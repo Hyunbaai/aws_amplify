@@ -3892,27 +3892,104 @@ ${waypointsYamlStr}
                 }
 
                 paths.forEach(path => {
-                    const pathItem = document.createElement("div");
-                    pathItem.style = "padding: 10px; background-color: #e0f7fa; border: 1px solid #00796b; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                    pathItem.innerHTML = `<strong>Path Name:</strong> ${path.name}
-                    <button onclick="enableAddWaypointMode(${path.id})" style="float: right; background: none; border: none; font-size: 14px; color: #007bff; cursor: pointer; margin-left: 10px;">+Add Waypoint</button>
-                    `;
+                // Path 항목 컨테이너
+                const pathItem = document.createElement("div");
+                pathItem.style = `
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: space-between; 
+                    padding: 10px; 
+                    background-color: #e0f7fa; 
+                    border: 1px solid #00796b; 
+                    border-radius: 5px; 
+                    margin-bottom: 5px; 
+                    cursor: pointer;
+                `;
 
-                    // Path를 클릭하면 Path ID를 저장하고 팝업을 닫음
-                    pathItem.onclick = () => {
-                        selectedPathId = path.id; // 선택된 Path ID 저장
-                        closePathListPopup();  // 두 번째 팝업 닫기
-                        showWaypointsForPath(path.id);
-                    };
+                // Path 이름 표시
+                const pathName = document.createElement("div");
+                pathName.innerHTML = `<strong>Path Name:</strong> ${path.name}`;
+                pathName.style = "flex-grow: 1; cursor: pointer;";
+                pathName.onclick = () => {
+                    selectedPathId = path.id; // 선택된 Path ID 저장
+                    closePathListPopup(); // 팝업 닫기
+                    showWaypointsForPath(path.id);
+                };
 
-                    pathListDisplay.appendChild(pathItem);
-                });
+                // Add Waypoint 버튼
+                const addWaypointButton = document.createElement("button");
+                addWaypointButton.innerText = "+Add Waypoint";
+                addWaypointButton.style = `
+                    background: none; 
+                    border: none; 
+                    font-size: 14px; 
+                    color: #007bff; 
+                    cursor: pointer; 
+                    margin-right: 10px;
+                `;
+                addWaypointButton.onclick = (e) => {
+                    e.stopPropagation(); // Path 클릭 이벤트 중지
+                    enableAddWaypointMode(path.id);
+                };
 
-                document.getElementById("pathListPopup").style.display = "block"; // 팝업 열기
+                // 삭제 버튼 (X 아이콘)
+                const deleteButton = document.createElement("button");
+                deleteButton.innerHTML = "&#10006;"; // 유니코드 X 아이콘
+                deleteButton.style = `
+                    color: white; 
+                    background-color: red; 
+                    border: none; 
+                    border-radius: 50%; 
+                    width: 24px; 
+                    height: 24px; 
+                    font-size: 16px; 
+                    cursor: pointer; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center;
+                `;
+                deleteButton.onclick = (e) => {
+                    e.stopPropagation(); // Path 클릭 이벤트 중지
+                    deletePath(path.id, pathItem); // Path 삭제 함수 호출
+                };
 
-                
+                // Path 항목에 요소 추가
+                pathItem.appendChild(pathName);
+                pathItem.appendChild(addWaypointButton);
+                pathItem.appendChild(deleteButton);
+
+                pathListDisplay.appendChild(pathItem);
+            });
+
+            document.getElementById("pathListPopup").style.display = "block"; // 팝업 열기
+
+        } catch (error) {
+            console.error("Path 목록 불러오기 오류:", error);
+        }
+        }
+
+        async function deletePath(pathId, pathElement) {
+            const confirmDelete = confirm("Are you sure you want to delete this Path?");
+            if (!confirmDelete) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('Path')
+                    .delete()
+                    .eq('id', pathId);
+
+                if (error) {
+                    console.error("Error deleting Path:", error);
+                    alert("Failed to delete Path. Please try again.");
+                    return;
+                }
+
+                alert("Path deleted successfully.");
+                pathElement.remove(); // UI에서 Path 제거
             } catch (error) {
-                console.error("Path 목록 불러오기 오류:", error);
+                console.error("Unexpected error while deleting Path:", error);
             }
         }
 
