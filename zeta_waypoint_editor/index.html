@@ -737,7 +737,7 @@
     <!-- 사용자가 로봇을 추가 및 제어할 수 있는 버튼 -->
     <div id="robot-control">
         <label>[Robot Control] </label>
-        <button onclick="openPopup()">Open Robot List</button>
+        <button onclick="openRobotListPopup()">Open Robot List</button>
         <!-- 선택된 로봇을 표시할 드롭다운 -->
         <select id="selectedRobotDropdown">
             <option value="">Selected a Robot</option>
@@ -927,9 +927,6 @@
         // WebSocket 데이터 관리
         let currentMqttData = []; // MQTT 로봇 데이터
         let currentAmrData = [];  // AMR 연결 데이터
-
-        const robotListPopup = document.getElementById('robotListPopup');
-        const robotList = document.getElementById('robotList');
 
 
         // WebSocket 연결 설정
@@ -2846,7 +2843,8 @@ ${waypointsYamlStr}
 
 
 
-
+        const robotListPopup = document.getElementById('robotListPopup');
+        const robotList = document.getElementById('robotList');
 
 
         // 선택된 로봇을 드롭다운에 추가
