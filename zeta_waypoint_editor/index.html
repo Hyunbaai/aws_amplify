@@ -1120,15 +1120,15 @@
             document.getElementById('websocket-status').textContent = `WebSocket 상태: ${status}`;
         }
 
-        socket.onopen = () => {
+        _socket.onopen = () => {
             updateWebSocketStatus('연결됨');
         };
 
-        socket.onclose = () => {
+        _socket.onclose = () => {
             updateWebSocketStatus('연결 종료');
         };
 
-        socket.onerror = () => {
+        _socket.onerror = () => {
             updateWebSocketStatus('오류 발생');
         };
 
