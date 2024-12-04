@@ -986,47 +986,7 @@
                 attribution: '© OpenStreetMap'
             }).addTo(map);  
 
-            const robotListPopup = document.getElementById('robotListPopup');
-            const robotList = document.getElementById('robotList');
-
-            // 팝업 열기
-            function openRobotListPopup() {
-                if (!robotListPopup || !robotList) {
-                    console.error("Robot List Popup or List is not defined.");
-                    return;
-                }
-
-                // 로봇 리스트 초기화 및 데이터 추가
-                robotList.innerHTML = ''; // 기존 내용을 비움
-                const dummyData = ["Robot 1", "Robot 2", "Robot 3"]; // 테스트용 데이터
-                dummyData.forEach(robot => {
-                    const li = document.createElement('li');
-                    li.textContent = robot;
-                    robotList.appendChild(li);
-                });
-
-                robotListPopup.style.display = 'block';
-            }
-
-            // 팝업 닫기
-            function closeRobotListPopup() {
-                if (!robotListPopup) {
-                    console.error("Robot List Popup is not defined.");
-                    return;
-                }
-                robotListPopup.style.display = 'none';
-            }
-
-            // 테스트 버튼 연결
-            const openButton = document.querySelector("#openButton");
-            if (openButton) {
-                openButton.addEventListener("click", openRobotListPopup);
-            }
-
-            const closeButton = robotListPopup.querySelector("button");
-            if (closeButton) {
-                closeButton.addEventListener("click", closeRobotListPopup);
-            }
+            
             
         });
 
@@ -2895,35 +2855,37 @@ ${waypointsYamlStr}
             closeRobotListPopup();
         }
 
-        // // 팝업 열기 및 로봇 리스트 표시
-        // function openRobotListPopup() {
-        //     const robotListPopup = document.getElementById('robotListPopup');
-        //     const robotList = document.getElementById('robotList');
-        //     console.log("button clicked");
+        // 팝업 열기 및 로봇 리스트 표시
+        function openRobotListPopup() {
+            const robotListPopup = document.getElementById('robotListPopup');
+            const robotList = document.getElementById('robotList');
+            console.log("button clicked");
+            console.log("currentMqttData:", currentMqttData);
+            console.log("currentAmrData:", currentAmrData);
 
 
-        //     robotList.innerHTML = '';
+            robotList.innerHTML = '';
 
-        //     const groupedData = currentMqttData.map((robot) => {
-        //         const connections = currentAmrData.filter((conn) => conn.robot_id === robot.topic_id);
-        //         const connectionId = connections.length > 0 ? connections[connections.length - 1].connection_id : 'No Connection';
+            const groupedData = currentMqttData.map((robot) => {
+                const connections = currentAmrData.filter((conn) => conn.robot_id === robot.topic_id);
+                const connectionId = connections.length > 0 ? connections[connections.length - 1].connection_id : 'No Connection';
 
-        //         return { robot, connectionId };
-        //     });
+                return { robot, connectionId };
+            });
 
-        //     groupedData.forEach(({ robot, connectionId }) => {
-        //         const li = document.createElement('li');
-        //         li.textContent = `Robot Name: ${robot.name} (${robot.topic_id}) / Connection ID: ${connectionId}`;
-        //         robotList.appendChild(li);
-        //     });
+            groupedData.forEach(({ robot, connectionId }) => {
+                const li = document.createElement('li');
+                li.textContent = `Robot Name: ${robot.name} (${robot.topic_id}) / Connection ID: ${connectionId}`;
+                robotList.appendChild(li);
+            });
 
-        //     robotListPopup.style.display = 'block';
-        // }
+            robotListPopup.style.display = 'block';
+        }
 
-        // // 팝업 닫기
-        // function closeRobotListPopup() {
-        //     robotListPopup.style.display = 'none';
-        // }
+        // 팝업 닫기
+        function closeRobotListPopup() {
+            robotListPopup.style.display = 'none';
+        }
 
 
 
