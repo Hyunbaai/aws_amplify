@@ -2921,7 +2921,7 @@ ${waypointsYamlStr}
             currentMqttData.forEach((robot) => {
                 const li = document.createElement('li');
                 li.style = "padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                li.textContent = `<strong>Robot Topic ID:</strong> ${robot.topic_id}, <strong>Status:</strong> ${robot.status}, <strong>Pressure:</strong> ${robot.pressure}`;
+                li.innerHTML = `<strong>Robot Topic ID:</strong> ${robot.topic_id}, <strong>Status:</strong> ${robot.status}, <strong>Pressure:</strong> ${robot.pressure}`;
                 robotList.appendChild(li);
             });
 
