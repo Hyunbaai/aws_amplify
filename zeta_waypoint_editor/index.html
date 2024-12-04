@@ -945,7 +945,7 @@
                 console.log('WebSocket 메시지 수신:', data);
 
                 if (data.type === 'mqttData') {
-                    currentMqttData = data.robots; // 업데이트된 로봇 데이터
+                    currentMqttData = data.topic_id; // 업데이트된 로봇 데이터
                 } else if (data.type === 'amrData') {
                     currentAmrData = data.connections; // 업데이트된 연결 데이터
                 }
@@ -984,9 +984,55 @@
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
-            }).addTo(map);  
+            }).addTo(map);
 
-            
+            let currentMqttData = []; // WebSocket으로 수신된 로봇 데이터 저장
+
+            const robotListPopup = document.getElementById('robotListPopup');
+            const robotList = document.getElementById('robotList');
+            const openPopupButton = document.getElementById('openPopupButton');
+            const closePopupButton = document.getElementById('closePopupButton');
+
+            // WebSocket 연결
+            const webSocket = new WebSocket('ws://your-websocket-url');
+
+            webSocket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                if (message.mqtt_data) {
+                    console.log('WebSocket 메시지 수신:', message.mqtt_data);
+                    const robotData = {
+                        topic_id: message.mqtt_data.topic_id,
+                        status: message.mqtt_data.data.docker_3_status || 'unknown',
+                        pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
+                    };
+                    // 기존 데이터에 추가
+                    currentMqttData = [...currentMqttData, robotData];
+                }
+            };
+
+            // 팝업 열기 및 로봇 리스트 표시
+            function openRobotListPopup() {
+                robotList.innerHTML = ''; // 기존 리스트 초기화
+
+                // 로봇 데이터를 리스트로 추가
+                currentMqttData.forEach((robot) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Robot Topic ID: ${robot.topic_id} / Status: ${robot.status} / Pressure: ${robot.pressure}`;
+                    robotList.appendChild(li);
+                });
+
+                robotListPopup.style.display = 'block'; // 팝업 열기
+            }
+
+            // 팝업 닫기
+            function closeRobotListPopup() {
+                robotListPopup.style.display = 'none';
+            }
+
+            // 버튼 이벤트 연결
+            openPopupButton.addEventListener('click', openRobotListPopup);
+            closePopupButton.addEventListener('click', closeRobotListPopup);
+
             
         });
 
@@ -2853,38 +2899,6 @@ ${waypointsYamlStr}
 
             // 팝업 닫기
             closeRobotListPopup();
-        }
-
-        // 팝업 열기 및 로봇 리스트 표시
-        function openRobotListPopup() {
-            const robotListPopup = document.getElementById('robotListPopup');
-            const robotList = document.getElementById('robotList');
-            console.log("button clicked");
-            console.log("currentMqttData:", currentMqttData);
-            console.log("currentAmrData:", currentAmrData);
-
-
-            robotList.innerHTML = '';
-
-            const groupedData = currentMqttData.map((robot) => {
-                const connections = currentAmrData.filter((conn) => conn.robot_id === robot.topic_id);
-                const connectionId = connections.length > 0 ? connections[connections.length - 1].connection_id : 'No Connection';
-
-                return { robot, connectionId };
-            });
-
-            groupedData.forEach(({ robot, connectionId }) => {
-                const li = document.createElement('li');
-                li.textContent = `Robot Name: ${robot.name} (${robot.topic_id}) / Connection ID: ${connectionId}`;
-                robotList.appendChild(li);
-            });
-
-            robotListPopup.style.display = 'block';
-        }
-
-        // 팝업 닫기
-        function closeRobotListPopup() {
-            robotListPopup.style.display = 'none';
         }
 
 
