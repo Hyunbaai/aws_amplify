@@ -978,20 +978,20 @@
 
     <script>
 
-        let _socket; // WebSocket 객체
+        let socket; // WebSocket 객체
 
         // WebSocket 연결 설정
         function connectWebSocket() {
             const wsUrl = 'wss://c1x50yosed.execute-api.ap-northeast-2.amazonaws.com/dev'; // WebSocket 서버 URL
-            _socket = new WebSocket(wsUrl);
+            socket = new WebSocket(wsUrl);
 
-            _socket.onopen = () => {
+            socket.onopen = () => {
                 console.log('WebSocket 연결 성공');
                 const initCommand = { command: 'reload' };
                 socket.send(JSON.stringify(initCommand)); // 초기화 명령 전송
             };
 
-            _socket.onmessage = (event) => {
+            socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log('WebSocket 메시지 수신:', data);
 
@@ -1001,12 +1001,12 @@
                 }
             };
 
-            _socket.onclose = () => {
+            socket.onclose = () => {
                 console.log('WebSocket 연결 종료');
                 setTimeout(connectWebSocket, 3000); // 연결 재시도
             };
 
-            _socket.onerror = (error) => {
+            socket.onerror = (error) => {
                 console.error('WebSocket 오류:', error);
             };
         }
@@ -4133,8 +4133,6 @@ ${waypointsYamlStr}
             document.getElementById("pathListPopup").style.display = "none"; // 두 번째 팝업 숨기기
         }
 
-        // WebSocket 연결을 위한 전역 변수
-        let socket;
         let isSocketInitialized = false; // WebSocket이 초기화되었는지 확인하는 변수
 
 
