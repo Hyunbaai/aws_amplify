@@ -974,9 +974,59 @@
         </table>
     </div>
 
+    <div id="websocket-status">WebSocket 상태: 연결 중...</div>
+
 
 
     <script>
+
+        let _socket; // WebSocket 객체
+
+        // WebSocket 연결 설정
+        function connectWebSocket() {
+            const wsUrl = 'wss://c1x50yosed.execute-api.ap-northeast-2.amazonaws.com/dev'; // WebSocket 서버 URL
+            _socket = new WebSocket(wsUrl);
+
+            _socket.onopen = () => {
+                console.log('WebSocket 연결 성공');
+                const initCommand = { command: 'reload' };
+                socket.send(JSON.stringify(initCommand)); // 초기화 명령 전송
+            };
+
+            _socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('WebSocket 메시지 수신:', data);
+
+                // 예시: 로봇 위치 업데이트 처리
+                if (data.amr_data_db) {
+                    updateRobotPosition(data.amr_data_db);
+                }
+            };
+
+            _socket.onclose = () => {
+                console.log('WebSocket 연결 종료');
+                setTimeout(connectWebSocket, 3000); // 연결 재시도
+            };
+
+            _socket.onerror = (error) => {
+                console.error('WebSocket 오류:', error);
+            };
+        }
+
+        // 로봇 위치 업데이트 (예제 함수)
+        function updateRobotPosition(robotData) {
+            robotData.forEach(robot => {
+                const { robot_id, position } = robot.data;
+                console.log(`로봇 ${robot_id} 위치:`, position);
+                // 지도에 로봇 위치 업데이트 로직 추가 가능
+            });
+        }
+
+        // WebSocket 연결 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            connectWebSocket();
+        });
+
         // 지도를 초기화하고, #map 요소에 연결
         // 초기 지도의 중심과 줌 레벨을 설정 // 위치: 한동대학교
         // map.setView([36.10332441762193, 129.38886749661228], 17);
@@ -1044,6 +1094,43 @@
         let scale = 1;                      // 로봇 교착 확률 행렬 스케일을 저장하는 변수
         let linearSpeed = 0.5;              // 로봇 원격 제어의 초기 선속도
         let angularSpeed = 0.5;             // 로봇 원격 제어의 초기 각속도
+
+
+        // 로봇 마커 레이어
+        const robotMarkers = {};
+
+        // 로봇 위치 업데이트 함수
+        function updateRobotPosition(robotData) {
+            robotData.forEach(robot => {
+                const { robot_id, position } = robot.data;
+                const { latitude, longitude } = position;
+
+                // 기존 마커가 있는지 확인
+                if (robotMarkers[robot_id]) {
+                    robotMarkers[robot_id].setLatLng([latitude, longitude]);
+                } else {
+                    // 새 마커 생성
+                    const marker = L.marker([latitude, longitude]).addTo(robotLayer);
+                    robotMarkers[robot_id] = marker;
+                }
+            });
+        }
+
+        function updateWebSocketStatus(status) {
+            document.getElementById('websocket-status').textContent = `WebSocket 상태: ${status}`;
+        }
+
+        socket.onopen = () => {
+            updateWebSocketStatus('연결됨');
+        };
+
+        socket.onclose = () => {
+            updateWebSocketStatus('연결 종료');
+        };
+
+        socket.onerror = () => {
+            updateWebSocketStatus('오류 발생');
+        };
 
         // Mobile 손가락 제어 변수 세팅
         $.Finger = {
@@ -2734,7 +2821,8 @@ ${waypointsYamlStr}
         }
 
         // 속도 조절 함수
-        function adjustSpeed(type, value) {
+        function 
+        adjustSpeed(type, value) {
             const robot = robots[selectedRobotID];
 
             if (type === 'linear') {
