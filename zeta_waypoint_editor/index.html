@@ -698,6 +698,36 @@
             margin-bottom: 0; /* 아래쪽 여백 제거 */
             border-radius: 0.8vh; /* 둥근 모서리 설정 */
         }
+
+        /* 팝업 스타일 */
+        #robotListPopup {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid black;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2000; /* 지도 위에 표시 */
+            max-width: 80%; /* 최대 너비 */
+            max-height: 80%; /* 최대 높이 */
+            overflow-y: auto; /* 스크롤 가능하도록 */
+        }
+
+        /* 로봇 리스트 스타일 */
+        #robotList {
+            list-style-type: none; /* 기본 리스트 스타일 제거 */
+            padding: 0;
+            margin: 0;
+        }
+
+        #robotList li {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -940,6 +970,25 @@
                 socket.send(JSON.stringify(initCommand)); // 초기화 명령 전송
             };
 
+            // WebSocket 메시지 수신 처리
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                if (message.mqtt_data) {
+                    const robotData = {
+                        topic_id: message.mqtt_data.topic_id,
+                        status: message.mqtt_data.data.docker_3_status || 'unknown',
+                        pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
+                    };
+                    currentMqttData.push(robotData); // 데이터 추가
+
+                     // 중복 여부 확인
+                    const exists = currentMqttData.some((robot) => robot.topic_id === newRobotData.topic_id);
+                    if (!exists) {
+                        currentMqttData.push(newRobotData); // 중복이 아니면 추가
+                    }
+                }
+            };
+
             socket.onclose = () => {
                 console.log('WebSocket 연결 종료');
                 setTimeout(connectWebSocket, 3000); // 연결 재시도
@@ -973,38 +1022,6 @@
             let currentMqttData = []; // WebSocket으로 수신된 로봇 데이터 저장
             const robotListPopup = document.getElementById('robotListPopup');
             const robotList = document.getElementById('robotList');
-
-            // WebSocket 메시지 수신 처리
-            socket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                if (message.mqtt_data) {
-                    const robotData = {
-                        topic_id: message.mqtt_data.topic_id,
-                        status: message.mqtt_data.data.docker_3_status || 'unknown',
-                        pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
-                    };
-                    currentMqttData.push(robotData); // 데이터 추가
-                }
-            };
-
-            // 로봇 리스트 팝업 열기
-            window.openRobotListPopup = () => {
-                robotList.innerHTML = ''; // 기존 리스트 초기화
-
-                // 로봇 데이터를 리스트로 추가
-                currentMqttData.forEach((robot) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Robot Topic ID: ${robot.topic_id} / Status: ${robot.status} / Pressure: ${robot.pressure}`;
-                    robotList.appendChild(li);
-                });
-
-                robotListPopup.style.display = 'block'; // 팝업 열기
-            };
-
-            // 로봇 리스트 팝업 닫기
-            window.closeRobotListPopup = () => {
-                robotListPopup.style.display = 'none';
-            };
             
         });
 
@@ -2848,6 +2865,28 @@ ${waypointsYamlStr}
         //                    로봇 세팅 및 상태 시각화 함수
         //
         // ==================================================================
+
+        // 팝업 열기
+        function openRobotListPopup() {
+            const robotList = document.getElementById('robotList');
+            const robotListPopup = document.getElementById('robotListPopup');
+            robotList.innerHTML = ''; // 기존 리스트 초기화
+
+            // 로봇 데이터를 리스트로 추가
+            currentMqttData.forEach((robot) => {
+                const li = document.createElement('li');
+                li.textContent = `Robot Topic ID: ${robot.topic_id} / Status: ${robot.status} / Pressure: ${robot.pressure}`;
+                robotList.appendChild(li);
+            });
+
+            robotListPopup.style.display = 'block'; // 팝업 열기
+        }
+
+        // 팝업 닫기
+        function closeRobotListPopup() {
+            const robotListPopup = document.getElementById('robotListPopup');
+            robotListPopup.style.display = 'none';
+        }
 
 
         // 선택된 로봇을 드롭다운에 추가
