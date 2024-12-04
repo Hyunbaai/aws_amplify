@@ -737,7 +737,7 @@
     <!-- 사용자가 로봇을 추가 및 제어할 수 있는 버튼 -->
     <div id="robot-control">
         <label>[Robot Control] </label>
-        <button onclick="addRobotPopup()" id="addRobotButton">Add Robot</button>
+        <button id="syncRobotsButton">Sync Robots</button>
         <select id="robotDropdown">
             <option value="">Select a Robot</option>
         </select>
@@ -2908,144 +2908,49 @@ ${waypointsYamlStr}
         //
         // ==================================================================
 
-        // "Add Robot" 버튼 클릭 시 입력창 팝업
-        function addRobotPopup() {
-            openPopup('addRobotPopup');
-            document.getElementById('addRobotPopup').style.display = 'block';
-        }
+        // WebSocket 데이터 기반으로 로봇 목록 업데이트
+        function syncRobots() {
+            if (!socket || socket.readyState !== WebSocket.OPEN) {
+                alert("WebSocket 연결이 필요합니다.");
+                return;
+            }
 
-        // 로봇 ID & IP 입력창 팝업 닫는 함수
-        function closeAddRobotPopup() {
-            document.getElementById('robotID').value = '';
-            document.getElementById('robotIP').value = '';
-            document.getElementById('addRobotPopup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
+            // WebSocket에서 로봇 정보 요청
+            const command = { command: "fetch_robots" }; // 로봇 목록 요청 명령
+            socket.send(JSON.stringify(command));
 
-        // "Add Robot" 버튼 클릭 시 호출되는 함수
-        function addRobotFromInput() {
-            const robotID = document.getElementById('robotID').value.trim();
-            const robotIP = document.getElementById('robotIP').value.trim();
-            if (robotID && robotIP) {
-                addRobot(robotID, robotIP);
-                addRobotInfoPopup(robotID);
-                initializeMatrix();
-                document.getElementById('robotID').value = '';
-                document.getElementById('robotIP').value = '';
-                document.getElementById('addRobotPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            } 
-            else {
-                if (!robotID) {
-                    alert('Please input the Robot ID.');
+            // WebSocket 메시지 처리
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+
+                if (message.robotID && message.connection_id) {
+                    // 로봇 데이터를 로컬 UI에 추가
+                    const robotDropdown = document.getElementById('robotDropdown');
+                    const option = document.createElement('option');
+                    option.value = message.robotID;
+                    option.textContent = `Robot: ${message.robotID} (Connection: ${message.connection_id})`;
+                    robotDropdown.appendChild(option);
+
+                    // Supabase DB에 로봇 데이터 저장
+                    supabase.from('Robot').upsert([
+                        {
+                            robotId: message.robotID,
+                            connection_id: message.connection_id,
+                            status: message.status,
+                        }
+                    ]).then(({ data, error }) => {
+                        if (error) {
+                            console.error("Supabase 저장 실패:", error);
+                        } else {
+                            console.log("Supabase 저장 성공:", data);
+                        }
+                    });
                 }
-                else if (!robotIP) {
-                    alert('Please input the Robot IP.');
-                }
-            }
-        }
-
-        // 로봇을 추가하는 함수
-        function addRobot(id, ip) {
-            if (!robots[id]) {
-                robots[id] = {
-                    id: id,
-                    statusSocket: setupWebSocket(
-                        `ws://${ip}:9000`,
-                        () => {
-                            robots[id].statusSocket = setupWebSocket(`ws://${ip}:9000`, () => {}, id, 'status');
-                            setupStatusSocket(id);
-                        },
-                        id,
-                        'status'
-                    ),
-                    waypointSocket: setupWebSocket(
-                        `ws://${ip}:8000`,
-                        () => robots[id].waypointSocket = setupWebSocket(`ws://${ip}:8000`, () => {}, id, 'waypoint'),
-                        id,
-                        'waypoint'
-                    ),
-                    controlSocket: setupWebSocket(
-                        `ws://${ip}:7000`,
-                        () => robots[id].controlSocket = setupWebSocket(`ws://${ip}:7000`, () => {}, id, 'control'),
-                        id,
-                        'control'
-                    ),
-                    speedSocket: setupWebSocket(
-                        `ws://${ip}:7500`,
-                        () => robots[id].speedSocket = setupWebSocket(`ws://${ip}:7500`, () => {}, id, 'speed'),
-                        id,
-                        'speed'
-                    ),
-                    remoteSocket: setupWebSocket(
-                        `ws://${ip}:8500`,
-                        () => robots[id].remoteSocket = setupWebSocket(`ws://${ip}:8500`, () => {}, id, 'remote'),
-                        id,
-                        'remote'
-                    ),
-                    lat: 38.161479,
-                    lng: -122.454630,
-                    heading: 0,
-                    task: '',
-                    departure: '',
-                    destination: '',
-                    speed: 0,
-                    priority: '',
-                    remoteCommandState: 'stop',
-                    remoteLinearSpeed: linearSpeed,
-                    remoteAngularSpeed: angularSpeed,
-                    marker: L.marker([34.9682601, 127.4821126], {
-                        icon: L.divIcon({
-                            className: 'robot',
-                            html: `<div>🤖 ${id}</div>`,
-                            iconSize: [30, 30]
-                        })
-                    }).addTo(map)
-                };
-                // 로봇 상태 설정
-                setupStatusSocket(id);
-                // 드롭다운에 로봇 추가
-                addRobotToDropdown(id);
-                console.log(`Robot ${id} added and listed in Dropdown.`);
-            }
-        }
-
-        // WebSocket 연결을 생성하고 끊어지면 재연결
-        function setupWebSocket(url, onReconnect, id, socketType) {
-            const socket = new WebSocket(url);
-            
-            socket.onopen = () => {
-                console.log(`WebSocket 연결 성공: ${url}`);
-            }
-            socket.onclose = () => {
-                console.log(`WebSocket 연결 끊김: ${url} - 재연결 시도 중...`);
-                setTimeout(() => {
-                    const newSocket = setupWebSocket(url, onReconnect, id, socketType);
-                    
-                    // 재연결 후 새 WebSocket 인스턴스를 해당 로봇의 selectedSocket에 갱신
-                    if (socketType === 'waypoint') {
-                        selectedWaypointSocket[id] = newSocket;
-                    }
-                    else if (socketType === 'control') {
-                        selectedControlSocket[id] = newSocket;
-                    }
-                    else if (socketType === 'speed') {
-                        selectedSpeedSocket[id] = newSocket;
-                    }
-                    else if (socketType === 'remote') {
-                        selectedRemoteSocket[id] = newSocket;
-                    }
-                    else if (socketType === 'status') {
-                        robots[id].statusSocket = newSocket;
-                        setupStatusSocket(id);
-                    }
-
-                }, 5000); // 5초 후 재연결 시도
             };
-            socket.onerror = (error) => console.log(`WebSocket 오류: ${url}`, error);
-        
-            return socket;
         }
+
+        // 버튼 클릭 이벤트 추가
+        document.getElementById('syncRobotsButton').addEventListener('click', syncRobots);
 
         // 로봇의 상태를 시각화하는 함수
         function setupStatusSocket(id) {
