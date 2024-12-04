@@ -974,8 +974,6 @@
         </table>
     </div>
 
-    <div id="websocket-status">WebSocket 상태: 연결 중...</div>
-
 
 
     <script>
@@ -1115,22 +1113,6 @@
                 }
             });
         }
-
-        function updateWebSocketStatus(status) {
-            document.getElementById('websocket-status').textContent = `WebSocket 상태: ${status}`;
-        }
-
-        _socket.onopen = () => {
-            updateWebSocketStatus('연결됨');
-        };
-
-        _socket.onclose = () => {
-            updateWebSocketStatus('연결 종료');
-        };
-
-        _socket.onerror = () => {
-            updateWebSocketStatus('오류 발생');
-        };
 
         // Mobile 손가락 제어 변수 세팅
         $.Finger = {
