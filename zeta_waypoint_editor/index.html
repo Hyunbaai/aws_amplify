@@ -974,14 +974,13 @@
             socket.onmessage = (event) => {
                 const message = JSON.parse(event.data);
                 if (message.mqtt_data) {
-                    const robotData = {
+                    const newRobotData = {
                         topic_id: message.mqtt_data.topic_id,
                         status: message.mqtt_data.data.docker_3_status || 'unknown',
                         pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
                     };
-                    currentMqttData.push(robotData); // 데이터 추가
 
-                     // 중복 여부 확인
+                    // 중복 여부 확인
                     const exists = currentMqttData.some((robot) => robot.topic_id === newRobotData.topic_id);
                     if (!exists) {
                         currentMqttData.push(newRobotData); // 중복이 아니면 추가
