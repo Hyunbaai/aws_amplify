@@ -3010,23 +3010,6 @@ ${waypointsYamlStr}
             }
         }
 
-         // WebSocket 연결을 생성하고 끊어지면 재연결
-         function setupWebSocketForStatus(url, reconnect, id) {
-            const socket = new WebSocket(url);
-            
-            socket.onopen = () => console.log(`WebSocket 연결 성공: ${url}`);
-            socket.onclose = () => {
-                console.log(`WebSocket 연결 끊김: ${url} - 재연결 시도 중...`);
-                setTimeout(() => {
-                    reconnect();
-                     // statusSocket일 때만 재실행
-                }, 5000); // 5초 후 재연결 시도
-            };
-            socket.onerror = (error) => console.log(`WebSocket 오류: ${url}`, error);
-
-            return socket;
-        }
-
         // WebSocket 연결을 생성하고 끊어지면 재연결
         function setupWebSocket(url, onReconnect, id, socketType) {
             const socket = new WebSocket(url);
@@ -4154,41 +4137,11 @@ ${waypointsYamlStr}
         let socket;
         let isSocketInitialized = false; // WebSocket이 초기화되었는지 확인하는 변수
 
-        // WebSocket 초기화 및 연결 함수
-        function initializeWebSocket() {
-            // WebSocket이 이미 열려 있는 경우 새로 열지 않고 함수 종료
-            if (isSocketInitialized && socket.readyState === WebSocket.OPEN) {
-                console.log("이미 WebSocket이 열려 있습니다.");
-                return;
-            }
-
-            socket = new WebSocket('ws://192.168.0.10:8000'); // 로봇의 IP 주소와 포트를 설정하세요.
-
-            socket.onopen = () => {
-                console.log("WebSocket 연결 성공");
-                isSocketInitialized = true; // WebSocket 초기화 완료 표시
-            };
-
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                console.log("Received from WebSocket:", data);
-            };
-
-            socket.onclose = (event) => {
-                console.log("WebSocket 연결 종료", event.code, event.reason);
-                isSocketInitialized = false; // WebSocket이 닫히면 초기화 상태 해제
-            };
-
-            socket.onerror = (error) => {
-                console.error("WebSocket 오류:", error);
-            };
-        }
 
         // DB에서 모든 Waypoint를 불러와 한 번에 전송하는 함수
         async function sendAllWaypoints(pathId, reverse = false) {
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 console.error("WebSocket 연결이 열려 있지 않습니다. 연결을 재설정합니다.");
-                initializeWebSocket(); // WebSocket을 다시 초기화
                 alert("WebSocket 연결이 닫혀 있습니다. 다시 시도해 주세요.");
                 return;
             }
@@ -4567,7 +4520,6 @@ ${waypointsYamlStr}
         // 특정 Path ID로 Waypoints를 불러와 모두 전송
         function startNavigation(pathId) {
             if (!isSocketInitialized) {
-                initializeWebSocket(); // WebSocket이 초기화되어 있지 않으면 초기화
             }
             sendAllWaypoints(pathId); // Waypoints를 한 번에 전송
         }
@@ -4575,7 +4527,6 @@ ${waypointsYamlStr}
         // 기존의 startNavigation 함수와 유사하게 Waypoints를 역순으로 전송하는 함수 추가
         function startReverseNavigation(pathId) {
             if (!isSocketInitialized) {
-                initializeWebSocket(); // WebSocket이 초기화되어 있지 않으면 초기화
             }
             sendAllWaypoints(pathId, true); // 역방향 Waypoints 전송을 위한 플래그 추가
         }
@@ -4584,9 +4535,6 @@ ${waypointsYamlStr}
         function showWaypointsForPath(pathId) {
             loadWaypointsFromDatabase(pathId);
         }
-
-        // WebSocket 초기화
-        initializeWebSocket();
 
         // 웨이포인트 삭제 함수
         async function deleteWaypoint(id) {
