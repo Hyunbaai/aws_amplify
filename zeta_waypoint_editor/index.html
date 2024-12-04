@@ -993,10 +993,7 @@
             const openPopupButton = document.getElementById('openPopupButton');
             const closePopupButton = document.getElementById('closePopupButton');
 
-            // WebSocket 연결
-            const webSocket = new WebSocket('ws://your-websocket-url');
-
-            webSocket.onmessage = (event) => {
+            socket.onmessage = (event) => {
                 const message = JSON.parse(event.data);
                 if (message.mqtt_data) {
                     console.log('WebSocket 메시지 수신:', message.mqtt_data);
