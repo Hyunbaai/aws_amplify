@@ -1023,6 +1023,12 @@
         // WebSocket 연결 초기화
         document.addEventListener('DOMContentLoaded', () => {
             connectWebSocket();
+            // Sync Robots 버튼 클릭 이벤트 연결
+            const syncButton = document.getElementById('syncRobotsButton');
+            syncButton.addEventListener('click', () => {
+                console.log("Sync Robots 버튼 클릭됨");
+                syncRobots(); // syncRobots 함수 호출
+            });
         });
 
         // 지도를 초기화하고, #map 요소에 연결
@@ -1226,9 +1232,7 @@
             saveSelectedWaypoints = [];
         });
 
-        document.getElementById('robotDropdown').addEventListener('change', updateSelectedRobot);
         
-        updateSelectedRobot();
 
         const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // 알파벳 배열
         
