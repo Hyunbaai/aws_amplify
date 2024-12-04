@@ -2910,6 +2910,7 @@ ${waypointsYamlStr}
 
         // WebSocket 데이터 기반으로 로봇 목록 업데이트
         function syncRobots() {
+            console.log("Sync Robots 버튼 클릭됨");
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 alert("WebSocket 연결이 필요합니다.");
                 return;
@@ -2988,35 +2989,6 @@ ${waypointsYamlStr}
                     robot.pathLine = L.polyline(LatLngs, { color: 'red' }).addTo(map);
                 }
             };
-        }
-
-        // 로봇을 드롭다운 메뉴에 추가하는 함수
-        function addRobotToDropdown(id) {
-            const dropdown = document.getElementById('robotDropdown');
-            const option = document.createElement('option');
-            option.value = id;
-            option.text = id;
-            dropdown.add(option);
-        }
-
-        // 드롭다운의 값이 변경될 때마다 웹소켓을 업데이트하는 함수
-        function updateSelectedRobot() {
-            selectedRobotID = document.getElementById('robotDropdown').value;
-            if (selectedRobotID && robots[selectedRobotID]) {
-                const selectedRobot = robots[selectedRobotID];
-                selectedWaypointSocket[selectedRobotID] = selectedRobot.waypointSocket;
-                selectedControlSocket[selectedRobotID] = selectedRobot.controlSocket;
-                selectedSpeedSocket[selectedRobotID] = selectedRobot.speedSocket;
-                selectedRemoteSocket[selectedRobotID] = selectedRobot.remoteSocket;
-                console.log(`Selected robot: ${selectedRobotID}`);
-            } else {
-                // 선택된 로봇이 없거나 잘못된 경우
-                selectedWaypointSocket[selectedRobotID] = null;
-                selectedControlSocket[selectedRobotID] = null;
-                selectedSpeedSocket[selectedRobotID] = null;
-                selectedRemoteSocket[selectedRobotID] = null;
-                console.error("No robot selected or robot ID is invalid.");
-            }
         }
 
         // 로봇의 위치와 Waypoint를 비교하여 현재 주행 중인 Waypoint 추적 함수
