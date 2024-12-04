@@ -1019,17 +1019,24 @@
             // WebSocket 메시지 수신 처리
             socket.onmessage = (event) => {
                 const message = JSON.parse(event.data);
+                console.log('Received message:', message);
+
                 if (message.mqtt_data) {
                     const newRobotData = {
                         topic_id: message.mqtt_data.topic_id,
+                        name: getRobotNameById(message.mqtt_data.topic_id), // 로봇 이름 가져오기
                         status: message.mqtt_data.data.docker_3_status || 'unknown',
                         pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
+                        connectionId: message.connection_id || 'No Connection' // 연결 정보 추가
                     };
 
-                    // 중복 여부 확인
+                    // 중복 확인
                     const exists = currentMqttData.some((robot) => robot.topic_id === newRobotData.topic_id);
                     if (!exists) {
-                        currentMqttData.push(newRobotData); // 중복이 아니면 추가
+                        currentMqttData.push(newRobotData);
+                        console.log('Added new robot data:', newRobotData);
+                    } else {
+                        console.log('Duplicate data ignored:', newRobotData);
                     }
                 }
             };
@@ -2917,15 +2924,31 @@ ${waypointsYamlStr}
             const robotListPopup = document.getElementById('robotListPopup');
             robotList.innerHTML = ''; // 기존 리스트 초기화
 
-            // 로봇 데이터를 리스트로 추가
-            currentMqttData.forEach((robot) => {
-                const li = document.createElement('li');
-                li.style = "padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                li.innerHTML = `<strong>Robot Topic ID:</strong> ${robot.topic_id}, <strong>Status:</strong> ${robot.status}, <strong>Pressure:</strong> ${robot.pressure}`;
-                robotList.appendChild(li);
+             // Robot 데이터를 바탕으로 리스트 생성
+            currentMqttData.forEach(robot => {
+                const connections = currentAmrData.filter(conn => conn.robot_id === robot.topic_id);
+                const connectionId = connections.length > 0 ? connections[connections.length - 1].connection_id : 'No Connection';
+
+                // 리스트 항목 생성
+                const listItem = document.createElement('li');
+                listItem.style = "padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px;";
+
+                // Robot Name, Topic ID, Connection ID 표시
+                listItem.innerHTML = `
+                    <strong>Robot Name:</strong> ${getRobotNameById(robot.topic_id)} (${robot.topic_id})<br>
+                    <strong>Connection ID:</strong> ${connectionId}
+                `;
+
+                robotList.appendChild(listItem);
             });
 
-            robotListPopup.style.display = 'block'; // 팝업 열기
+            robotListPopup.style.display = 'block'; // 팝업 표시
+        }
+
+        // Robot Name 조회 함수
+        function getRobotNameById(robotId) {
+            const robot = robots.find(r => r.robotId === robotId);
+            return robot ? robot.name : (robotId !== "000000" ? robotId : "");
         }
 
         // 팝업 닫기
