@@ -706,15 +706,16 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #ffffff; /* 배경색 */
-            padding: 20px;
+            background: linear-gradient(135deg, #ffffff, #e3f2fd); /* 부드러운 배경 그라데이션 */
+            padding: 30px;
             border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
             z-index: 2000; /* 지도보다 위에 표시 */
-            max-width: 400px; /* 팝업 너비 */
-            max-height: 70%; /* 최대 높이 */
+            max-width: 600px; /* 팝업 너비 */
+            max-height: 80%; /* 최대 높이 */
             overflow-y: auto; /* 스크롤 가능 */
+            font-family: Arial, sans-serif;
         }
 
         /* 로봇 리스트 스타일 */
@@ -725,34 +726,47 @@
         }
 
         #robotList li {
-            padding: 10px;
-            background-color: #f8f9fa;
+            padding: 15px;
+            background-color: #f9f9f9;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         #robotList li:hover {
-            background-color: #e9ecef; /* 호버 시 색 변경 */
+            background-color: #e1f5fe; /* 호버 시 색 변경 */
+            transform: translateY(-2px); /* 약간 위로 올라감 */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 팝업 제목 스타일 */
+        #popupTitle {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1976d2; /* 파란색 강조 */
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         /* 닫기 버튼 스타일 */
         #closePopupButton {
             display: block;
-            margin: 10px auto 0 auto;
-            padding: 8px 16px;
-            background: #007bff;
+            margin: 20px auto 0 auto;
+            padding: 10px 20px;
+            background: #1976d2;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
             transition: background-color 0.3s ease;
         }
 
         #closePopupButton:hover {
-            background-color: #0056b3;
+            background-color: #0d47a1;
         }
     </style>
 </head>
