@@ -2920,7 +2920,7 @@ ${waypointsYamlStr}
             // 로봇 데이터를 리스트로 추가
             currentMqttData.forEach((robot) => {
                 const li = document.createElement('li');
-                li.style = robotItem.style = "padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
+                li.style = "padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
                 li.textContent = `<strong>Robot Topic ID:</strong> ${robot.topic_id}, <strong>Status:</strong> ${robot.status}, <strong>Pressure:</strong> ${robot.pressure}`;
                 robotList.appendChild(li);
             });
