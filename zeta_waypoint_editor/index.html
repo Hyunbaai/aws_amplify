@@ -978,6 +978,13 @@
         // WebSocket 연결 초기화
         document.addEventListener('DOMContentLoaded', () => {
             connectWebSocket();
+            var map = L.map('map').setView([34.9682601, 127.4821126], 17);
+
+            // OpenStreetMap 타일을 추가하여 지도에 표시
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);  
             
         });
 
@@ -985,31 +992,12 @@
         // 초기 지도의 중심과 줌 레벨을 설정 // 위치: 한동대학교
         // map.setView([36.10332441762193, 129.38886749661228], 17);
         // 시뮬레이션 용 설정 // 위치: Sonoma Raceway
-        var map = L.map('map').setView([34.9682601, 127.4821126], 17);
-
-        // OpenStreetMap 타일을 추가하여 지도에 표시
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+        
 
         // Layer 그룹 설정
         var robotLayer = L.layerGroup().addTo(map); // WebSocket을 통해 실시간 위치를 표시할 Layer
         var waypointLayer = L.layerGroup().addTo(map); // DB에서 불러온 Waypoint를 표시할 Layer
 
-        // 팝업용 지도 초기화 (Leaflet 사용)
-        var mapPopup = L.map('mapPopup').setView([34.9682601, 127.4821126], 18); // 기본 좌표 설정
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(mapPopup);
-
-        // 팝업용 지도(포인트 추가) 초기화 (Leaflet 사용)
-        var mapPopupPoint = L.map('mapPopupPoint').setView([34.9682601, 127.4821126], 18); // 기본 좌표 설정
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(mapPopupPoint);
         
         let waypoints = [];                 // Waypoints를 저장할 배열
         let totalWaypoints = [];            // 전체 Waypoints를 저장할 배열
@@ -1051,24 +1039,24 @@
 
 
         // 로봇 마커 레이어
-        const robotMarkers = {};
+        // const robotMarkers = {};
 
-        // 로봇 위치 업데이트 함수
-        function updateRobotPosition(robotData) {
-            robotData.forEach(robot => {
-                const { robot_id, position } = robot.data;
-                const { latitude, longitude } = position;
+        // // 로봇 위치 업데이트 함수
+        // function updateRobotPosition(robotData) {
+        //     robotData.forEach(robot => {
+        //         const { robot_id, position } = robot.data;
+        //         const { latitude, longitude } = position;
 
-                // 기존 마커가 있는지 확인
-                if (robotMarkers[robot_id]) {
-                    robotMarkers[robot_id].setLatLng([latitude, longitude]);
-                } else {
-                    // 새 마커 생성
-                    const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-                    robotMarkers[robot_id] = marker;
-                }
-            });
-        }
+        //         // 기존 마커가 있는지 확인
+        //         if (robotMarkers[robot_id]) {
+        //             robotMarkers[robot_id].setLatLng([latitude, longitude]);
+        //         } else {
+        //             // 새 마커 생성
+        //             const marker = L.marker([latitude, longitude]).addTo(robotLayer);
+        //             robotMarkers[robot_id] = marker;
+        //         }
+        //     });
+        // }
 
         // Mobile 손가락 제어 변수 세팅
         $.Finger = {
@@ -2842,11 +2830,6 @@ ${waypointsYamlStr}
         // ==================================================================
 
 
-
-        const robotListPopup = document.getElementById('robotListPopup');
-        const robotList = document.getElementById('robotList');
-
-
         // 선택된 로봇을 드롭다운에 추가
         function selectRobot(name, topic_id, connection_id) {
             const dropdown = document.getElementById("selectedRobotDropdown");
@@ -2872,6 +2855,10 @@ ${waypointsYamlStr}
 
         // 팝업 열기 및 로봇 리스트 표시
         function openRobotListPopup() {
+            const robotListPopup = document.getElementById('robotListPopup');
+            const robotList = document.getElementById('robotList');
+
+
             robotList.innerHTML = '';
 
             const groupedData = currentMqttData.map((robot) => {
