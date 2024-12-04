@@ -940,22 +940,6 @@
                 socket.send(JSON.stringify(initCommand)); // 초기화 명령 전송
             };
 
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                console.log('WebSocket 메시지 수신:', data);
-
-                if (data.type === 'mqttData') {
-                    currentMqttData = data.topic_id; // 업데이트된 로봇 데이터
-                } else if (data.type === 'amrData') {
-                    currentAmrData = data.connections; // 업데이트된 연결 데이터
-                }
-
-                // 예시: 로봇 위치 업데이트 처리
-                if (data.amr_data_db) {
-                    updateRobotPosition(data.amr_data_db);
-                }
-            };
-
             socket.onclose = () => {
                 console.log('WebSocket 연결 종료');
                 setTimeout(connectWebSocket, 3000); // 연결 재시도
@@ -987,28 +971,24 @@
             }).addTo(map);
 
             let currentMqttData = []; // WebSocket으로 수신된 로봇 데이터 저장
-
             const robotListPopup = document.getElementById('robotListPopup');
             const robotList = document.getElementById('robotList');
-            const openPopupButton = document.getElementById('openPopupButton');
-            const closePopupButton = document.getElementById('closePopupButton');
 
+            // WebSocket 메시지 수신 처리
             socket.onmessage = (event) => {
                 const message = JSON.parse(event.data);
                 if (message.mqtt_data) {
-                    console.log('WebSocket 메시지 수신:', message.mqtt_data);
                     const robotData = {
                         topic_id: message.mqtt_data.topic_id,
                         status: message.mqtt_data.data.docker_3_status || 'unknown',
                         pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
                     };
-                    // 기존 데이터에 추가
-                    currentMqttData = [...currentMqttData, robotData];
+                    currentMqttData.push(robotData); // 데이터 추가
                 }
             };
 
-            // 팝업 열기 및 로봇 리스트 표시
-            function openRobotListPopup() {
+            // 로봇 리스트 팝업 열기
+            window.openRobotListPopup = () => {
                 robotList.innerHTML = ''; // 기존 리스트 초기화
 
                 // 로봇 데이터를 리스트로 추가
@@ -1019,17 +999,12 @@
                 });
 
                 robotListPopup.style.display = 'block'; // 팝업 열기
-            }
+            };
 
-            // 팝업 닫기
-            function closeRobotListPopup() {
+            // 로봇 리스트 팝업 닫기
+            window.closeRobotListPopup = () => {
                 robotListPopup.style.display = 'none';
-            }
-
-            // 버튼 이벤트 연결
-            openPopupButton.addEventListener('click', openRobotListPopup);
-            closePopupButton.addEventListener('click', closeRobotListPopup);
-
+            };
             
         });
 
