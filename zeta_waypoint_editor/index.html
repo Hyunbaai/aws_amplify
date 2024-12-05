@@ -941,7 +941,7 @@
     <!-- 새로운 DB Data 섹션 -->
     <div id="db-data-section">
         <label>[DB Data]</label>
-        <button onclick="openPathListPopup(selectedRobotId)"> DB Waypoint List </button>
+        <button onclick="openDBRobotPopup()"> DB Waypoint List </button>
         <button id="startNavigationBtn" onclick="startNavigation(selectedPathId)">Start Navigation</button>
         <button id="reverseNavigationBtn" onclick="startReverseNavigation(selectedPathId)">Reverse Waypoint</button>
     </div>
@@ -3833,31 +3833,29 @@ ${waypointsYamlStr}
         // 첫 번째 팝업에서 로봇 목록을 클릭하면 Path 목록을 표시하는 팝업을 띄움
         async function fetchRobotList() {
             try {
-                const { data: robots, error } = await supabase.from('Robot').select('id, robotId, name').order('id', { ascending: true });
-                if (error) {
-                    console.error('로봇 목록 조회 오류:', error);
+                if (!selectedRobotId) {
+                    alert("Please select a robot from the dropdown.");
                     return;
                 }
 
-                const robotListDiv = document.getElementById("robotListDisplay");
-                robotListDiv.innerHTML = ""; // 기존 내용을 지우기
+                // Supabase에서 Robot 테이블 조회
+                const { data: robots, error } = await supabase.from('Robot').select('id, robotId, name').order('id', { ascending: true });
 
-                robots.forEach(robot => {
-                    const robotItem = document.createElement("div");
-                    robotItem.style = "padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; cursor: pointer;";
-                    robotItem.innerHTML = `<strong>ID:</strong> ${robot.id}, <strong>로봇 ID:</strong> ${robot.robotId}, <strong>이름:</strong> ${robot.name}`;
+                if (error) {
+                    console.error('Robot 조회 오류:', error);
+                    return;
+                }
 
-                    // 로봇을 클릭하면 Path 목록을 표시하는 함수 호출
-                    robotItem.onclick = () => {
-                        closeDBRobotPopup();  // 첫 번째 팝업 닫기
-                        openPathListPopup(selectedRobotId);  // 두 번째 팝업 열기
-                    };
+                // SelectedRobotId와 일치하는 로봇 찾기
+                const selectedRobot = robots.find(robot => robot.robotId === selectedRobotId);
 
-                    robotListDiv.appendChild(robotItem);
-                });
+                if (!selectedRobot) {
+                    alert("Selected robot not found in the database.");
+                    return;
+                }
 
-        
-
+                // Path 목록 팝업 열기
+                openPathListPopup(selectedRobot.id); // 로봇 ID 전달
             } catch (error) {
                 console.error("Unexpected error:", error);
             }
