@@ -1100,6 +1100,8 @@
             });
         }
 
+        let robotLayer;
+
         // WebSocket 연결 초기화
         document.addEventListener('DOMContentLoaded', () => {
             connectWebSocket();
@@ -1114,6 +1116,7 @@
             let currentMqttData = []; // WebSocket으로 수신된 로봇 데이터 저장
             const robotListPopup = document.getElementById('robotListPopup');
             const robotList = document.getElementById('robotList');
+            robotLayer = L.layerGroup().addTo(map); // WebSocket을 통해 실시간 위치를 표시할 Layer
             
         });
 
@@ -1124,7 +1127,6 @@
         
 
         // Layer 그룹 설정
-        var robotLayer = L.layerGroup().addTo(map); // WebSocket을 통해 실시간 위치를 표시할 Layer
         var waypointLayer = L.layerGroup().addTo(map); // DB에서 불러온 Waypoint를 표시할 Layer
 
         
