@@ -1102,21 +1102,23 @@
 
         let robotLayer;
 
-        // WebSocket 연결 초기화
-        document.addEventListener('DOMContentLoaded', () => {
-            connectWebSocket();
-            var map = L.map('map').setView([34.9682601, 127.4821126], 17);
+        let map; // 전역 변수로 선언
 
+        function initializeMap() {
+            // Leaflet 맵 초기화
+            map = L.map('map').setView([34.9682601, 127.4821126], 17); // 서울 중심 좌표
             // OpenStreetMap 타일을 추가하여 지도에 표시
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
-
-            let currentMqttData = []; // WebSocket으로 수신된 로봇 데이터 저장
-            const robotListPopup = document.getElementById('robotListPopup');
-            const robotList = document.getElementById('robotList');
             robotLayer = L.layerGroup().addTo(map); // WebSocket을 통해 실시간 위치를 표시할 Layer
+        }
+
+        // WebSocket 연결 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            connectWebSocket();
+            initializeMap();          
             
         });
 
