@@ -1002,7 +1002,8 @@
         
         // WebSocket 데이터 관리
         let newRobotData = [];
-        let mqtt_data = [];  
+        let mqtt_data = [];
+        let nav2_data = [];
 
 
         // WebSocket 연결 설정
@@ -1047,7 +1048,34 @@
                             mqtt_data.push(incomingData);
                         }
                         console.log("Updated mqtt_data:", mqtt_data);
+                    };
+                    if (message.nav2_eta_paths){
+                        const data = JSON.parse(message.nav2_eta_paths); // JSON 파싱
+                        const { path, heading } = data;
+                        const topicId = message.topic_id; // topic_id는 메시지에서 가져옴
+
+                        // nav2_data 배열 업데이트
+                        const existingIndex = nav2_data.findIndex(item => item.topic_id === topicId);
+                        if (existingIndex !== -1) {
+                            // 기존 데이터 업데이트
+                            nav2_data[existingIndex] = {
+                                ...nav2_data[existingIndex],
+                                path: path || [],
+                                heading: heading || 0,
+                            };
+                        } else {
+                            // 새로운 데이터 추가
+                            nav2_data.push({
+                                topic_id: topicId,
+                                path: path || [],
+                                heading: heading || 0,
+                            });
+                        }
+
+                        console.log("Updated nav2_data:", nav2_data);
                     }
+                    
+
                 } catch (error){
                     console.error("Error parsing message:", error);
                 }
@@ -3040,16 +3068,17 @@ ${waypointsYamlStr}
 
             const latitude = parseFloat(selectedRobotData.data.fix_filtered_latitude) || 0;
             const longitude = parseFloat(selectedRobotData.data.fix_filtered_longitude) || 0;
+            const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
 
             // 지도 업데이트
-            updateMap(latitude, longitude, robotId);
+            updateMap(latitude, longitude, robotId, heading);
 
             // 팝업 닫기
             closeRobotListPopup();
         }
 
         // 지도 업데이트 함수
-        function updateMap(latitude, longitude, robotId) {
+        function updateMap(latitude, longitude, robotId, heading) {
             if (robotLayer) {
                 robotLayer.clearLayers(); // 기존 마커 초기화
             }
@@ -3058,7 +3087,7 @@ ${waypointsYamlStr}
                 title: name,
                 icon: L.divIcon({
                     className: 'custom-div-icon',
-                    html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-yaw}rad);"/>`,
+                    html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-heading}rad);"/>`,
                     iconSize: [15, 15],
                 }),
                 draggable: false,
