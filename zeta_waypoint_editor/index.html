@@ -1024,9 +1024,6 @@
                 if (message.mqtt_data) {
                     const newRobotData = {
                         topic_id: message.mqtt_data.topic_id,
-                        status: message.mqtt_data.data.docker_3_status || 'unknown',
-                        pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
-                        connectionId: message.connection_id || 'No Connection' // 연결 정보 추가
                     };
 
                     // 중복 확인
@@ -1034,8 +1031,6 @@
                     if (!exists) {
                         currentMqttData.push(newRobotData);
                         console.log('Added new robot data:', newRobotData);
-                    } else {
-                        console.log('Duplicate data ignored:', newRobotData);
                     }
                 }
             };
