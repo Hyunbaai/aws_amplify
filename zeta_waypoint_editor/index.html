@@ -946,21 +946,6 @@
         <button id="reverseNavigationBtn" onclick="startReverseNavigation(selectedPathId)">Reverse Waypoint</button>
     </div>
 
-    <!-- DB Robot 데이터 표시 팝업 -->
-    <div id="dbRobotPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); z-index: 1000;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0; font-size: 18px;">DB Robot 목록</h3>
-            <div style="display: flex; gap: 8px;">
-                <button onclick="openAddRobotPopup()" style="background: none; border: none; font-size: 14px; padding: 5px 10px; background-color: #007bff; color: white; border-radius: 5px; cursor: pointer;">+Add</button>
-                <button onclick="closeDBRobotPopup()" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer;">&times;</button>
-            </div>
-        </div>
-
-        <div id="robotListDisplay" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px;"></div>
-
-        <button onclick="closeDBRobotPopup()" style="margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">닫기</button>
-    </div>
-
     <!-- Path 목록을 표시하는 팝업 -->
     <div id="pathListPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); z-index: 1000;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
