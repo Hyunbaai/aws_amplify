@@ -3067,7 +3067,7 @@ ${waypointsYamlStr}
             }
 
             // mqtt_data에서 로봇 위치 찾기
-            const selectedRobotData = mqtt_data.find(data => data.topic_id === robotId);
+            const selectedRobotData = mqtt_data.find(data => String(data.topic_id).trim().toLowerCase() === String(robotId).trim().toLowerCase());
             if (!selectedRobotData) {
                 alert('Unable to find robot location data!');
                 return;
