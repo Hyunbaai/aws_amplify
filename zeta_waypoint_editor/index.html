@@ -1024,7 +1024,6 @@
                 if (message.mqtt_data) {
                     const newRobotData = {
                         topic_id: message.mqtt_data.topic_id,
-                        name: getRobotNameById(message.mqtt_data.topic_id), // 로봇 이름 가져오기
                         status: message.mqtt_data.data.docker_3_status || 'unknown',
                         pressure: message.mqtt_data.data.bumper_pressure_pa || 'N/A',
                         connectionId: message.connection_id || 'No Connection' // 연결 정보 추가
@@ -2932,11 +2931,11 @@ ${waypointsYamlStr}
                 const matchedData = currentMqttData.find(data => data.topic_id === robot.robotId);
                 const connectionId = matchedData ? matchedData.connectionId : 'No Connection';
 
-                // 리스트 아이템 생성
+                // 연결되지 않은 로봇은 선택 불가 처리
                 const li = document.createElement('li');
                 li.style = `
                     padding: 10px; 
-                    background-color: #f9f9f9; 
+                    background-color: ${connectionId ? '#d4f8d4' : '#f9d4d4'}; 
                     border: 1px solid #ddd; 
                     border-radius: 10px; 
                     margin-bottom: 10px; 
@@ -2944,11 +2943,19 @@ ${waypointsYamlStr}
                     display: flex; 
                     justify-content: space-between; 
                     align-items: center;
+                    cursor: ${connectionId ? 'pointer' : 'not-allowed'};
                 `;
                 li.innerHTML = `
-                    <strong>Robot Name:</strong> ${robot.name} (${robot.robotId})<br>
-                    <strong>Connection ID:</strong> ${connectionId}
+                    <span>
+                        <strong>Robot Name:</strong> ${robot.name} (${robot.robotId})<br>
+                        <strong>Connection ID:</strong> ${connectionId || 'No Connection'}
+                    </span>
                 `;
+
+                // 연결된 로봇만 선택 가능
+                if (connectionId) {
+                    li.onclick = () => selectRobot(robot.name, robot.robotId, connectionId);
+                }
 
                 robotList.appendChild(li);
             });
@@ -2987,29 +2994,26 @@ ${waypointsYamlStr}
             }
         }
 
-
-        // 선택된 로봇을 드롭다운에 추가
-        function selectRobot(name, topic_id, connection_id) {
-            const dropdown = document.getElementById("selectedRobotDropdown");
+        function selectRobot(name, robotId, connectionId) {
+            const dropdown = document.getElementById('selectedRobotDropdown');
 
             // 중복 추가 방지
-            const exists = Array.from(dropdown.options).some(
-                (option) => option.value === topic_id
-            );
+            const exists = Array.from(dropdown.options).some(option => option.value === robotId);
             if (exists) {
-                alert("This robot is already in the dropdown!");
+                alert('This robot is already selected!');
                 return;
             }
 
             // 드롭다운에 로봇 추가
-            const option = document.createElement("option");
-            option.value = topic_id;
-            option.textContent = `Robot Name: ${name} (${topic_id}) / Connection ID: ${connection_id}`;
+            const option = document.createElement('option');
+            option.value = robotId;
+            option.textContent = `Robot Name: ${name} (${robotId}) / Connection ID: ${connectionId}`;
             dropdown.appendChild(option);
 
             // 팝업 닫기
             closeRobotListPopup();
         }
+
 
 
 
