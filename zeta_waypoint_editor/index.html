@@ -1018,20 +1018,24 @@
 
             // WebSocket 메시지 수신 처리
             socket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                console.log('Received message:', message);
+                try{
+                    const message = JSON.parse(event.data);
+                    console.log('Received message:', message);
 
-                if (message.mqtt_data) {
-                    const newRobotData = {
-                        topic_id: message.mqtt_data.topic_id,
+                    if (message.amr_data_db && Array.isArray(message.amr_data_db)) {
+                        const newRobotData = message.amr_data_db.map((amrData) => {
+                            return {
+                                connection_id: amrData.connection_id,
+                                robot_id: amrData.data?.robot_id || null,
+                                timestamp: amrData.data?.timestamp || null,
+                                status: amrData.data?.system_values?.status || "unknown",
+                            };
+                        });
+
+                        console.log("New Robot Data:", newRobotData);  
                     };
-
-                    // 중복 확인
-                    const exists = currentMqttData.some((robot) => robot.topic_id === newRobotData.topic_id);
-                    if (!exists) {
-                        currentMqttData.push(newRobotData);
-                        console.log('Added new robot data:', newRobotData);
-                    }
+                } catch (error){
+                    console.error("Error parsing message:", error);
                 }
             };
 
