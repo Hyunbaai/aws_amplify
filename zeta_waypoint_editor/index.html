@@ -1002,7 +1002,7 @@
         
         // WebSocket 데이터 관리
         let newRobotData = [];
-        let currentAmrData = [];  // AMR 연결 데이터
+        let mqtt_data = [];  // AMR 연결 데이터
 
 
         // WebSocket 연결 설정
@@ -1034,6 +1034,9 @@
 
                         console.log("New Robot Data:", newRobotData);  
                     };
+                    if (message.mqtt_data) {
+                        mqtt_data = message.mqtt_data;
+                    }
                 } catch (error){
                     console.error("Error parsing message:", error);
                 }
