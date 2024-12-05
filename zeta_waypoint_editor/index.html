@@ -2927,7 +2927,9 @@ ${waypointsYamlStr}
 
             // WebSocket의 currentMqttData와 연결 상태를 확인
             robots.forEach(robot => {
-                const matchedData = newRobotData.find(data => data.topic_id === robot.robotId);
+                const matchedData = newRobotData.find(data => 
+                data.robot_id.trim().toLowerCase() === robot.robotId.trim().toLowerCase()
+            );
                 const connectionId = matchedData ? matchedData.connection_id : null;
 
                  // 연결되지 않은 로봇은 선택 불가 처리
