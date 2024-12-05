@@ -3002,40 +3002,52 @@ ${waypointsYamlStr}
         }
 
         function selectRobot(name, robotId, connectionId) {
-            document.getElementById('selectedRobotDropdown').addEventListener('change', function () {
-                const robotId = this.value;
+            const dropdown = document.getElementById('selectedRobotDropdown');
 
-                // 선택된 로봇의 데이터를 newRobotData에서 찾기
-                const selectedRobot = newRobotData.find(robot => robot.robot_id === robotId);
-                if (!selectedRobot) {
-                    alert('선택된 로봇의 데이터를 찾을 수 없습니다!');
-                    return;
-                }
-
-                const latitude = parseFloat(selectedRobot.data.fix_filtered_latitude) || 0;
-                const longitude = parseFloat(selectedRobot.data.fix_filtered_longitude) || 0;
-
-                // 지도 업데이트
-                updateMap(latitude, longitude, robotId);
-            });
-        }
-
-        function updateMap(latitude, longitude, robotId) {
-            // 기존 마커 삭제
-            if (robotLayer) {
-                robotLayer.clearLayers();
+            // 중복 추가 방지
+            const exists = Array.from(dropdown.options).some(option => option.value === robotId);
+            if (exists) {
+                alert('This robot is already selected!');
+                return;
             }
 
+            // 드롭다운에 로봇 추가
+            const option = document.createElement('option');
+            option.value = robotId;
+            option.textContent = `${name} (${robotId})`;
+            dropdown.appendChild(option);
 
-            // 새로운 마커 추가
+            // mqtt_data에서 로봇 위치 찾기
+            const selectedRobotData = mqtt_data.find(data => data.topic_id === robotId);
+            if (!selectedRobotData) {
+                alert('Unable to find robot location data!');
+                return;
+            }
+
+            const latitude = parseFloat(selectedRobotData.data.fix_filtered_latitude) || 0;
+            const longitude = parseFloat(selectedRobotData.data.fix_filtered_longitude) || 0;
+
+            // 지도 업데이트
+            updateMap(latitude, longitude, robotId);
+
+            // 팝업 닫기
+            closeRobotListPopup();
+        }
+
+        // 지도 업데이트 함수
+        function updateMap(latitude, longitude, robotId) {
+            if (robotLayer) {
+                robotLayer.clearLayers(); // 기존 마커 초기화
+            }
+
             const marker = L.marker([latitude, longitude],{
                 title: name,
-                        icon: L.divIcon({
-                            className: 'custom-div-icon',
-                            html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-yaw}rad);"/>`,
-                            iconSize: [15, 15],
-                        }),
-                        draggable: false,
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-yaw}rad);"/>`,
+                    iconSize: [15, 15],
+                }),
+                draggable: false,
             }).addTo(robotLayer);
             marker.bindPopup(`<strong>Robot ID:</strong> ${robotId}`).openPopup();
 
