@@ -1004,6 +1004,7 @@
         let newRobotData = [];
         let mqtt_data = [];
         let nav2_data = [];
+        let selectedRobotID = null;
 
 
         // WebSocket 연결 설정
@@ -1093,7 +1094,6 @@
 
 
         let robotLayer;
-
         let map; // 전역 변수로 선언
 
         function initializeMap(initialMapType = 'robot') {
@@ -1106,7 +1106,7 @@
             const selectedUrl = tileUrls[initialMapType];
 
             // Leaflet 맵 초기화
-            map = L.map('map').setView([34.9682601, 127.4821126], 17); // 서울 중심 좌표
+            map = L.map('map').setView([37.60749551, 126.8917684], 17); // 서울 중심 좌표
             // OpenStreetMap 타일을 추가하여 지도에 표시
             L.tileLayer(selectedUrl, {
                 maxZoom: 19,
@@ -1142,7 +1142,7 @@
         let controlPoints = [];             // Control Points를 저장할 배열
         let tempLabel = '';                 
         let robots = {};                    // 로봇 정보를 저장하는 객체
-        let selectedRobotID = null;         // 선택된 로봇을 저장하는 변수
+        
         let selectedWaypointSocket = {};    // 선택된 로봇의 waypoint websocket을 저장
         let selectedControlSocket = {};     // 선택된 로봇의 control websocket을 저장
         let selectedSpeedSocket = {};       // 선택된 로봇의 speed websocket을 저장
@@ -2117,25 +2117,6 @@ ${waypointsYamlStr}
             .catch(error => console.error('Error:', error));
         }
 
-        // YAML 파일 목록 선택 함수
-        function selectFile(fileName) {
-            fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
-                .then(response => response.json())
-                .then(fileContent => {
-                    console.log(`Selected File: ${fileName}`);
-                    
-                    // Waypoint Load 함수 실행
-                    loadWaypoints(fileContent, selectedRobotID, true);
-
-                    // 팝업 닫기
-                    waypointPopup.style.display = 'none';
-                    overlay.style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error loading file:', error);
-                });
-        }
-
         // YAML 파일 삭제 확인 팝업 함수
         function openDeletePopup(fileName) {
             document.getElementById('deleteConfirmationPopup').style.display = 'flex';
@@ -3029,7 +3010,7 @@ ${waypointsYamlStr}
 
         function handleRobotSelectionChange() {
             const dropdown = document.getElementById('selectedRobotDropdown');
-            const selectedRobotId = dropdown.value;
+            selectedRobotId = dropdown.value;
 
             // mqtt_data에서 로봇 데이터 찾기
             const selectedRobotData = mqtt_data.find(data => data.topic_id === selectedRobotId);
@@ -3055,7 +3036,7 @@ ${waypointsYamlStr}
 
         function selectRobot(name, robotId, connectionId) {
             const dropdown = document.getElementById('selectedRobotDropdown');
-            const selectedRobotId = dropdown.value;
+            selectedRobotId = dropdown.value;
 
             // 중복 추가 방지
             const exists = Array.from(dropdown.options).some(option => option.value === robotId);
@@ -3089,20 +3070,20 @@ ${waypointsYamlStr}
             // const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
 
             // 지도 업데이트
-            updateMap(latitude, longitude, robotId);
+            updateMap(latitude, longitude, name);
 
             // 팝업 닫기
             closeRobotListPopup();
         }
 
         // 지도 업데이트 함수
-        function updateMap(latitude, longitude, robotId) {
+        function updateMap(latitude, longitude, name) {
             if (robotLayer) {
                 robotLayer.clearLayers(); // 기존 마커 초기화
             }
 
             const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-            marker.bindPopup(`<strong>Robot ID:</strong> ${robotId}`).openPopup();
+            marker.bindPopup(`<strong>Robot:</strong> ${name}`).openPopup();
 
             // 지도 중심 이동
             map.setView([latitude, longitude], 17);
@@ -3869,7 +3850,7 @@ ${waypointsYamlStr}
                     // 로봇을 클릭하면 Path 목록을 표시하는 함수 호출
                     robotItem.onclick = () => {
                         closeDBRobotPopup();  // 첫 번째 팝업 닫기
-                        openPathListPopup(robot.id);  // 두 번째 팝업 열기
+                        openPathListPopup(selectedRobotId);  // 두 번째 팝업 열기
                     };
 
                     robotListDiv.appendChild(robotItem);
