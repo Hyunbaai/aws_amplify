@@ -3060,11 +3060,11 @@ ${waypointsYamlStr}
             dropdown.appendChild(option);
 
             // nav2_data에서 선택한 로봇의 데이터 찾기
-            const selectedNav2Data = nav2_data.find(data => data.topic_id === robotId);
-            if (!selectedNav2Data) {
-                alert('Unable to find robot navigation data!');
-                return;
-            }
+            // const selectedNav2Data = nav2_data.find(data => data.topic_id === robotId);
+            // if (!selectedNav2Data) {
+            //     alert('Unable to find robot navigation data!');
+            //     return;
+            // }
 
             // mqtt_data에서 로봇 위치 찾기
             const selectedRobotData = mqtt_data.find(data => String(data.topic_id).trim().toLowerCase() === String(robotId).trim().toLowerCase());
@@ -3075,7 +3075,7 @@ ${waypointsYamlStr}
 
             const latitude = parseFloat(selectedRobotData.data.fix_filtered_latitude) || 0;
             const longitude = parseFloat(selectedRobotData.data.fix_filtered_longitude) || 0;
-            const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
+            // const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
 
             // 지도 업데이트
             updateMap(latitude, longitude, robotId, heading);
@@ -3090,15 +3090,7 @@ ${waypointsYamlStr}
                 robotLayer.clearLayers(); // 기존 마커 초기화
             }
 
-            const marker = L.marker([latitude, longitude],{
-                title: name,
-                icon: L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-heading}rad);"/>`,
-                    iconSize: [15, 15],
-                }),
-                draggable: false,
-            }).addTo(robotLayer);
+            const marker = L.marker([latitude, longitude]).addTo(robotLayer);
             marker.bindPopup(`<strong>Robot ID:</strong> ${robotId}`).openPopup();
 
             // 지도 중심 이동
