@@ -2919,30 +2919,42 @@ ${waypointsYamlStr}
         // ==================================================================
 
         // 팝업 열기
-        function openRobotListPopup() {
-            const robotList = document.getElementById('robotList');
+        async function openRobotListPopup() {
             const robotListPopup = document.getElementById('robotListPopup');
-            robotList.innerHTML = ''; // 기존 리스트 초기화
+            const robotList = document.getElementById('robotList');
+            robotList.innerHTML = ''; // 기존 항목 초기화
 
-             // Robot 데이터를 바탕으로 리스트 생성
-            currentMqttData.forEach(robot => {
-                const connections = currentAmrData.filter(conn => conn.robot_id === robot.topic_id);
-                const connectionId = connections.length > 0 ? connections[connections.length - 1].connection_id : 'No Connection';
+            // Supabase에서 데이터 가져오기
+            const robots = await fetchRobotData();
 
-                // 리스트 항목 생성
-                const listItem = document.createElement('li');
-                listItem.style = "padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px;";
+            // WebSocket의 currentMqttData와 연결 상태를 확인
+            robots.forEach(robot => {
+                const matchedData = currentMqttData.find(data => data.topic_id === robot.robotId);
+                const connectionId = matchedData ? matchedData.connectionId : 'No Connection';
 
-                // Robot Name, Topic ID, Connection ID 표시
-                listItem.innerHTML = `
-                    <strong>Robot Name:</strong> ${getRobotNameById(robot.topic_id)} (${robot.topic_id})<br>
+                // 리스트 아이템 생성
+                const li = document.createElement('li');
+                li.style = `
+                    padding: 10px; 
+                    background-color: #f9f9f9; 
+                    border: 1px solid #ddd; 
+                    border-radius: 10px; 
+                    margin-bottom: 10px; 
+                    font-size: 1rem; 
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: center;
+                `;
+                li.innerHTML = `
+                    <strong>Robot Name:</strong> ${robot.name} (${robot.robotId})<br>
                     <strong>Connection ID:</strong> ${connectionId}
                 `;
 
-                robotList.appendChild(listItem);
+                robotList.appendChild(li);
             });
 
-            robotListPopup.style.display = 'block'; // 팝업 표시
+            // 팝업 보이기
+            robotListPopup.style.display = 'block';
         }
 
         // Robot Name 조회 함수
@@ -2955,6 +2967,24 @@ ${waypointsYamlStr}
         function closeRobotListPopup() {
             const robotListPopup = document.getElementById('robotListPopup');
             robotListPopup.style.display = 'none';
+        }
+
+        async function fetchRobotData() {
+            try {
+                const { data: robots, error } = await supabase
+                    .from('Robot') // 테이블 이름
+                    .select('robotId, name'); // 필요한 컬럼만 선택
+
+                if (error) {
+                    console.error('Error fetching robots:', error);
+                    return [];
+                }
+
+                return robots || [];
+            } catch (error) {
+                console.error('Unexpected error:', error);
+                return [];
+            }
         }
 
 
