@@ -3059,6 +3059,13 @@ ${waypointsYamlStr}
             option.textContent = `${name} (${robotId})`;
             dropdown.appendChild(option);
 
+            // nav2_data에서 선택한 로봇의 데이터 찾기
+            const selectedNav2Data = nav2_data.find(data => data.topic_id === robotId);
+            if (!selectedNav2Data) {
+                alert('Unable to find robot navigation data!');
+                return;
+            }
+
             // mqtt_data에서 로봇 위치 찾기
             const selectedRobotData = mqtt_data.find(data => data.topic_id === robotId);
             if (!selectedRobotData) {
