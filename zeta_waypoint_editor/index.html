@@ -1091,20 +1091,12 @@
             };
         }
 
-        // 로봇 위치 업데이트 (예제 함수)
-        function updateRobotPosition(robotData) {
-            robotData.forEach(robot => {
-                const { robot_id, position } = robot.data;
-                console.log(`로봇 ${robot_id} 위치:`, position);
-                // 지도에 로봇 위치 업데이트 로직 추가 가능
-            });
-        }
 
         let robotLayer;
 
         let map; // 전역 변수로 선언
 
-        function initializeMap(initialMapType = 'site') {
+        function initializeMap(initialMapType = 'robot') {
             const tileUrls = {
                 site: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
                 robot: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
@@ -1178,26 +1170,6 @@
         let linearSpeed = 0.5;              // 로봇 원격 제어의 초기 선속도
         let angularSpeed = 0.5;             // 로봇 원격 제어의 초기 각속도
 
-
-        // 로봇 마커 레이어
-        // const robotMarkers = {};
-
-        // // 로봇 위치 업데이트 함수
-        // function updateRobotPosition(robotData) {
-        //     robotData.forEach(robot => {
-        //         const { robot_id, position } = robot.data;
-        //         const { latitude, longitude } = position;
-
-        //         // 기존 마커가 있는지 확인
-        //         if (robotMarkers[robot_id]) {
-        //             robotMarkers[robot_id].setLatLng([latitude, longitude]);
-        //         } else {
-        //             // 새 마커 생성
-        //             const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-        //             robotMarkers[robot_id] = marker;
-        //         }
-        //     });
-        // }
 
         // Mobile 손가락 제어 변수 세팅
         $.Finger = {
