@@ -1036,7 +1036,7 @@
                     };
                     if (message.mqtt_data && Array.isArray(message.mqtt_data)) {
                         const incomingData = message.mqtt_data;
-                        
+
                         // 기존 mqtt_data 배열 업데이트
                         const existingIndex = mqtt_data.findIndex(data => data.topic_id === incomingData.topic_id);
                         if (existingIndex !== -1) {
@@ -1046,6 +1046,7 @@
                             // 새로운 데이터 추가
                             mqtt_data.push(incomingData);
                         }
+                        console.log("Updated mqtt_data:", mqtt_data);
                     }
                 } catch (error){
                     console.error("Error parsing message:", error);
