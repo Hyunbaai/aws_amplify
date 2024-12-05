@@ -1001,7 +1001,7 @@
         let socket; // WebSocket 객체
         
         // WebSocket 데이터 관리
-        let currentMqttData = []; // MQTT 로봇 데이터
+        let newRobotData = [];
         let currentAmrData = [];  // AMR 연결 데이터
 
 
@@ -1023,7 +1023,7 @@
                     console.log('Received message:', message);
 
                     if (message.amr_data_db && Array.isArray(message.amr_data_db)) {
-                        const newRobotData = message.amr_data_db.map((amrData) => {
+                        newRobotData = message.amr_data_db.map((amrData) => {
                             return {
                                 connection_id: amrData.connection_id,
                                 robot_id: amrData.data?.robot_id || null,
@@ -2927,10 +2927,10 @@ ${waypointsYamlStr}
 
             // WebSocket의 currentMqttData와 연결 상태를 확인
             robots.forEach(robot => {
-                const matchedData = currentMqttData.find(data => data.topic_id === robot.robotId);
-                const connectionId = matchedData ? matchedData.connectionId : 'No Connection';
+                const matchedData = newRobotData.find(data => data.topic_id === robot.robotId);
+                const connectionId = matchedData ? matchedData.connection_id : null;
 
-                // 연결되지 않은 로봇은 선택 불가 처리
+                 // 연결되지 않은 로봇은 선택 불가 처리
                 const li = document.createElement('li');
                 li.style = `
                     padding: 10px; 
@@ -2958,6 +2958,25 @@ ${waypointsYamlStr}
 
                 robotList.appendChild(li);
             });
+
+                // 팝업 창 스타일 수정 (너비 최대)
+                robotListPopup.style = `
+                    display: block;
+                    width: 100%; /* 너비를 화면 최대 */
+                    height: auto;
+                    max-height: 90vh; /* 화면 높이를 넘지 않도록 제한 */
+                    overflow-y: auto; /* 스크롤 가능 */
+                    padding: 20px;
+                    background-color: white;
+                    border: 1px solid #ddd;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    position: fixed;
+                    top: 10%;
+                    left: 0;
+                    z-index: 1000;
+                `;
+            
 
             // 팝업 보이기
             robotListPopup.style.display = 'block';
