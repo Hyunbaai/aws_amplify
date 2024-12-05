@@ -3078,14 +3078,14 @@ ${waypointsYamlStr}
             // const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
 
             // 지도 업데이트
-            updateMap(latitude, longitude, robotId, heading);
+            updateMap(latitude, longitude, robotId);
 
             // 팝업 닫기
             closeRobotListPopup();
         }
 
         // 지도 업데이트 함수
-        function updateMap(latitude, longitude, robotId, heading) {
+        function updateMap(latitude, longitude, robotId) {
             if (robotLayer) {
                 robotLayer.clearLayers(); // 기존 마커 초기화
             }
@@ -3096,9 +3096,6 @@ ${waypointsYamlStr}
             // 지도 중심 이동
             map.setView([latitude, longitude], 17);
         }
-
-
-
 
         // 로봇의 상태를 시각화하는 함수
         function setupStatusSocket(id) {
