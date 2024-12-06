@@ -3073,9 +3073,13 @@ ${waypointsYamlStr}
 
         // 지도 업데이트 함수
         function updateMap(latitude, longitude, name) {
-            if (robotLayer) {
-                robotLayer.clearLayers(); // 기존 마커 초기화
+            if (!map) {
+                console.error("Map is not initialized!");
+                return;
             }
+
+            // 선택된 로봇의 마커 업데이트
+            updateMarkerPosition(selectedRobotId, latitude, longitude);
 
             // 지도 중심 이동
             map.setView([latitude, longitude], 17);
@@ -3832,7 +3836,6 @@ ${waypointsYamlStr}
          // DB Robot 팝업 열기 및 데이터 조회 함수
          async function openDBRobotPopup() {
             await fetchRobotList(); // 로봇 목록 조회 후 팝업 열기
-            document.getElementById("dbRobotPopup").style.display = "block"; // 팝업 표시
         }
 
         // DB Robot 팝업 닫기 함수
