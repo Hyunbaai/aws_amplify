@@ -4267,7 +4267,7 @@ ${waypointsYamlStr}
                 currentPathWaypoints = waypoints; // 현재 경로의 Waypoints를 저장
 
                 waypoints.forEach((waypoint, index) => {
-                    const { id, latitude, longitude, name, type, yaw, color } = waypoint;
+                    const { id, latitude, longitude, name, type, yaw } = waypoint;
                     const latlng = [latitude, longitude];
                     
 
@@ -4287,7 +4287,14 @@ ${waypointsYamlStr}
                     // Waypoints 간의 선 연결
                     if (index > 0) {
                         const previousLatLng = [waypoints[index - 1].latitude, waypoints[index - 1].longitude];
-                        const polyline = L.polyline([previousLatLng, latlng], { color: color || '#3388ff' }).addTo(waypointLayer);
+                        const currentDistance = map.distance(previousLatLng, latlng); // 두 점 사이 거리 계산
+                        
+                        // 거리 기준 초과 시 로그 출력
+                        if (currentDistance > 100) { // 예: 100m 이상이면 경고
+                            console.warn(`Unusual distance between waypoints ${waypoints[index - 1].id} and ${id}: ${currentDistance} meters`);
+                        }
+
+                        const polyline = L.polyline([previousLatLng, latlng], { color: '#808080' }).addTo(waypointLayer); // 회색으로 통일
                     }
                 });
             } catch (error) {
