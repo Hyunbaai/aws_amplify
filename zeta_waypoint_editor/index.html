@@ -990,6 +990,7 @@
         let mqtt_data = [];
         let nav2_data = [];
         let selectedRobotID = null;
+        const robotMarkers = {};
 
 
         // WebSocket 연결 설정
@@ -3055,23 +3056,38 @@ ${waypointsYamlStr}
             // const heading = selectedNav2Data.heading || 0; // heading 값 가져오기
 
             // 지도 업데이트
-            updateMap(latitude, longitude, name);
+            updateMap(latitude, longitude, name, robotId, true);
 
             // 팝업 닫기
             closeRobotListPopup();
         }
 
         // 지도 업데이트 함수
-        function updateMap(latitude, longitude, name) {
-            if (robotLayer) {
-                robotLayer.clearLayers(); // 기존 마커 초기화
+        function updateMap(latitude, longitude, name, robotId, moveMap = false) {
+
+            if (!robotLayer) {
+                console.error("Robot layer is not initialized!");
+                return;
             }
 
-            const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-            marker.bindPopup(`<strong>Robot:</strong> ${name}`).openPopup();
+            let marker = robotMarkers[robotId];
 
-            // 지도 중심 이동
-            map.setView([latitude, longitude], 17);
+            if (marker) {
+                // 기존 마커의 위치 업데이트
+                marker.setLatLng([latitude, longitude]);
+            } else {
+                // 새로운 마커 생성
+                marker = L.marker([latitude, longitude]).addTo(robotLayer);
+                marker.bindPopup(`<strong>Robot:</strong> ${name}`).openPopup();
+                robotMarkers[robotId] = marker; // 마커 저장
+            }
+
+            // 선택된 로봇일 경우 지도 중심 이동
+            if (moveMap && selectedRobotId === robotId) {
+                map.setView([latitude, longitude], 17);
+            }
+
+
         }
 
         // 로봇의 상태를 시각화하는 함수
