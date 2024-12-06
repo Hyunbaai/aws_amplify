@@ -1091,6 +1091,10 @@
         let robotLayer = null;
         let waypointLayer = null;
         let map; // 전역 변수로 선언
+        
+        // Waypoint 데이터를 저장할 변수
+        let currentPathWaypoints = [];
+        let currentWaypointIndex = 0; // 현재 Waypoint의 인덱스
 
         function initializeMap(initialMapType = 'robot') {
             const tileUrls = {
@@ -4239,9 +4243,7 @@ ${waypointsYamlStr}
             }
         }
 
-        // Waypoint 데이터를 저장할 변수
-        let currentPathWaypoints = [];
-        let currentWaypointIndex = 0; // 현재 Waypoint의 인덱스
+        
         
         
 
