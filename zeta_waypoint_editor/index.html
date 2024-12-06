@@ -3077,9 +3077,6 @@ ${waypointsYamlStr}
                 robotLayer.clearLayers(); // 기존 마커 초기화
             }
 
-            const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-            marker.bindPopup(`<strong>Robot:</strong> ${name}`).openPopup();
-
             // 지도 중심 이동
             map.setView([latitude, longitude], 17);
         }
