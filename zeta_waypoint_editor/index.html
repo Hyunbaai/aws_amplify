@@ -3091,16 +3091,25 @@ ${waypointsYamlStr}
                 return;
             }
 
-            let marker = robotMarkers[robotId];
-
-            if (marker) {
-                // 기존 마커 위치 업데이트
-                marker.setLatLng([latitude, longitude]);
+             // 기존 마커가 존재하면 위치 업데이트
+            if (robotMarkers[robotId]) {
+                robotMarkers[robotId].setLatLng([latitude, longitude]);
             } else {
-                // 새로운 마커 생성
-                marker = L.marker([latitude, longitude]).addTo(robotLayer);
-                robotMarkers[robotId] = marker; // 마커 저장
+                // 새 마커 생성
+                const marker = L.marker([latitude, longitude]).addTo(robotLayer);
+                marker.bindPopup(`<strong>Robot:</strong> ${robotId}`).openPopup();
+
+                // 마커를 robotMarkers에 저장
+                robotMarkers[robotId] = marker;
             }
+
+            // 다른 로봇의 마커는 제거
+            Object.keys(robotMarkers).forEach(id => {
+                if (id !== robotId) {
+                    robotLayer.removeLayer(robotMarkers[id]); // 지도에서 제거
+                    delete robotMarkers[id]; // robotMarkers 객체에서 제거
+                }
+            });
         }
 
         // 로봇의 상태를 시각화하는 함수
