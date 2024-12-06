@@ -4198,13 +4198,6 @@ ${waypointsYamlStr}
                     return;
                 }
 
-                // Waypoints 정렬 및 방향 반전 (옵션)
-                const waypointsToSend = reverse
-                    ? waypoints.reverse().map(wp => ({
-                        ...wp,
-                        yaw: (wp.yaw + Math.PI) % (2 * Math.PI), // 반전된 yaw 값
-                    }))
-                    : waypoints;
 
                 // connection_id 찾기
                 const matchedRobotData = mqtt_data.find(data =>
@@ -4218,15 +4211,28 @@ ${waypointsYamlStr}
 
                 const connectionId = matchedRobotData.connection_id;
 
-                // WebSocket 데이터 구조 생성
-                const pathData = {
-                    command: "path",
-                    connection_id: connectionId,
-                    robot_id: selectedRobotId,
-                    path_id: pathId,
-                    waypoint_id: -1,
-                    type: commandType,
+                if(reverse){
+                    // WebSocket 데이터 구조 생성
+                    const pathData = {
+                        command: "path",
+                        connection_id: connectionId,
+                        robot_id: selectedRobotId,
+                        path_id: pathId,
+                        waypoint_id: -2,
+                        type: commandType,
+                    };
                 };
+                else{
+                    // WebSocket 데이터 구조 생성
+                    const pathData = {
+                        command: "path",
+                        connection_id: connectionId,
+                        robot_id: selectedRobotId,
+                        path_id: pathId,
+                        waypoint_id: -1,
+                        type: commandType,
+                    };
+                }
 
                 console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
                 socket.send(JSON.stringify(pathData));
