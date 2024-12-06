@@ -4263,6 +4263,9 @@ ${waypointsYamlStr}
                     console.error('Waypoint 데이터 조회 오류:', error);
                     return;
                 }
+                waypoints.forEach((waypoint, index) => {
+                    console.log(`Waypoint ${index}: Name=${waypoint.name}, Latitude=${waypoint.latitude}, Longitude=${waypoint.longitude}`);
+                });
 
                 currentPathWaypoints = waypoints; // 현재 경로의 Waypoints를 저장
 
