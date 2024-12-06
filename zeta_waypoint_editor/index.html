@@ -1104,10 +1104,11 @@
             map = L.map('map').setView([37.60749551, 126.8917684], 17); // 서울 중심 좌표
             // OpenStreetMap 타일을 추가하여 지도에 표시
             L.tileLayer(selectedUrl, {
-                maxZoom: 19,
+                maxZoom: 18,
                 attribution: '© OpenStreetMap <a href="https://main.d32zil74wpx5uc.amplifyapp.com/">ZETA</a>'
             }).addTo(map);
             robotLayer = L.layerGroup().addTo(map); // WebSocket을 통해 실시간 위치를 표시할 Layer
+            waypointLayer = L.layerGroup().addTo(map); // DB에서 불러온 Waypoint를 표시할 Layer
         }
 
         // WebSocket 연결 초기화
@@ -1124,7 +1125,7 @@
         
 
         // Layer 그룹 설정
-        var waypointLayer = L.layerGroup().addTo(map); // DB에서 불러온 Waypoint를 표시할 Layer
+        
 
         
         let waypoints = [];                 // Waypoints를 저장할 배열
