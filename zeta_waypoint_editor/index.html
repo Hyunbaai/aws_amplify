@@ -3070,6 +3070,10 @@ ${waypointsYamlStr}
                 return;
             }
 
+           
+            robotLayer.clearLayers(); // 기존 마커 초기화
+           
+
             let marker = robotMarkers[robotId];
 
             if (marker) {
