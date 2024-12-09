@@ -4259,19 +4259,6 @@ ${waypointsYamlStr}
                 }
 
                 console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
-
-                // ACK 처리 로직
-                const ackPromise = new Promise((resolve, reject) => {
-                    ackPromises.current.set(requestId, resolve);
-
-                    setTimeout(() => {
-                        if (ackPromises.current.has(requestId)) {
-                            ackPromises.current.delete(requestId);
-                            reject(new Error("ACK not received within timeout"));
-                        }
-                    }, 10000); // 10초 타임아웃
-                });
-
                 socket.send(JSON.stringify(pathData));
             } catch (error) {
                 console.error("Unexpected error while loading waypoints from database:", error);
