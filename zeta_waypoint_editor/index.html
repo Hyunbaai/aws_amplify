@@ -2943,14 +2943,37 @@ ${waypointsYamlStr}
                     </span>
                 `;
 
+                robotList.appendChild(li);
+
                 // 연결된 로봇만 선택 가능
                 if (connectionId) {
                     li.onclick = () => selectRobot(robot.name, robot.robotId, connectionId);
                 }
 
-                robotList.appendChild(li);
             });
 
+            // 닫기 버튼 추가 및 스타일 적용
+            const closeButton = document.createElement('button');
+            closeButton.innerText = 'Close';
+            closeButton.style = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 10px 20px;
+                font-size: 1.2rem;
+                color: white;
+                background-color: #ff5555; /* 닫기 버튼 색상 */
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            `;
+
+            closeButton.onclick = closeRobotListPopup;
+
+
+            
+            robotListPopup.appendChild(closebutton);
             // 팝업 보이기
             robotListPopup.style.display = 'block';
 
