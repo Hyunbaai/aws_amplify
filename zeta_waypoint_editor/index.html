@@ -3006,7 +3006,7 @@ ${waypointsYamlStr}
         function selectRobot(name, robotId, connectionId) {
             const dropdown = document.getElementById('selectedRobotDropdown');
             selectedRobotId = dropdown.value;
-            robotname = name;
+            
 
             // 중복 추가 방지
             const exists = Array.from(dropdown.options).some(option => option.value === robotId);
@@ -3019,6 +3019,7 @@ ${waypointsYamlStr}
             const option = document.createElement('option');
             option.value = robotId;
             option.textContent = `${name} (${robotId})`;
+            robotname = name;
             dropdown.appendChild(option);
 
 
