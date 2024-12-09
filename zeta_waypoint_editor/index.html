@@ -1021,7 +1021,7 @@
                             };
                         });
 
-                        // console.log("New Robot Data:", newRobotData);  
+                        console.log("New Robot Data:", newRobotData);  
                     };
                     if (message.mqtt_data) {
                         const incomingData = message.mqtt_data;
@@ -1044,7 +1044,7 @@
                             // 선택된 로봇 마커 위치 업데이트
                             updateMarkerPosition(robotname, latitude, longitude);
                         }
-                        // console.log("Updated mqtt_data:", mqtt_data);
+                        console.log("Updated mqtt_data:", mqtt_data);
                     };
 
                 } catch (error){
@@ -4179,8 +4179,8 @@ ${waypointsYamlStr}
 
 
                 // connection_id 찾기
-                const matchedRobotData = mqtt_data.find(data =>
-                    String(data.topic_id).trim().toLowerCase() === String(selectedRobotId).trim().toLowerCase()
+                const matchedRobotData = newRobotData.find(data =>
+                    String(data.robot_id).trim().toLowerCase() === String(selectedRobotId).trim().toLowerCase()
                 );
 
                 if (!matchedRobotData || !matchedRobotData.connection_id) {
@@ -4220,14 +4220,43 @@ ${waypointsYamlStr}
                     return;
                 }
 
+                // Reverse Path 이름 생성
+                const reversePathName = `${waypoints[0]?.name || "Path"}_reverse`;
+
+                // Reverse Path가 이미 존재하는지 확인
+                const { data: existingPath, error: existingPathError } = await supabase
+                    .from('Path')
+                    .select('id')
+                    .eq('name', reversePathName)
+                    .eq('robotId', selectedRobotId)
+                    .single();
+
+                if (existingPathError) {
+                    console.error("Reverse Path 확인 중 오류 발생:", existingPathError);
+                    return;
+                }
+
+                if (existingPath) {
+                    console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
+                    const pathData = {
+                        command: "path",
+                        connection_id: connectionId,
+                        robot_id: selectedRobotId,
+                        path_id: existingPath.id,
+                        waypoint_id: -1, // 모든 Waypoint를 주행
+                        type: commandType,
+                    };
+
+                    console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
+                    socket.send(JSON.stringify(pathData));
+                    return;
+                }
+
                 // Reverse Waypoints 처리
                 const reversedWaypoints = waypoints.reverse().map(wp => ({
                     ...wp,
                     yaw: (wp.yaw + Math.PI) % (2 * Math.PI), // 방향 반대로 계산
                 }));
-
-                // Reverse Path 이름 생성
-                const reversePathName = `${waypoints[0]?.name || "Path"}_reverse`;
 
                 // Reverse Path 생성
                 const { data: newPath, error: pathError } = await supabase
