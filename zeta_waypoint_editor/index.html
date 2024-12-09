@@ -1020,7 +1020,7 @@
                             };
                         });
 
-                        console.log("New Robot Data:", newRobotData);  
+                        // console.log("New Robot Data:", newRobotData);  
                     };
                     if (message.mqtt_data) {
                         const incomingData = message.mqtt_data;
@@ -1043,34 +1043,8 @@
                             // 선택된 로봇 마커 위치 업데이트
                             updateMarkerPosition(selectedRobotId, latitude, longitude);
                         }
-                        console.log("Updated mqtt_data:", mqtt_data);
+                        // console.log("Updated mqtt_data:", mqtt_data);
                     };
-                    if (message.nav2_eta_paths){
-                        const data = JSON.parse(message.nav2_eta_paths); // JSON 파싱
-                        const { path, heading } = data;
-                        const topicId = message.topic_id; // topic_id는 메시지에서 가져옴
-
-                        // nav2_data 배열 업데이트
-                        const existingIndex = nav2_data.findIndex(item => item.topic_id === topicId);
-                        if (existingIndex !== -1) {
-                            // 기존 데이터 업데이트
-                            nav2_data[existingIndex] = {
-                                ...nav2_data[existingIndex],
-                                path: path || [],
-                                heading: heading || 0,
-                            };
-                        } else {
-                            // 새로운 데이터 추가
-                            nav2_data.push({
-                                topic_id: topicId,
-                                path: path || [],
-                                heading: heading || 0,
-                            });
-                        }
-
-                        console.log("Updated nav2_data:", nav2_data);
-                    }
-                    
 
                 } catch (error){
                     console.error("Error parsing message:", error);
@@ -3024,12 +2998,15 @@ ${waypointsYamlStr}
             }
 
             // 지도 업데이트
-            updateMap(latitude, longitude, selectedRobotId);
+            updateMap(latitude, longitude, robotname);
         }
+
+        let robotname;
 
         function selectRobot(name, robotId, connectionId) {
             const dropdown = document.getElementById('selectedRobotDropdown');
             selectedRobotId = dropdown.value;
+            robotname = name;
 
             // 중복 추가 방지
             const exists = Array.from(dropdown.options).some(option => option.value === robotId);
@@ -3044,12 +3021,6 @@ ${waypointsYamlStr}
             option.textContent = `${name} (${robotId})`;
             dropdown.appendChild(option);
 
-            // nav2_data에서 선택한 로봇의 데이터 찾기
-            // const selectedNav2Data = nav2_data.find(data => data.topic_id === robotId);
-            // if (!selectedNav2Data) {
-            //     alert('Unable to find robot navigation data!');
-            //     return;
-            // }
 
             // mqtt_data에서 로봇 위치 찾기
             const selectedRobotData = mqtt_data.find(data => String(data.topic_id).trim().toLowerCase() === String(robotId).trim().toLowerCase());
@@ -3077,7 +3048,7 @@ ${waypointsYamlStr}
             }
 
             // 선택된 로봇의 마커 업데이트
-            updateMarkerPosition(selectedRobotId, latitude, longitude);
+            updateMarkerPosition(name, latitude, longitude);
 
             // 지도 중심 이동
             map.setView([latitude, longitude], 17);
