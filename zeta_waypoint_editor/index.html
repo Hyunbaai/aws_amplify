@@ -4213,15 +4213,8 @@ ${waypointsYamlStr}
                 let pathData ={};
 
                 if(reverse){
-                    // WebSocket 데이터 구조 생성
-                    pathData = {
-                        command: "path",
-                        connection_id: connectionId,
-                        robot_id: selectedRobotId,
-                        path_id: pathId,
-                        waypoint_id: -2,
-                        type: commandType,
-                    };
+                    handleReversePath(waypoints,connectionId,selectedRobotId,commandType)
+                   
                 } else{
                     // WebSocket 데이터 구조 생성
                     pathData = {
@@ -4238,6 +4231,83 @@ ${waypointsYamlStr}
                 socket.send(JSON.stringify(pathData));
             } catch (error) {
                 console.error("Unexpected error while loading waypoints from database:", error);
+            }
+        }
+
+        async function handleReversePath(waypoints, connectionId, selectedRobotId, commandType) {
+            try {
+                if (!waypoints || waypoints.length === 0) {
+                    console.error("Reverse 처리할 Waypoints가 없습니다.");
+                    return;
+                }
+
+                // Reverse Waypoints 처리
+                const reversedWaypoints = waypoints.reverse().map(wp => ({
+                    ...wp,
+                    yaw: (wp.yaw + Math.PI) % (2 * Math.PI), // 방향 반대로 계산
+                }));
+
+                // Reverse Path 이름 생성
+                const reversePathName = `${waypoints[0]?.name || "Path"}_reverse`;
+
+                // Reverse Path 생성
+                const { data: newPath, error: pathError } = await supabase
+                    .from('Path')
+                    .insert({
+                        name: reversePathName,
+                        robotId: selectedRobotId,
+                        description: "Automatically generated reverse path",
+                        color: "blue", // 필요 시 색상 지정
+                        type: 0 // Path 타입 지정
+                    })
+                    .select();
+
+                if (pathError || !newPath) {
+                    console.error('Reverse Path 생성 오류:', pathError);
+                    return;
+                }
+
+                const newPathId = newPath[0].id;
+
+                // Reverse Waypoints를 새로운 Path에 추가
+                const waypointInsertions = reversedWaypoints.map(wp =>
+                    supabase.from('Waypoint').insert({
+                        pathId: newPathId,
+                        latitude: wp.latitude,
+                        longitude: wp.longitude,
+                        yaw: wp.yaw,
+                        name: wp.name,
+                        type: wp.type,
+                        color: wp.color || "blue" // 필요 시 색상 지정
+                    })
+                );
+
+                // 모든 Waypoint 삽입 Promise 처리
+                const waypointResults = await Promise.all(waypointInsertions);
+
+                // Waypoint 삽입 오류 확인
+                const waypointErrors = waypointResults.filter(result => result.error);
+                if (waypointErrors.length > 0) {
+                    console.error("Reverse Waypoint 삽입 중 오류 발생:", waypointErrors);
+                    return;
+                }
+
+                console.log("Reverse Path와 Waypoints가 성공적으로 생성되었습니다.");
+
+                // Reverse Path에 대한 WebSocket 명령 생성
+                const pathData = {
+                    command: "path",
+                    connection_id: connectionId,
+                    robot_id: selectedRobotId,
+                    path_id: newPathId,
+                    waypoint_id: -1, // 모든 Waypoint를 주행
+                    type: commandType,
+                };
+
+                console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
+                socket.send(JSON.stringify(pathData));
+            } catch (error) {
+                console.error("Reverse Path 처리 중 예기치 않은 오류 발생:", error);
             }
         }
 
