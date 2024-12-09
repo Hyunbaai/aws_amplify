@@ -4162,7 +4162,7 @@ ${waypointsYamlStr}
 
 
         // DB에서 모든 Waypoint를 불러와 한 번에 전송하는 함수
-        async function sendAllWaypoints(pathId,commandType = 10, reverse = false) {
+        async function sendAllWaypoints(pathId,commandType = 0, reverse = false) {
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 console.error("WebSocket 연결이 열려 있지 않습니다. 연결을 재설정합니다.");
                 alert("WebSocket 연결이 닫혀 있습니다. 다시 시도해 주세요.");
@@ -4205,30 +4205,48 @@ ${waypointsYamlStr}
 
                 const connectionId = matchedRobotData.connection_id;
                 let pathData ={};
+                const requestId = uuidv4();
 
                 if(reverse){
-                    handleReversePath(waypoints,connectionId,selectedRobotId,commandType)
+                    handleReversePath(waypoints,connectionId,selectedRobotId,commandType, requestId)
                    
                 } else{
                     // WebSocket 데이터 구조 생성
                     pathData = {
-                        command: "path",
-                        connection_id: connectionId,
-                        robot_id: selectedRobotId,
-                        path_id: pathId,
-                        waypoint_id: -1,
-                        type: commandType,
+                        type: "system",
+                        args: {
+                            command: "path",
+                            connection_id: connectionId,
+                            robot_id: selectedRobotId,
+                            path_id: pathId,
+                            waypoint_id: -1,
+                            type: commandType,
+                            request_id: requestId, // request_id 추가
+                        },
                     };
                 }
 
                 console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
+
+                // ACK 처리 로직
+                const ackPromise = new Promise((resolve, reject) => {
+                    ackPromises.current.set(requestId, resolve);
+
+                    setTimeout(() => {
+                        if (ackPromises.current.has(requestId)) {
+                            ackPromises.current.delete(requestId);
+                            reject(new Error("ACK not received within timeout"));
+                        }
+                    }, 10000); // 10초 타임아웃
+                });
+
                 socket.send(JSON.stringify(pathData));
             } catch (error) {
                 console.error("Unexpected error while loading waypoints from database:", error);
             }
         }
 
-        async function handleReversePath(waypoints, connectionId, selectedRobotId, commandType) {
+        async function handleReversePath(waypoints, connectionId, selectedRobotId, commandType, requestId) {
             try {
                 if (!waypoints || waypoints.length === 0) {
                     console.error("Reverse 처리할 Waypoints가 없습니다.");
@@ -4254,12 +4272,16 @@ ${waypointsYamlStr}
                 if (existingPath) {
                     console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
                     const pathData = {
-                        command: "path",
-                        connection_id: connectionId,
-                        robot_id: selectedRobotId,
-                        path_id: existingPath.id,
-                        waypoint_id: -1, // 모든 Waypoint를 주행
-                        type: commandType,
+                        type: "system",
+                        args: {
+                            command: "path",
+                            connection_id: connectionId,
+                            robot_id: selectedRobotId,
+                            path_id: pathId,
+                            waypoint_id: -1,
+                            type: commandType,
+                            request_id: requestId, // request_id 추가
+                        },
                     };
 
                     console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
