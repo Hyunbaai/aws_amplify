@@ -1012,6 +1012,7 @@
                     const message = JSON.parse(event.data);
                     console.log('Received message:', message);
 
+                
                     if (message.amr_data_db && Array.isArray(message.amr_data_db)) {
                         newRobotData = message.amr_data_db.map((amrData) => {
                             return {
@@ -4148,7 +4149,7 @@ ${waypointsYamlStr}
 
 
         // DB에서 모든 Waypoint를 불러와 한 번에 전송하는 함수
-        async function sendAllWaypoints(pathId,commandType = 1000, reverse = false) {
+        async function sendAllWaypoints(pathId,commandType = 10, reverse = false) {
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 console.error("WebSocket 연결이 열려 있지 않습니다. 연결을 재설정합니다.");
                 alert("WebSocket 연결이 닫혀 있습니다. 다시 시도해 주세요.");
