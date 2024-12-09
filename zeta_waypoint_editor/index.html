@@ -4210,10 +4210,11 @@ ${waypointsYamlStr}
                 }
 
                 const connectionId = matchedRobotData.connection_id;
+                let pathData ={};
 
                 if(reverse){
                     // WebSocket 데이터 구조 생성
-                    const pathData = {
+                    pathData = {
                         command: "path",
                         connection_id: connectionId,
                         robot_id: selectedRobotId,
@@ -4221,10 +4222,9 @@ ${waypointsYamlStr}
                         waypoint_id: -2,
                         type: commandType,
                     };
-                };
-                else{
+                } else{
                     // WebSocket 데이터 구조 생성
-                    const pathData = {
+                    pathData = {
                         command: "path",
                         connection_id: connectionId,
                         robot_id: selectedRobotId,
