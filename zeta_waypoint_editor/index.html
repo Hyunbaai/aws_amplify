@@ -1042,7 +1042,7 @@
                             const longitude = parseFloat(incomingData.data.fix_filtered_longitude) || 0;
 
                             // 선택된 로봇 마커 위치 업데이트
-                            updateMarkerPosition(selectedRobotId, latitude, longitude);
+                            updateMarkerPosition(robotname, latitude, longitude);
                         }
                         // console.log("Updated mqtt_data:", mqtt_data);
                     };
@@ -2986,6 +2986,12 @@ ${waypointsYamlStr}
             if (!selectedRobotData || !selectedRobotData.data) {
                 alert('Unable to find data for the selected robot.');
                 return;
+            }
+
+            // 로봇 이름 업데이트
+            const selectedOption = dropdown.options[dropdown.selectedIndex];
+            if (selectedOption) {
+                robotname = selectedOption.textContent.split('(')[0].trim(); // 이름만 추출
             }
 
             // 로봇 위치 데이터 가져오기
