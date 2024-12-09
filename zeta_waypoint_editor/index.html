@@ -1250,34 +1250,34 @@
         let isTwoFingerTouch = false;   // 두 손가락 터치 여부 확인
         let pointMode = false;          // 포인트 생성 기능을 위한 변수
 
-        // 커스텀 토글 버튼
-        const toggleButton = L.control({ position: 'bottomright' });
-        toggleButton.onAdd = function () {
-            const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            div.innerHTML = 'Point Mode OFF';
-            div.style.backgroundColor = 'white';
-            div.style.borderRadius = '0.5vh';
-            div.style.padding = '0.5vh';
-            div.style.cursor = 'pointer';
+        // // 커스텀 토글 버튼
+        // const toggleButton = L.control({ position: 'bottomright' });
+        // toggleButton.onAdd = function () {
+        //     const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+        //     div.innerHTML = 'Point Mode OFF';
+        //     div.style.backgroundColor = 'white';
+        //     div.style.borderRadius = '0.5vh';
+        //     div.style.padding = '0.5vh';
+        //     div.style.cursor = 'pointer';
 
-            // 모바일에서 터치 및 클릭 이벤트 추가
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.on(div, 'touchstart', function(e) {
-                L.DomEvent.stopPropagation(e);
-                pointMode = !pointMode;
-                div.innerHTML = pointMode ? 'Point Mode ON' : 'Point Mode OFF';
-                div.style.backgroundColor = pointMode ? '#4CAF50' : 'white';
+        //     // 모바일에서 터치 및 클릭 이벤트 추가
+        //     L.DomEvent.disableClickPropagation(div);
+        //     L.DomEvent.on(div, 'touchstart', function(e) {
+        //         L.DomEvent.stopPropagation(e);
+        //         pointMode = !pointMode;
+        //         div.innerHTML = pointMode ? 'Point Mode ON' : 'Point Mode OFF';
+        //         div.style.backgroundColor = pointMode ? '#4CAF50' : 'white';
 
-                // if (pointMode) {
-                //     enablePointMode();
-                // } else {
-                //     disablePointMode();
-                // }
-            });
+        //         // if (pointMode) {
+        //         //     enablePointMode();
+        //         // } else {
+        //         //     disablePointMode();
+        //         // }
+        //     });
 
-            return div;
-        };
-        toggleButton.addTo(map);
+        //     return div;
+        // };
+        // toggleButton.addTo(map);
 
         // ==================================================================
         //
