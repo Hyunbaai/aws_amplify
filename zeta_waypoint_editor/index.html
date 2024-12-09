@@ -1012,15 +1012,18 @@
                     const message = JSON.parse(event.data);
                     console.log('Received message:', message);
 
-                    // ACK 처리: request_id를 기반으로 확인
+                     // ACK 처리
                     if (message.request_id && ackPromises.current.has(message.request_id)) {
                         console.log(`ACK received for request_id: ${message.request_id}`);
                         const resolve = ackPromises.current.get(message.request_id);
                         if (resolve) {
                             resolve(); // Promise를 성공으로 처리
                         }
-                        ackPromises.current.delete(message.request_id);
+                        ackPromises.current.delete(message.request_id); // 처리된 요청 삭제
+                    } else if (message.request_id) {
+                        console.warn(`Unexpected ACK for request_id: ${message.request_id}`);
                     }
+
 
                 
                     if (message.amr_data_db && Array.isArray(message.amr_data_db)) {
