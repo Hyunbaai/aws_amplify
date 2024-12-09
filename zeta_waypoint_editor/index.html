@@ -991,6 +991,7 @@
         let nav2_data = [];
         let selectedRobotId = null;
         const robotMarkers = {};
+        let robotname;
 
 
         // WebSocket 연결 설정
@@ -3001,7 +3002,7 @@ ${waypointsYamlStr}
             updateMap(latitude, longitude, robotname);
         }
 
-        let robotname;
+        
 
         function selectRobot(name, robotId, connectionId) {
             const dropdown = document.getElementById('selectedRobotDropdown');
