@@ -4293,7 +4293,7 @@ ${waypointsYamlStr}
                     .from('Path')
                     .select('id')
                     .eq('name', reversePathName)
-                    .single();
+                    .maybeSingle();
 
                 if (existingPathError) {
                     console.error("Reverse Path 확인 중 오류 발생:", existingPathError);
