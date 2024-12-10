@@ -4076,6 +4076,17 @@ ${waypointsYamlStr}
             }
 
             try {
+
+                const { error: waypointError } = await supabase
+                    .from('Waypoint')
+                    .delete()
+                    .eq('pathId', pathId);
+
+                if (waypointError) {
+                console.error("Waypoint 삭제 중 오류 발생:", waypointError);
+                return;
+                }
+
                 const { error } = await supabase
                     .from('Path')
                     .delete()
@@ -4253,7 +4264,7 @@ ${waypointsYamlStr}
                 const requestId = uuidv4();
 
                 if(reverse){
-                    handleReversePath(waypoints,connectionId,selectedRobotId,commandType, requestId)
+                    handleReversePath(waypoints,connectionId,selectedRobotId,pathId,commandType, requestId)
                    
                 } else{
                     // WebSocket 데이터 구조 생성
@@ -4291,7 +4302,7 @@ ${waypointsYamlStr}
             }
         }
 
-        async function handleReversePath(waypoints, connectionId, selectedRobotId, commandType, requestId) {
+        async function handleReversePath(waypoints, connectionId, selectedRobotId,pathId, commandType, requestId) {
             try {
                 if (!waypoints || waypoints.length === 0) {
                     console.error("Reverse 처리할 Waypoints가 없습니다.");
