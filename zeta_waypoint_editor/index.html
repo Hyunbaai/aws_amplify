@@ -4144,8 +4144,21 @@ ${waypointsYamlStr}
                 return;
             }
 
+            const { data: robotData, error: robotError } = await supabase
+                .from('Robot') // Robot 테이블에서
+                .select('id')  // id만 선택
+                .eq('robotId', selectedRobotId) // selectedRobotId와 매칭되는 데이터 찾기
+                .single(); // 단일 행만 반환
+
+            if (robotError || !robotData) {
+                console.error('Robot 정보 조회 오류:', robotError);
+                return;
+            }
+
+            const robotDbId = robotData.id; // Robot 테이블의 id 값
+
             const { error } = await supabase.from('Path').insert([{ 
-                robotId: selectedRobotId, 
+                robotId: robotDbId, 
                 name: "New Path", 
                 description: description, 
                 color: "gray", 
