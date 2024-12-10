@@ -993,6 +993,7 @@
         let selectedPathId;
         const robotMarkers = {};
         let robotname;
+        let newPathId = null;
 
 
         // WebSocket 연결 설정
@@ -4350,8 +4351,6 @@ ${waypointsYamlStr}
                     console.error("Reverse Path 확인 중 오류 발생:", existingPathError);
                     return;
                 }
-
-                let newPathId = null;
 
                 if (existingPath) {
                     console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
