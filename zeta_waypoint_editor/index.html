@@ -4293,7 +4293,6 @@ ${waypointsYamlStr}
                     .from('Path')
                     .select('id')
                     .eq('name', reversePathName)
-                    .eq('robotId', selectedRobotId)
                     .single();
 
                 if (existingPathError) {
