@@ -4264,7 +4264,7 @@ ${waypointsYamlStr}
                 const requestId = uuidv4();
 
                 if(reverse){
-                    handleReversePath(waypoints,connectionId,selectedRobotId,pathId,commandType, requestId)
+                    handleReversePath(waypoints,connectionId,pathId,commandType, requestId)
                    
                 } else{
                     // WebSocket 데이터 구조 생성
@@ -4302,12 +4302,29 @@ ${waypointsYamlStr}
             }
         }
 
-        async function handleReversePath(waypoints, connectionId, selectedRobotId,pathId, commandType, requestId) {
+        async function handleReversePath(waypoints, connectionId, pathId, commandType, requestId) {
             try {
                 if (!waypoints || waypoints.length === 0) {
                     console.error("Reverse 처리할 Waypoints가 없습니다.");
                     return;
                 }
+
+                // 기존 Path 이름 가져오기
+                const { data: existingPathData, error: existingPathDataError } = await supabase
+                    .from('Path')
+                    .select('name')
+                    .eq('id', pathId)
+                    .single();
+
+                if (existingPathDataError || !existingPathData) {
+                    console.error('기존 Path 이름 조회 오류:', existingPathDataError);
+                    return;
+                }
+
+                const originalPathName = existingPathData.name;
+
+                // Reverse Path 이름 생성
+                const reversePathName = `${originalPathName}_reverse`;
 
                 const { data: robotData, error: robotError } = await supabase
                     .from('Robot') // Robot 테이블에서
@@ -4321,9 +4338,6 @@ ${waypointsYamlStr}
                 }
 
                 const robotDbId = robotData.id; // Robot 테이블의 id 값
-
-                // Reverse Path 이름 생성
-                const reversePathName = `${waypoints[0]?.name || "Path"}_reverse`;
 
                 // Reverse Path가 이미 존재하는지 확인
                 const { data: existingPath, error: existingPathError } = await supabase
