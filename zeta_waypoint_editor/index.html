@@ -4285,6 +4285,19 @@ ${waypointsYamlStr}
                     return;
                 }
 
+                const { data: robotData, error: robotError } = await supabase
+                    .from('Robot') // Robot 테이블에서
+                    .select('id')  // id만 선택
+                    .eq('robotId', selectedRobotId) // selectedRobotId와 매칭되는 데이터 찾기
+                    .maybeSingle(); // 단일 행만 반환
+
+                if (robotError || !robotData) {
+                    console.error('Robot 정보 조회 오류:', robotError);
+                    return;
+                }
+
+                const robotDbId = robotData.id; // Robot 테이블의 id 값
+
                 // Reverse Path 이름 생성
                 const reversePathName = `${waypoints[0]?.name || "Path"}_reverse`;
 
@@ -4307,7 +4320,7 @@ ${waypointsYamlStr}
                         args: {
                             command: "path",
                             connection_id: connectionId,
-                            robot_id: selectedRobotId,
+                            robot_id: robotDbId,
                             path_id: pathId,
                             waypoint_id: -1,
                             type: commandType,
