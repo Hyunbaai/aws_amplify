@@ -4429,6 +4429,7 @@ ${waypointsYamlStr}
                     path_id: newPathId,
                     waypoint_id: -1, // 모든 Waypoint를 주행
                     type: commandType,
+                    request_id: requestId,
                 };
 
                 console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
