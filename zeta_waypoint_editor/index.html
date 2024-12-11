@@ -818,11 +818,11 @@
         <select id="selectedRobotDropdown" onchange="handleRobotSelectionChange()" >
             <option value="">Selected a Robot</option>
         </select>
-        <button onclick="toggleControlMode()">Control Mode</button>
+        <!-- <button onclick="toggleControlMode()">Control Mode</button> -->
         <!-- <input type="file" id="fileInput" accept=".yaml" />
         <button id="loadWaypointButton">Load Waypoint</button> -->
         <!-- <button id="waypointListButton">Waypoint List</button> -->
-        <button onclick="speedUpdatePopup()">Update Speed</button>
+        <!-- <button onclick="speedUpdatePopup()">Update Speed</button> -->
         <button onclick="robotController()">Robot Controller</button>
     </div>
 
@@ -1681,1145 +1681,1145 @@
         // ==================================================================
 
         // Waypoint 저장 파일명을 입력하는 함수
-        function saveWaypointName() {
-            openPopup('yamlFileNamePopup');
-            document.getElementById('yamlFileNamePopup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+//         function saveWaypointName() {
+//             openPopup('yamlFileNamePopup');
+//             document.getElementById('yamlFileNamePopup').style.display = 'block';
+//             document.getElementById('overlay').style.display = 'block';
+//         }
 
-        // Waypoint 저장 파일명을 입력하는 팝업을 닫는 함수
-        function closeYamlFileNamePopup() {
-            document.getElementById('yamlFileNamePopup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
+//         // Waypoint 저장 파일명을 입력하는 팝업을 닫는 함수
+//         function closeYamlFileNamePopup() {
+//             document.getElementById('yamlFileNamePopup').style.display = 'none';
+//             document.getElementById('overlay').style.display = 'none';
+//         }
 
-        // Waypoint 저장 목록을 팝업하는 함수
-        function saveWaypointFilesPopup() {
-            // robot 값이 ''인 Waypoint만 필터링
-            const filteredWaypoints = totalWaypoints.filter(group => 
-                group.some(waypoint => waypoint.robot === '')
-            );
+//         // Waypoint 저장 목록을 팝업하는 함수
+//         function saveWaypointFilesPopup() {
+//             // robot 값이 ''인 Waypoint만 필터링
+//             const filteredWaypoints = totalWaypoints.filter(group => 
+//                 group.some(waypoint => waypoint.robot === '')
+//             );
 
-            saveFileListElement.innerHTML = '';
-            filteredWaypoints.forEach((waypoints, index) => {
-                const labelName = `Label-${waypoints[0].label.charAt(0)}-Waypoint`;
+//             saveFileListElement.innerHTML = '';
+//             filteredWaypoints.forEach((waypoints, index) => {
+//                 const labelName = `Label-${waypoints[0].label.charAt(0)}-Waypoint`;
 
-                const li = document.createElement('li');
+//                 const li = document.createElement('li');
                 
-                // 파일 순서 표시
-                const orderButton = document.createElement('button');
-                orderButton.textContent = index + 1;
-                orderButton.disabled = true;
+//                 // 파일 순서 표시
+//                 const orderButton = document.createElement('button');
+//                 orderButton.textContent = index + 1;
+//                 orderButton.disabled = true;
 
-                // 파일 이름 표시
-                const fileNameSpan = document.createElement('span');
-                fileNameSpan.textContent = labelName;
-                fileNameSpan.classList.add('waypoint-label');
+//                 // 파일 이름 표시
+//                 const fileNameSpan = document.createElement('span');
+//                 fileNameSpan.textContent = labelName;
+//                 fileNameSpan.classList.add('waypoint-label');
 
-                // 파일 선택 버튼
-                const selectButton = document.createElement('button');
-                selectButton.classList.add('select-button');
-                selectButton.textContent = 'Select';
+//                 // 파일 선택 버튼
+//                 const selectButton = document.createElement('button');
+//                 selectButton.classList.add('select-button');
+//                 selectButton.textContent = 'Select';
 
-                // 각 요소에 클래스 추가
-                orderButton.classList.add('item-space');
-                fileNameSpan.classList.add('item-space');
+//                 // 각 요소에 클래스 추가
+//                 orderButton.classList.add('item-space');
+//                 fileNameSpan.classList.add('item-space');
 
-                // 목록 항목에 추가
-                li.appendChild(orderButton);
-                li.appendChild(fileNameSpan);
-                li.appendChild(selectButton);
-                saveFileListElement.appendChild(li);
+//                 // 목록 항목에 추가
+//                 li.appendChild(orderButton);
+//                 li.appendChild(fileNameSpan);
+//                 li.appendChild(selectButton);
+//                 saveFileListElement.appendChild(li);
 
-                // 파일 선택 버튼 클릭 이벤트
-                selectButton.addEventListener('click', function() {
-                    if (selectButton.classList.contains('selected')) {
-                        selectButton.classList.remove('selected');
-                        saveSelectedWaypoints = [];
-                    }
-                    else {
-                        document.querySelectorAll('.select-button').forEach(btn => {
-                            btn.classList.remove('selected');
-                        });
-                        selectButton.classList.add('selected');
-                        saveSelectedWaypoints.push(waypoints);
-                    }
-                });
-            })
-        }
+//                 // 파일 선택 버튼 클릭 이벤트
+//                 selectButton.addEventListener('click', function() {
+//                     if (selectButton.classList.contains('selected')) {
+//                         selectButton.classList.remove('selected');
+//                         saveSelectedWaypoints = [];
+//                     }
+//                     else {
+//                         document.querySelectorAll('.select-button').forEach(btn => {
+//                             btn.classList.remove('selected');
+//                         });
+//                         selectButton.classList.add('selected');
+//                         saveSelectedWaypoints.push(waypoints);
+//                     }
+//                 });
+//             })
+//         }
 
-        // Waypoint 저장 함수 (YAML 파일 형식)
-        function saveWaypoint() {
-            const fileName = document.getElementById('newYamlFileName').value;
-            document.getElementById('yamlFileNamePopup').style.display = 'none';
-            document.getElementById('save-waypoint-popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
+//         // Waypoint 저장 함수 (YAML 파일 형식)
+//         function saveWaypoint() {
+//             const fileName = document.getElementById('newYamlFileName').value;
+//             document.getElementById('yamlFileNamePopup').style.display = 'none';
+//             document.getElementById('save-waypoint-popup').style.display = 'none';
+//             document.getElementById('overlay').style.display = 'none';
             
-            // 선택된 값 가져오기
-            const task = document.getElementById('task').value;
-            const departure = document.getElementById('departure').value;
-            const destination = document.getElementById('destination').value;
+//             // 선택된 값 가져오기
+//             const task = document.getElementById('task').value;
+//             const departure = document.getElementById('departure').value;
+//             const destination = document.getElementById('destination').value;
 
-            // 빈 배열을 선언하여 변환된 데이터를 저장합니다
-            const waypointsData = [];
+//             // 빈 배열을 선언하여 변환된 데이터를 저장합니다
+//             const waypointsData = [];
 
-            // totalWaypoints 배열의 각 요소를 순회하며 변환 작업을 수행합니다
-            saveSelectedWaypoints.forEach(waypoint => {
-                waypoint.forEach(point => {
-                    waypointsData.push({
-                        label: point.label,
-                        color: point.color,
-                        latlng: {
-                            lat: point.latlng.lat,
-                            lng: point.latlng.lng
-                        },
-                        heading: point.heading,
-                        type: point.type
-                    });
-                })
-            });
+//             // totalWaypoints 배열의 각 요소를 순회하며 변환 작업을 수행합니다
+//             saveSelectedWaypoints.forEach(waypoint => {
+//                 waypoint.forEach(point => {
+//                     waypointsData.push({
+//                         label: point.label,
+//                         color: point.color,
+//                         latlng: {
+//                             lat: point.latlng.lat,
+//                             lng: point.latlng.lng
+//                         },
+//                         heading: point.heading,
+//                         type: point.type
+//                     });
+//                 })
+//             });
 
-            // Waypoints 데이터를 한 줄씩 포맷
-            const waypointsYamlStr = waypointsData.map(point => {
-                return `    - {label: ${point.label}, color: '${point.color}', latlng: {lat: ${point.latlng.lat}, lng: ${point.latlng.lng}}, heading: ${point.heading}, type: ${point.type}}`;
-            }).join('\n'); // 각 Waypoint 항목을 한 줄로 포맷하고, 줄바꿈 추가
+//             // Waypoints 데이터를 한 줄씩 포맷
+//             const waypointsYamlStr = waypointsData.map(point => {
+//                 return `    - {label: ${point.label}, color: '${point.color}', latlng: {lat: ${point.latlng.lat}, lng: ${point.latlng.lng}}, heading: ${point.heading}, type: ${point.type}}`;
+//             }).join('\n'); // 각 Waypoint 항목을 한 줄로 포맷하고, 줄바꿈 추가
 
-            // 전체 YAML 구조 (Waypoints는 직접 포맷한 문자열로 추가)
-            const yamlStr = `
-task: ${task}
-departure: ${departure}
-destination: ${destination}
-waypoints:
-${waypointsYamlStr}
-            `.trim();
+//             // 전체 YAML 구조 (Waypoints는 직접 포맷한 문자열로 추가)
+//             const yamlStr = `
+// task: ${task}
+// departure: ${departure}
+// destination: ${destination}
+// waypoints:
+// ${waypointsYamlStr}
+//             `.trim();
 
-            // 서버로 YAML 파일 전송
-            fetch('http://192.168.0.16:3000/api/save-file-origin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    fileName: fileName,
-                    data: yamlStr
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => console.error('Error:', error));
+//             // 서버로 YAML 파일 전송
+//             fetch('http://192.168.0.16:3000/api/save-file-origin', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     fileName: fileName,
+//                     data: yamlStr
+//                 })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 alert(data.message);
+//             })
+//             .catch(error => console.error('Error:', error));
 
-            // 저장 후 선택된 값 초기화
-            document.getElementById('task').value = "";
-            document.getElementById('departure').value = "";
-            document.getElementById('destination').value = "";
-            document.getElementById('newYamlFileName').value = "";
-        }
+//             // 저장 후 선택된 값 초기화
+//             document.getElementById('task').value = "";
+//             document.getElementById('departure').value = "";
+//             document.getElementById('destination').value = "";
+//             document.getElementById('newYamlFileName').value = "";
+//         }
 
-        // Waypoint 불러오기 함수 (YAML 파일 형식)
-        function loadWaypoints(file, robotID, isFromServer = false) {
-            // 서버에서 가져온 YAML 파일의 경우에는 바로 처리
-            if (isFromServer) {
-                try {
-                    const yamlData = file;
+//         // Waypoint 불러오기 함수 (YAML 파일 형식)
+//         function loadWaypoints(file, robotID, isFromServer = false) {
+//             // 서버에서 가져온 YAML 파일의 경우에는 바로 처리
+//             if (isFromServer) {
+//                 try {
+//                     const yamlData = file;
         
-                    if (!yamlData || !yamlData.waypoints) {
-                        throw new Error("Invalid YAML format");
-                    }
+//                     if (!yamlData || !yamlData.waypoints) {
+//                         throw new Error("Invalid YAML format");
+//                     }
 
-                    // Reverse 모드 활성화 시에는 역방향의 Waypoint 전송
-                    if (reverseMode) {
-                        yamlData.waypoints.reverse();
-                        yamlData.waypoints.forEach(point => {
-                            point.heading = reverseHeading(point.heading);
-                        })
-                    }
+//                     // Reverse 모드 활성화 시에는 역방향의 Waypoint 전송
+//                     if (reverseMode) {
+//                         yamlData.waypoints.reverse();
+//                         yamlData.waypoints.forEach(point => {
+//                             point.heading = reverseHeading(point.heading);
+//                         })
+//                     }
         
-                    const yamlContent = jsyaml.dump(yamlData); 
-                    console.log("Updated YAML content as string:", yamlContent);
+//                     const yamlContent = jsyaml.dump(yamlData); 
+//                     console.log("Updated YAML content as string:", yamlContent);
         
-                    if (selectedWaypointSocket[robotID].readyState === WebSocket.OPEN) {
-                        selectedWaypointSocket[robotID].send(yamlContent);
-                        console.log("YAML data sent via WebSocket (Waypoint).");
-                    }
+//                     if (selectedWaypointSocket[robotID].readyState === WebSocket.OPEN) {
+//                         selectedWaypointSocket[robotID].send(yamlContent);
+//                         console.log("YAML data sent via WebSocket (Waypoint).");
+//                     }
                     
-                    // 로봇의 주행 경로 초기화
-                    selectedRobotWaypoints[robotID] = [];
+//                     // 로봇의 주행 경로 초기화
+//                     selectedRobotWaypoints[robotID] = [];
         
-                    // 포인트 카운터 초기화
-                    pointCounter = 1;
+//                     // 포인트 카운터 초기화
+//                     pointCounter = 1;
 
-                    updateRobotInfo(yamlData.task, yamlData.departure, yamlData.destination, robotID);
-                    createWaypoint(yamlData.waypoints, robotID);
-                } catch (error) {
-                    console.error("Failed to load waypoints from YAML:", error);
-                    alert("Invalid YAML file. Please check the file format.");
-                }
-            } else {
-                const reader = new FileReader();
+//                     updateRobotInfo(yamlData.task, yamlData.departure, yamlData.destination, robotID);
+//                     createWaypoint(yamlData.waypoints, robotID);
+//                 } catch (error) {
+//                     console.error("Failed to load waypoints from YAML:", error);
+//                     alert("Invalid YAML file. Please check the file format.");
+//                 }
+//             } else {
+//                 const reader = new FileReader();
 
-                reader.onload = function(event) {
-                    try {
-                        const yamlData = jsyaml.load(event.target.result);
-                        const yamlResult = event.target.result;
+//                 reader.onload = function(event) {
+//                     try {
+//                         const yamlData = jsyaml.load(event.target.result);
+//                         const yamlResult = event.target.result;
 
-                        if (!yamlData || !yamlData.waypoints) {
-                            throw new Error("invalid YAML format");
-                        }
+//                         if (!yamlData || !yamlData.waypoints) {
+//                             throw new Error("invalid YAML format");
+//                         }
 
-                        const yamlContent = jsyaml.dump(yamlData); 
-                        console.log("Updated YAML content as string:", yamlContent);
+//                         const yamlContent = jsyaml.dump(yamlData); 
+//                         console.log("Updated YAML content as string:", yamlContent);
                         
-                        if (selectedWaypointSocket[robotID].readyState === WebSocket.OPEN) {
-                            selectedWaypointSocket[robotID].send(yamlContent);
-                            console.log("YAML data sent via WebSocket (Waypoint).");
-                            // deadlockDetected[robotID].status = false;
-                        }
+//                         if (selectedWaypointSocket[robotID].readyState === WebSocket.OPEN) {
+//                             selectedWaypointSocket[robotID].send(yamlContent);
+//                             console.log("YAML data sent via WebSocket (Waypoint).");
+//                             // deadlockDetected[robotID].status = false;
+//                         }
                         
-                        // 로봇의 주행 경로 초기화
-                        selectedRobotWaypoints[robotID] = [];
+//                         // 로봇의 주행 경로 초기화
+//                         selectedRobotWaypoints[robotID] = [];
                         
-                        // 포인트 카운터 초기화
-                        pointCounter = 1;
+//                         // 포인트 카운터 초기화
+//                         pointCounter = 1;
 
-                        updateRobotInfo(yamlData.task, yamlData.departure, yamlData.destination, robotID);
-                        createWaypoint(yamlData.waypoints, robotID);
-                    } catch (error) {
-                        console.error("Failed to load waypoints from YAML:", error);
-                        alert("Invalid YAML file. Please check the file format.");
-                    }
-                };
+//                         updateRobotInfo(yamlData.task, yamlData.departure, yamlData.destination, robotID);
+//                         createWaypoint(yamlData.waypoints, robotID);
+//                     } catch (error) {
+//                         console.error("Failed to load waypoints from YAML:", error);
+//                         alert("Invalid YAML file. Please check the file format.");
+//                     }
+//                 };
                 
-                reader.readAsText(file);
+//                 reader.readAsText(file);
 
-                // File Input 값을 리셋하여 동일한 파일을 재선택할 수 있음
-                const inputFile = document.getElementById("fileInput");
-                if (inputFile) {
-                    inputFile.value = "";
-                }  
-            }
-        }
+//                 // File Input 값을 리셋하여 동일한 파일을 재선택할 수 있음
+//                 const inputFile = document.getElementById("fileInput");
+//                 if (inputFile) {
+//                     inputFile.value = "";
+//                 }  
+//             }
+//         }
 
-        // 서버에서 YAML 파일 목록 불러오는 함수
-        function fetchYAMLFiles() {
-            fetch('http://192.168.0.16:3000/api/yaml-files')
-                .then(response => response.json())
-                .then(files => {
-                    fileListElement.innerHTML = '';
-                    files.forEach((file, index) => {
-                        const li = document.createElement('li');
-                        li.draggable = true;
+//         // 서버에서 YAML 파일 목록 불러오는 함수
+//         function fetchYAMLFiles() {
+//             fetch('http://192.168.0.16:3000/api/yaml-files')
+//                 .then(response => response.json())
+//                 .then(files => {
+//                     fileListElement.innerHTML = '';
+//                     files.forEach((file, index) => {
+//                         const li = document.createElement('li');
+//                         li.draggable = true;
                         
-                        // 현재 순서 표시
-                        const orderButton = document.createElement('button');
-                        orderButton.textContent = index + 1;
-                        orderButton.disabled = true;
-
-                        // 파일 이름 표시 및 수정
-                        const fileNameSpan = document.createElement('span');
-                        fileNameSpan.textContent = file;
-                        fileNameSpan.onclick = () => selectFile(file);
-
-                        // 파일 시각화 버튼
-                        const viewButton = document.createElement('button');
-                        viewButton.textContent = 'view';
-                        viewButton.onclick = (event) => viewFile(file, event);
-
-                        // 파일명 수정 버튼
-                        const renameButton = document.createElement('button');
-                        renameButton.textContent = 'rename';
-                        renameButton.onclick = () => renameFile(file);
-
-                        // 파일 정보 팝업 버튼
-                        const infoButton = document.createElement('button');
-                        infoButton.textContent = 'info';
-                        infoButton.onclick = () => showWaypointPopup(false, file);
-
-                        // 파일 삭제 버튼
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'delete';
-                        deleteButton.onclick = () => openDeletePopup(file);
-
-                        // 각 요소에 클래스 추가
-                        orderButton.classList.add('item-space');
-                        fileNameSpan.classList.add('item-space');
-                        viewButton.classList.add('item-space');
-                        renameButton.classList.add('item-space');
-                        infoButton.classList.add('item-space');
-
-                        // 목록 항목에 추가
-                        li.appendChild(orderButton);
-                        li.appendChild(fileNameSpan);
-                        li.appendChild(viewButton);
-                        li.appendChild(renameButton);
-                        li.appendChild(infoButton);
-                        li.appendChild(deleteButton);
-                        fileListElement.appendChild(li);
-
-                        // 파일 순서 변경
-                        li.addEventListener('dragstart', (event) => {
-                            event.dataTransfer.setData('text/plain', index);
-                        });
-
-                        li.addEventListener('dragover', (event) => {
-                            event.preventDefault();
-                        });
-
-                        li.addEventListener('drop', (event) => {
-                            event.preventDefault(); // 기본 동작을 막아야 정상적으로 drop이 동작함
-                            event.stopPropagation(); // 이벤트 전파 방지
-
-                            const oldIndex = event.dataTransfer.getData('text/plain');
-                            const newIndex = index;
-
-                            console.log(`oldIndex: ${oldIndex}, newIndex: ${newIndex}`); // 로그로 확인
-
-                            if (oldIndex !== newIndex) {
-                                swapFiles(oldIndex, newIndex);
-                            }
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching file list:', error);
-                    fileListElement.innerHTML = 'An error occurred while retrieving the file list.'
-                });
-        }
-
-        // Waypoint를 역방향으로 변환하는 함수
-        function toggleReverseMode() {
-            reverseMode = !reverseMode;
-            const reverseButton = document.getElementById('reverseButton');
-
-            if (reverseMode) {
-                reverseButton.textContent = 'Reverse Mode ON';
-                alert('Reverse mode activated!');
-            }
-            else {
-                reverseButton.textContent = 'Reverse Mode OFF';
-                alert('Reverse mode deactivated!');
-            }
-        }
-
-        // 역방향 모드일 때 각 Point에서의 방향을 역방향으로 변환하는 함수
-        function reverseHeading(heading) {
-            return (heading + Math.PI) % (2 * Math.PI);
-        }
-
-        // 파일 시각화 함수
-        function viewFile(fileName, event) {
-            viewFileMode = !viewFileMode;
-
-            if (viewFileMode) {
-                fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
-                    .then(response => response.json())
-                    .then(fileContent => {                                    
-                        // 팝업용 Waypoint 생성
-                        createWaypointPopup(fileContent.waypoints);
-
-                        // 팝업용 지도 표시
-                        const rect = event.target.getBoundingClientRect();
-                        const mapPopupElement = document.getElementById('mapPopup');
-                        mapPopupElement.style.display = 'block';
-                        mapPopupElement.style.left = `50%`;
-                        mapPopupElement.style.top = `${rect.bottom + 150}px`; // 클릭 위치 바로 아래로 10px 이동
-
-                        // 팝업 지연에 맞추어 타이머 설정
-                        setTimeout(() => {
-                            // 팝업용 지도 크기 재조정
-                            mapPopup.invalidateSize();
-                        }, 200);
-                    })
-                    .catch(error => {
-                        console.error('Error loading file:', error);
-                    });
-            }
-            else if (!viewFileMode) {
-                fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
-                    .then(response => response.json())
-                    .then(fileContent => {
-                        // 팝업용 지도에서 모든 Waypoints 제거
-                        mapPopupWaypoints.forEach(point => {
-                            mapPopup.removeLayer(point.marker);
-                        });
-
-                        // 팝업용 지도에서 모든 Waypoints Lines 제거
-                        popupWaypoint_lines.forEach(line => {
-                            mapPopup.removeLayer(line);
-                        });
-
-                        // 팝업용 Waypoints 초기화
-                        mapPopupWaypoints = [];
-                        popupWaypoint_lines = [];
-
-                        // 팝업용 지도 숨김
-                        document.getElementById('mapPopup').style.display = 'none';
-                    })
-                    .catch(error => {
-                        console.error('Error loading file:', error);
-                    });
-            }
-        }
-
-        // 파일명 수정 함수
-        function renameFile(oldFileName) {
-            const newFileName = prompt('Enter new file name:', oldFileName);
-            if (newFileName) {
-                fetch(`http://192.168.0.16:3000/api/rename-file`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ oldFileName: oldFileName, newFileName: newFileName })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.message);
-                    alert(data.message);
-                    fetchYAMLFiles();
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }
-
-        // 파일 순서 변경 함수
-        function swapFiles(oldIndex, newIndex) {
-            fetch(`http://192.168.0.16:3000/api/swap-files`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ oldIndex: oldIndex, newIndex: newIndex })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message);
-                fetchYAMLFiles();
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // YAML 파일 삭제 확인 팝업 함수
-        function openDeletePopup(fileName) {
-            document.getElementById('deleteConfirmationPopup').style.display = 'flex';
-            deleteYamlFileName = fileName;
-        }
-
-        // YAML 파일 삭제 확인 팝업 닫는 함수
-        function cancelDelete() {
-            document.getElementById('deleteConfirmationPopup').style.display = 'none';
-            deleteYamlFileName = null;
-        }
-
-        // YAML 파일 삭제 함수
-        function deleteFile() {
-            const fileName = deleteYamlFileName;
-
-            fetch('http://192.168.0.16:3000/api/delete-file', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ fileName })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('deleteConfirmationPopup').style.display = 'none';
-                deleteYamlFileName = null;
-                alert(data.message);
-                fetchYAMLFiles();
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Waypoint Point 정보 팝업 함수
-        function showWaypointPopup(useCurrentData = true, fileName = null) {
-
-            if (!useCurrentData && fileName) {
-                // 서버에서 파일 불러오기
-                fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
-                    .then(response => response.json())
-                    .then(fileContent => {
-                        console.log(`Selected File: ${fileName}`);
-                        setCurrentYamlData(fileContent);
-                        updateWaypointList(fileContent);
-                        document.getElementById('waypoint-popup2').dataset.name = fileName;
-                    })
-                    .catch(error => {
-                        console.error('Error loading file:', error);
-                    });
-            }
-            else {
-                // 수정된 파일 내용을 사용하기
-                updateWaypointList(currentYamlData);
-            }
-            openPopup('waypoint-popup2');
-            document.getElementById('waypoint-popup2').style.display = 'block';
-        }
-
-        // Waypoint Point 정보 목록을 업데이트하는 함수
-        function updateWaypointList(fileContent) {
-            const waypointListElement = document.getElementById('waypointList');
-            waypointListElement.innerHTML = '';
-
-            fileContent.waypoints.forEach((point, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <strong>${point.label}</strong>
-                    <ul>
-                        <li>Latitude: ${point.latlng.lat}</li>
-                        <li>Longitude: ${point.latlng.lng}</li>
-                        <li>Heading: ${point.heading}</li>
-                    </ul>
-                    <button onclick="editWaypoint(${index})">Edit</button>
-                    <button onclick="deleteWaypoint(${index})">Delete</button>
-                `;
-                waypointListElement.appendChild(li);
-            });
-        }
-
-        // Waypoint Point 정보 팝업을 닫는 함수
-        function closeWaypointPopup() {
-            document.getElementById('waypoint-popup2').style.display = 'none';
-        }
-
-        // YAML 데이터를 저장하는 함수
-        function setCurrentYamlData(yamlData) {
-            currentYamlData = yamlData;
-        }
-
-        // Waypoint Point 수정 함수
-        function editWaypoint(index) {
-            const yamlData = currentYamlData;
-            const point = yamlData.waypoints[index];
-
-            // 팝업창에 기존 값 세팅
-            document.getElementById('latInput').value = point.latlng.lat;
-            document.getElementById('lngInput').value = point.latlng.lng;
-            document.getElementById('headingInput').value = point.heading;
-
-            // 저장 시에 사용할 index도 함께 저장
-            document.getElementById('editFormPopup').dataset.index = index;
-
-            // 팝업창 열기
-            openPopup('editFormPopup');
-            document.getElementById('editFormPopup').style.display = 'block';
-        }
-
-        // Point 수정 후 저장 버튼 클릭 시 수정된 값을 반영하는 함수
-        function saveEditedWaypoint() {
-            const index = document.getElementById('editFormPopup').dataset.index;
-            const yamlData = currentYamlData;
-            const point = yamlData.waypoints[index];
-
-            // 수정된 값들 가져오기
-            point.latlng.lat = parseFloat(document.getElementById('latInput').value);
-            point.latlng.lng = parseFloat(document.getElementById('lngInput').value);
-            point.heading = parseFloat(document.getElementById('headingInput').value);
-
-            console.log(yamlData);
-            // 팝업창 닫은 후 데이터 업데이트
-            closeEditPopup();
-            showWaypointPopup(true);
-        }
-
-        // Waypoint Point 팝업창 닫는 함수
-        function closeEditPopup() {
-            document.getElementById('editFormPopup').style.display = 'none';
-        }
-
-        // Waypoint Point 삭제 함수
-        function deleteWaypoint(index) {
-            const yamlData = currentYamlData;
-            const prefix = yamlData.waypoints[0].label.charAt(0);
-
-            // Point 삭제
-            yamlData.waypoints.splice(index, 1);
-
-            // 삭제 후 라벨을 재정렬
-            yamlData.waypoints.forEach((point, i) => {
-                point.label = `${prefix}-${i + 1}`;
-            })
-
-            showWaypointPopup(true);
-        }
-
-        // Waypoint Point 추가용 팝업 페이지 여는 함수
-        function openPointPopup() {
-            const fileName = document.getElementById('waypoint-popup2').dataset.name;
-
-            fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
-                                .then(response => response.json())
-                                .then(fileContent => {                                    
-                                    // 팝업용 Waypoint 생성
-                                    createWaypointPointPopup(fileContent.waypoints);
-
-                                    // 팝업용 지도(Point 추가) 표시
-                                    openPopup('mapPopupPointPage');
-                                    const mapPopupPointPageElement = document.getElementById('mapPopupPointPage');
-                                    mapPopupPointPageElement.style.display = 'block';
-
-                                    // 팝업 지연에 맞추어 타이머 설정
-                                    setTimeout(() => {
-                                        // 팝업용 지도 크기 재조정
-                                        const mapPopupPointElement = document.getElementById('mapPopupPoint');
-                                        mapPopupPoint.invalidateSize();
-                                    }, 200);
-                                })
-                                .catch(error => {
-                                    console.error('Error loading file:', error);
-                                });
-        }
-
-        // Waypoint Point 추가용 팝업 페이지 닫는 함수
-        function closeMapPopupPoint() {
-            document.getElementById('mapPopupPointPage').style.display = 'none';
-
-            // 변수 및 객체 초기화
-            popupPointCounter = 1;
-            pointLineMode = true;
-            addPointMode = false;
-            mapPopupPointWaypoints = [];
-            popupPointWaypoint_lines = [];
-
-            document.getElementById('point_index').value = '';
-
-            // 업데이트
-            showWaypointPopup(true);
-        }
-
-        // Waypoint Point 추가 함수
-        function addPoint() {
-            addPointMode = !addPointMode;
-            const yamlData = currentYamlData;
-
-            if (addPointMode) {
-                // addPointMode가 true일 때 이벤트 리스너 활성화
-                mapPopupPoint.on('mousedown', onMouseDown);
-                mapPopupPoint.on('mousemove', onMouseMove);
-                mapPopupPoint.on('mouseup', function(e) {
-                    onMouseUp(e, yamlData);
-                });
-            } else {
-                // addPointMode가 false일 때 이벤트 리스너 제거
-                mapPopupPoint.off('mousedown', onMouseDown);
-                mapPopupPoint.off('mousemove', onMouseMove);
-                mapPopupPoint.off('mouseup', function(e) {
-                    onMouseUp(e, yamlData);
-                });
-            }            
-        }
-
-        // mousedown 이벤트 핸들러
-        function onMouseDown(e) {
-            if (e.originalEvent.button === 0) {
-                isDragging = true;
-                startLatLng = e.latlng;
-
-                e.originalEvent.preventDefault();
-                e.originalEvent.stopPropagation();
-
-                mapPopupPoint.dragging.disable();
-
-                tempMarker = L.marker(startLatLng, {
-                    icon: L.divIcon({
-                        className: 'custom-div-icon',
-                        html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                        iconSize: [15, 15],
-                    }),
-                    draggable: false,
-                }).addTo(mapPopupPoint);
-            } else if (e.originalEvent.button === 1) {
-                mapPopupPoint.dragging.enable();
-            }
-        }
-
-        // mousemove 이벤트 핸들러
-        function onMouseMove(e) {
-            if (!isDragging) return;
-
-            e.originalEvent.preventDefault();
-            e.originalEvent.stopPropagation();
-
-            const currentLatLng = e.latlng;
-            const angle = calculateHeading(startLatLng, currentLatLng);
-
-            tempMarker.setLatLng(startLatLng);
-
-            const arrowElement = tempMarker.getElement().querySelector('img');
-            arrowElement.style.transform = `rotate(${1.57 - angle}rad)`;
-        }
-
-        // mouseup 이벤트 핸들러
-        function onMouseUp(e, yamlData) {
-            if (!isDragging) return;
-            isDragging = false;
-
-            e.originalEvent.preventDefault();
-            e.originalEvent.stopPropagation();
-
-            const pointColor = yamlData.waypoints[0].color;
-            const pointType = yamlData.waypoints[0].type;
-
-            const endLatLng = e.latlng;
-            const label = '';
-            const heading = calculateHeading(startLatLng, endLatLng);
-
-            let waypointToUse = findNearestWaypoint(startLatLng);
-
-            if (waypointToUse) {
-                startLatLng = waypointToUse.latlng;
-            }
-
-            const waypoint = L.marker(startLatLng, {
-                title: label,
-                icon: L.divIcon({
-                    className: 'custom-div-icon',
-                    html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                    iconSize: [15, 15],
-                }),
-                draggable: false,
-            }).addTo(mapPopupPoint);
-
-            const arrowElement = waypoint.getElement().querySelector('img');
-            arrowElement.style.transform = `rotate(${1.57 - heading}rad)`;
-
-            waypoint.label = label;
-            waypoint.color = pointColor;
-            waypoint.latlng = startLatLng;
-            waypoint.heading = heading;
-            waypoint.type = pointType;
-
-            addPopupWaypoints.push({
-                marker: waypoint,
-                color: pointColor,
-                latlng: startLatLng,
-                label: label,
-                heading: heading,
-                type: pointType
-            });
-
-            mapPopupPoint.dragging.enable();
-            mapPopupPoint.removeLayer(tempMarker);
-        }
-
-        // Waypoint Point 추가용 팝업 페이지에서 추가된 Point 저장 함수
-        function saveMapPopupPoint() {
-            const yamlData = currentYamlData;
-            const index = document.getElementById('point_index').value;
-            const waypointsData = [];
-
-            addPopupWaypoints.forEach(point => {
-                waypointsData.push({
-                    label: point.label,
-                    color: point.color,
-                    latlng: {
-                        lat: point.latlng.lat,
-                        lng: point.latlng.lng
-                    },
-                    heading: point.heading,
-                    type: point.type
-                });
-            });
-
-            // Waypoints 데이터 삽입
-            insertPointToYaml(yamlData, waypointsData[0], index);
-
-            // 팝업 종료
-            closeMapPopupPoint();
-        }
-
-        // 추가된 Point를 YAML 데이터에 삽입하는 함수
-        function insertPointToYaml(yamlData, newPoint, index) {
-            // 1. Waypoints 배열에서 삽입 위치를 기준으로 새로운 데이터 삽입
-            yamlData.waypoints.splice(index, 0, newPoint);
-
-            // 2. 라벨과 순서를 다시 재정렬
-            const label = yamlData.waypoints[0].label.charAt(0);
+//                         // 현재 순서 표시
+//                         const orderButton = document.createElement('button');
+//                         orderButton.textContent = index + 1;
+//                         orderButton.disabled = true;
+
+//                         // 파일 이름 표시 및 수정
+//                         const fileNameSpan = document.createElement('span');
+//                         fileNameSpan.textContent = file;
+//                         fileNameSpan.onclick = () => selectFile(file);
+
+//                         // 파일 시각화 버튼
+//                         const viewButton = document.createElement('button');
+//                         viewButton.textContent = 'view';
+//                         viewButton.onclick = (event) => viewFile(file, event);
+
+//                         // 파일명 수정 버튼
+//                         const renameButton = document.createElement('button');
+//                         renameButton.textContent = 'rename';
+//                         renameButton.onclick = () => renameFile(file);
+
+//                         // 파일 정보 팝업 버튼
+//                         const infoButton = document.createElement('button');
+//                         infoButton.textContent = 'info';
+//                         infoButton.onclick = () => showWaypointPopup(false, file);
+
+//                         // 파일 삭제 버튼
+//                         const deleteButton = document.createElement('button');
+//                         deleteButton.textContent = 'delete';
+//                         deleteButton.onclick = () => openDeletePopup(file);
+
+//                         // 각 요소에 클래스 추가
+//                         orderButton.classList.add('item-space');
+//                         fileNameSpan.classList.add('item-space');
+//                         viewButton.classList.add('item-space');
+//                         renameButton.classList.add('item-space');
+//                         infoButton.classList.add('item-space');
+
+//                         // 목록 항목에 추가
+//                         li.appendChild(orderButton);
+//                         li.appendChild(fileNameSpan);
+//                         li.appendChild(viewButton);
+//                         li.appendChild(renameButton);
+//                         li.appendChild(infoButton);
+//                         li.appendChild(deleteButton);
+//                         fileListElement.appendChild(li);
+
+//                         // 파일 순서 변경
+//                         li.addEventListener('dragstart', (event) => {
+//                             event.dataTransfer.setData('text/plain', index);
+//                         });
+
+//                         li.addEventListener('dragover', (event) => {
+//                             event.preventDefault();
+//                         });
+
+//                         li.addEventListener('drop', (event) => {
+//                             event.preventDefault(); // 기본 동작을 막아야 정상적으로 drop이 동작함
+//                             event.stopPropagation(); // 이벤트 전파 방지
+
+//                             const oldIndex = event.dataTransfer.getData('text/plain');
+//                             const newIndex = index;
+
+//                             console.log(`oldIndex: ${oldIndex}, newIndex: ${newIndex}`); // 로그로 확인
+
+//                             if (oldIndex !== newIndex) {
+//                                 swapFiles(oldIndex, newIndex);
+//                             }
+//                         });
+//                     });
+//                 })
+//                 .catch(error => {
+//                     console.error('Error fetching file list:', error);
+//                     fileListElement.innerHTML = 'An error occurred while retrieving the file list.'
+//                 });
+//         }
+
+//         // Waypoint를 역방향으로 변환하는 함수
+//         function toggleReverseMode() {
+//             reverseMode = !reverseMode;
+//             const reverseButton = document.getElementById('reverseButton');
+
+//             if (reverseMode) {
+//                 reverseButton.textContent = 'Reverse Mode ON';
+//                 alert('Reverse mode activated!');
+//             }
+//             else {
+//                 reverseButton.textContent = 'Reverse Mode OFF';
+//                 alert('Reverse mode deactivated!');
+//             }
+//         }
+
+//         // 역방향 모드일 때 각 Point에서의 방향을 역방향으로 변환하는 함수
+//         function reverseHeading(heading) {
+//             return (heading + Math.PI) % (2 * Math.PI);
+//         }
+
+//         // 파일 시각화 함수
+//         function viewFile(fileName, event) {
+//             viewFileMode = !viewFileMode;
+
+//             if (viewFileMode) {
+//                 fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
+//                     .then(response => response.json())
+//                     .then(fileContent => {                                    
+//                         // 팝업용 Waypoint 생성
+//                         createWaypointPopup(fileContent.waypoints);
+
+//                         // 팝업용 지도 표시
+//                         const rect = event.target.getBoundingClientRect();
+//                         const mapPopupElement = document.getElementById('mapPopup');
+//                         mapPopupElement.style.display = 'block';
+//                         mapPopupElement.style.left = `50%`;
+//                         mapPopupElement.style.top = `${rect.bottom + 150}px`; // 클릭 위치 바로 아래로 10px 이동
+
+//                         // 팝업 지연에 맞추어 타이머 설정
+//                         setTimeout(() => {
+//                             // 팝업용 지도 크기 재조정
+//                             mapPopup.invalidateSize();
+//                         }, 200);
+//                     })
+//                     .catch(error => {
+//                         console.error('Error loading file:', error);
+//                     });
+//             }
+//             else if (!viewFileMode) {
+//                 fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
+//                     .then(response => response.json())
+//                     .then(fileContent => {
+//                         // 팝업용 지도에서 모든 Waypoints 제거
+//                         mapPopupWaypoints.forEach(point => {
+//                             mapPopup.removeLayer(point.marker);
+//                         });
+
+//                         // 팝업용 지도에서 모든 Waypoints Lines 제거
+//                         popupWaypoint_lines.forEach(line => {
+//                             mapPopup.removeLayer(line);
+//                         });
+
+//                         // 팝업용 Waypoints 초기화
+//                         mapPopupWaypoints = [];
+//                         popupWaypoint_lines = [];
+
+//                         // 팝업용 지도 숨김
+//                         document.getElementById('mapPopup').style.display = 'none';
+//                     })
+//                     .catch(error => {
+//                         console.error('Error loading file:', error);
+//                     });
+//             }
+//         }
+
+//         // 파일명 수정 함수
+//         function renameFile(oldFileName) {
+//             const newFileName = prompt('Enter new file name:', oldFileName);
+//             if (newFileName) {
+//                 fetch(`http://192.168.0.16:3000/api/rename-file`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Content-Type': 'application/json',
+//                     },
+//                     body: JSON.stringify({ oldFileName: oldFileName, newFileName: newFileName })
+//                 })
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     console.log(data.message);
+//                     alert(data.message);
+//                     fetchYAMLFiles();
+//                 })
+//                 .catch(error => console.error('Error:', error));
+//             }
+//         }
+
+//         // 파일 순서 변경 함수
+//         function swapFiles(oldIndex, newIndex) {
+//             fetch(`http://192.168.0.16:3000/api/swap-files`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ oldIndex: oldIndex, newIndex: newIndex })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 console.log(data.message);
+//                 fetchYAMLFiles();
+//             })
+//             .catch(error => console.error('Error:', error));
+//         }
+
+//         // YAML 파일 삭제 확인 팝업 함수
+//         function openDeletePopup(fileName) {
+//             document.getElementById('deleteConfirmationPopup').style.display = 'flex';
+//             deleteYamlFileName = fileName;
+//         }
+
+//         // YAML 파일 삭제 확인 팝업 닫는 함수
+//         function cancelDelete() {
+//             document.getElementById('deleteConfirmationPopup').style.display = 'none';
+//             deleteYamlFileName = null;
+//         }
+
+//         // YAML 파일 삭제 함수
+//         function deleteFile() {
+//             const fileName = deleteYamlFileName;
+
+//             fetch('http://192.168.0.16:3000/api/delete-file', {
+//                 method: 'DELETE',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ fileName })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 document.getElementById('deleteConfirmationPopup').style.display = 'none';
+//                 deleteYamlFileName = null;
+//                 alert(data.message);
+//                 fetchYAMLFiles();
+//             })
+//             .catch(error => console.error('Error:', error));
+//         }
+
+//         // Waypoint Point 정보 팝업 함수
+//         function showWaypointPopup(useCurrentData = true, fileName = null) {
+
+//             if (!useCurrentData && fileName) {
+//                 // 서버에서 파일 불러오기
+//                 fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
+//                     .then(response => response.json())
+//                     .then(fileContent => {
+//                         console.log(`Selected File: ${fileName}`);
+//                         setCurrentYamlData(fileContent);
+//                         updateWaypointList(fileContent);
+//                         document.getElementById('waypoint-popup2').dataset.name = fileName;
+//                     })
+//                     .catch(error => {
+//                         console.error('Error loading file:', error);
+//                     });
+//             }
+//             else {
+//                 // 수정된 파일 내용을 사용하기
+//                 updateWaypointList(currentYamlData);
+//             }
+//             openPopup('waypoint-popup2');
+//             document.getElementById('waypoint-popup2').style.display = 'block';
+//         }
+
+//         // Waypoint Point 정보 목록을 업데이트하는 함수
+//         function updateWaypointList(fileContent) {
+//             const waypointListElement = document.getElementById('waypointList');
+//             waypointListElement.innerHTML = '';
+
+//             fileContent.waypoints.forEach((point, index) => {
+//                 const li = document.createElement('li');
+//                 li.innerHTML = `
+//                     <strong>${point.label}</strong>
+//                     <ul>
+//                         <li>Latitude: ${point.latlng.lat}</li>
+//                         <li>Longitude: ${point.latlng.lng}</li>
+//                         <li>Heading: ${point.heading}</li>
+//                     </ul>
+//                     <button onclick="editWaypoint(${index})">Edit</button>
+//                     <button onclick="deleteWaypoint(${index})">Delete</button>
+//                 `;
+//                 waypointListElement.appendChild(li);
+//             });
+//         }
+
+//         // Waypoint Point 정보 팝업을 닫는 함수
+//         function closeWaypointPopup() {
+//             document.getElementById('waypoint-popup2').style.display = 'none';
+//         }
+
+//         // YAML 데이터를 저장하는 함수
+//         function setCurrentYamlData(yamlData) {
+//             currentYamlData = yamlData;
+//         }
+
+//         // Waypoint Point 수정 함수
+//         function editWaypoint(index) {
+//             const yamlData = currentYamlData;
+//             const point = yamlData.waypoints[index];
+
+//             // 팝업창에 기존 값 세팅
+//             document.getElementById('latInput').value = point.latlng.lat;
+//             document.getElementById('lngInput').value = point.latlng.lng;
+//             document.getElementById('headingInput').value = point.heading;
+
+//             // 저장 시에 사용할 index도 함께 저장
+//             document.getElementById('editFormPopup').dataset.index = index;
+
+//             // 팝업창 열기
+//             openPopup('editFormPopup');
+//             document.getElementById('editFormPopup').style.display = 'block';
+//         }
+
+//         // Point 수정 후 저장 버튼 클릭 시 수정된 값을 반영하는 함수
+//         function saveEditedWaypoint() {
+//             const index = document.getElementById('editFormPopup').dataset.index;
+//             const yamlData = currentYamlData;
+//             const point = yamlData.waypoints[index];
+
+//             // 수정된 값들 가져오기
+//             point.latlng.lat = parseFloat(document.getElementById('latInput').value);
+//             point.latlng.lng = parseFloat(document.getElementById('lngInput').value);
+//             point.heading = parseFloat(document.getElementById('headingInput').value);
+
+//             console.log(yamlData);
+//             // 팝업창 닫은 후 데이터 업데이트
+//             closeEditPopup();
+//             showWaypointPopup(true);
+//         }
+
+//         // Waypoint Point 팝업창 닫는 함수
+//         function closeEditPopup() {
+//             document.getElementById('editFormPopup').style.display = 'none';
+//         }
+
+//         // Waypoint Point 삭제 함수
+//         function deleteWaypoint(index) {
+//             const yamlData = currentYamlData;
+//             const prefix = yamlData.waypoints[0].label.charAt(0);
+
+//             // Point 삭제
+//             yamlData.waypoints.splice(index, 1);
+
+//             // 삭제 후 라벨을 재정렬
+//             yamlData.waypoints.forEach((point, i) => {
+//                 point.label = `${prefix}-${i + 1}`;
+//             })
+
+//             showWaypointPopup(true);
+//         }
+
+//         // Waypoint Point 추가용 팝업 페이지 여는 함수
+//         function openPointPopup() {
+//             const fileName = document.getElementById('waypoint-popup2').dataset.name;
+
+//             fetch(`http://192.168.0.16:3000/api/yaml-files/${fileName}`)
+//                                 .then(response => response.json())
+//                                 .then(fileContent => {                                    
+//                                     // 팝업용 Waypoint 생성
+//                                     createWaypointPointPopup(fileContent.waypoints);
+
+//                                     // 팝업용 지도(Point 추가) 표시
+//                                     openPopup('mapPopupPointPage');
+//                                     const mapPopupPointPageElement = document.getElementById('mapPopupPointPage');
+//                                     mapPopupPointPageElement.style.display = 'block';
+
+//                                     // 팝업 지연에 맞추어 타이머 설정
+//                                     setTimeout(() => {
+//                                         // 팝업용 지도 크기 재조정
+//                                         const mapPopupPointElement = document.getElementById('mapPopupPoint');
+//                                         mapPopupPoint.invalidateSize();
+//                                     }, 200);
+//                                 })
+//                                 .catch(error => {
+//                                     console.error('Error loading file:', error);
+//                                 });
+//         }
+
+//         // Waypoint Point 추가용 팝업 페이지 닫는 함수
+//         function closeMapPopupPoint() {
+//             document.getElementById('mapPopupPointPage').style.display = 'none';
+
+//             // 변수 및 객체 초기화
+//             popupPointCounter = 1;
+//             pointLineMode = true;
+//             addPointMode = false;
+//             mapPopupPointWaypoints = [];
+//             popupPointWaypoint_lines = [];
+
+//             document.getElementById('point_index').value = '';
+
+//             // 업데이트
+//             showWaypointPopup(true);
+//         }
+
+//         // Waypoint Point 추가 함수
+//         function addPoint() {
+//             addPointMode = !addPointMode;
+//             const yamlData = currentYamlData;
+
+//             if (addPointMode) {
+//                 // addPointMode가 true일 때 이벤트 리스너 활성화
+//                 mapPopupPoint.on('mousedown', onMouseDown);
+//                 mapPopupPoint.on('mousemove', onMouseMove);
+//                 mapPopupPoint.on('mouseup', function(e) {
+//                     onMouseUp(e, yamlData);
+//                 });
+//             } else {
+//                 // addPointMode가 false일 때 이벤트 리스너 제거
+//                 mapPopupPoint.off('mousedown', onMouseDown);
+//                 mapPopupPoint.off('mousemove', onMouseMove);
+//                 mapPopupPoint.off('mouseup', function(e) {
+//                     onMouseUp(e, yamlData);
+//                 });
+//             }            
+//         }
+
+//         // mousedown 이벤트 핸들러
+//         function onMouseDown(e) {
+//             if (e.originalEvent.button === 0) {
+//                 isDragging = true;
+//                 startLatLng = e.latlng;
+
+//                 e.originalEvent.preventDefault();
+//                 e.originalEvent.stopPropagation();
+
+//                 mapPopupPoint.dragging.disable();
+
+//                 tempMarker = L.marker(startLatLng, {
+//                     icon: L.divIcon({
+//                         className: 'custom-div-icon',
+//                         html: '<img src="robot_1.png" alt="Custom Icon"/>',
+//                         iconSize: [15, 15],
+//                     }),
+//                     draggable: false,
+//                 }).addTo(mapPopupPoint);
+//             } else if (e.originalEvent.button === 1) {
+//                 mapPopupPoint.dragging.enable();
+//             }
+//         }
+
+//         // mousemove 이벤트 핸들러
+//         function onMouseMove(e) {
+//             if (!isDragging) return;
+
+//             e.originalEvent.preventDefault();
+//             e.originalEvent.stopPropagation();
+
+//             const currentLatLng = e.latlng;
+//             const angle = calculateHeading(startLatLng, currentLatLng);
+
+//             tempMarker.setLatLng(startLatLng);
+
+//             const arrowElement = tempMarker.getElement().querySelector('img');
+//             arrowElement.style.transform = `rotate(${1.57 - angle}rad)`;
+//         }
+
+//         // mouseup 이벤트 핸들러
+//         function onMouseUp(e, yamlData) {
+//             if (!isDragging) return;
+//             isDragging = false;
+
+//             e.originalEvent.preventDefault();
+//             e.originalEvent.stopPropagation();
+
+//             const pointColor = yamlData.waypoints[0].color;
+//             const pointType = yamlData.waypoints[0].type;
+
+//             const endLatLng = e.latlng;
+//             const label = '';
+//             const heading = calculateHeading(startLatLng, endLatLng);
+
+//             let waypointToUse = findNearestWaypoint(startLatLng);
+
+//             if (waypointToUse) {
+//                 startLatLng = waypointToUse.latlng;
+//             }
+
+//             const waypoint = L.marker(startLatLng, {
+//                 title: label,
+//                 icon: L.divIcon({
+//                     className: 'custom-div-icon',
+//                     html: '<img src="robot_1.png" alt="Custom Icon"/>',
+//                     iconSize: [15, 15],
+//                 }),
+//                 draggable: false,
+//             }).addTo(mapPopupPoint);
+
+//             const arrowElement = waypoint.getElement().querySelector('img');
+//             arrowElement.style.transform = `rotate(${1.57 - heading}rad)`;
+
+//             waypoint.label = label;
+//             waypoint.color = pointColor;
+//             waypoint.latlng = startLatLng;
+//             waypoint.heading = heading;
+//             waypoint.type = pointType;
+
+//             addPopupWaypoints.push({
+//                 marker: waypoint,
+//                 color: pointColor,
+//                 latlng: startLatLng,
+//                 label: label,
+//                 heading: heading,
+//                 type: pointType
+//             });
+
+//             mapPopupPoint.dragging.enable();
+//             mapPopupPoint.removeLayer(tempMarker);
+//         }
+
+//         // Waypoint Point 추가용 팝업 페이지에서 추가된 Point 저장 함수
+//         function saveMapPopupPoint() {
+//             const yamlData = currentYamlData;
+//             const index = document.getElementById('point_index').value;
+//             const waypointsData = [];
+
+//             addPopupWaypoints.forEach(point => {
+//                 waypointsData.push({
+//                     label: point.label,
+//                     color: point.color,
+//                     latlng: {
+//                         lat: point.latlng.lat,
+//                         lng: point.latlng.lng
+//                     },
+//                     heading: point.heading,
+//                     type: point.type
+//                 });
+//             });
+
+//             // Waypoints 데이터 삽입
+//             insertPointToYaml(yamlData, waypointsData[0], index);
+
+//             // 팝업 종료
+//             closeMapPopupPoint();
+//         }
+
+//         // 추가된 Point를 YAML 데이터에 삽입하는 함수
+//         function insertPointToYaml(yamlData, newPoint, index) {
+//             // 1. Waypoints 배열에서 삽입 위치를 기준으로 새로운 데이터 삽입
+//             yamlData.waypoints.splice(index, 0, newPoint);
+
+//             // 2. 라벨과 순서를 다시 재정렬
+//             const label = yamlData.waypoints[0].label.charAt(0);
             
-            yamlData.waypoints.forEach((point, index) => {
-                point.label = `${label}-${index + 1}`;
-            });
-        }
+//             yamlData.waypoints.forEach((point, index) => {
+//                 point.label = `${label}-${index + 1}`;
+//             });
+//         }
 
-        // Waypoint Point 추가용 팝업 페이지에서 추가된 Point 취소 함수
-        function cancelPoint() {
-            // 팝업용 지도(Point 추가)에서 추가된 Points 제거
-            addPopupWaypoints.forEach(point => {
-                mapPopupPoint.removeLayer(point.marker);
-            });
+//         // Waypoint Point 추가용 팝업 페이지에서 추가된 Point 취소 함수
+//         function cancelPoint() {
+//             // 팝업용 지도(Point 추가)에서 추가된 Points 제거
+//             addPopupWaypoints.forEach(point => {
+//                 mapPopupPoint.removeLayer(point.marker);
+//             });
 
-            // 변수 초기화
-            addPopupWaypoints = [];
-        }
+//             // 변수 초기화
+//             addPopupWaypoints = [];
+//         }
 
-        // Waypoint Point 추가용 팝업 페이지에서 Line 시각화 제어 함수
-        function togglePointLine() {
-            // 팝업용 지도(Point 추가)의 Waypoint Line 시각화 모드 토글
-            pointLineMode = !pointLineMode;
+//         // Waypoint Point 추가용 팝업 페이지에서 Line 시각화 제어 함수
+//         function togglePointLine() {
+//             // 팝업용 지도(Point 추가)의 Waypoint Line 시각화 모드 토글
+//             pointLineMode = !pointLineMode;
 
-            if (!pointLineMode) {
-                // 팝업용 지도(Point 추가)에서 모든 Waypoints Lines 제거
-                popupPointWaypoint_lines.forEach(line => {
-                    mapPopupPoint.removeLayer(line);
-                });
-            }
-            else {
-                // 팝업용 지도(Point 추가)에서 모든 Waypoints Lines 생성
-                popupPointWaypoint_lines.forEach(line => {
-                    line.addTo(mapPopupPoint);
-                });
-            }
-        }
+//             if (!pointLineMode) {
+//                 // 팝업용 지도(Point 추가)에서 모든 Waypoints Lines 제거
+//                 popupPointWaypoint_lines.forEach(line => {
+//                     mapPopupPoint.removeLayer(line);
+//                 });
+//             }
+//             else {
+//                 // 팝업용 지도(Point 추가)에서 모든 Waypoints Lines 생성
+//                 popupPointWaypoint_lines.forEach(line => {
+//                     line.addTo(mapPopupPoint);
+//                 });
+//             }
+//         }
 
-        // Waypoint YAML 파일 덮어쓰는 함수
-        function overwriteWaypoint() {
-            const yamlData = currentYamlData;
-            const fileName = document.getElementById('waypoint-popup2').dataset.name;
+//         // Waypoint YAML 파일 덮어쓰는 함수
+//         function overwriteWaypoint() {
+//             const yamlData = currentYamlData;
+//             const fileName = document.getElementById('waypoint-popup2').dataset.name;
 
-            fetch('http://192.168.0.16:3000/api/overwrite-file', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ fileName: fileName, data: yamlData })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                document.getElementById('waypoint-popup2').style.display = 'none';
-            })
-            .catch(error => console.error('Error:', error));
-        }
+//             fetch('http://192.168.0.16:3000/api/overwrite-file', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ fileName: fileName, data: yamlData })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 alert(data.message);
+//                 document.getElementById('waypoint-popup2').style.display = 'none';
+//             })
+//             .catch(error => console.error('Error:', error));
+//         }
 
-        // 새로운 파일명을 입력하는 팝업을 생성하는 함수
-        function openFileNamePopup() {
-            openPopup('fileNamePopup');
-            document.getElementById('fileNamePopup').style.display = 'block';
-        }
+//         // 새로운 파일명을 입력하는 팝업을 생성하는 함수
+//         function openFileNamePopup() {
+//             openPopup('fileNamePopup');
+//             document.getElementById('fileNamePopup').style.display = 'block';
+//         }
 
-        // Waypoint YAML 파일 새로 생성해서 저장하는 함수
-        function saveAsNew() {
-            const newFileName = document.getElementById('newFileName').value;
+//         // Waypoint YAML 파일 새로 생성해서 저장하는 함수
+//         function saveAsNew() {
+//             const newFileName = document.getElementById('newFileName').value;
 
-            if (!newFileName) {
-                alert("Please enter a new file name.");
-                return;
-            }
+//             if (!newFileName) {
+//                 alert("Please enter a new file name.");
+//                 return;
+//             }
 
-            document.getElementById('fileNamePopup').style.display = 'none';
+//             document.getElementById('fileNamePopup').style.display = 'none';
 
-            const yamlData = currentYamlData;
+//             const yamlData = currentYamlData;
 
-            fetch('http://192.168.0.16:3000/api/save-file', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ fileName: newFileName, data: yamlData })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                document.getElementById('waypoint-popup2').style.display = 'none';
-                fetchYAMLFiles();
-            })
-            .catch(error => console.error("Error:", error));
-        }
+//             fetch('http://192.168.0.16:3000/api/save-file', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ fileName: newFileName, data: yamlData })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 alert(data.message);
+//                 document.getElementById('waypoint-popup2').style.display = 'none';
+//                 fetchYAMLFiles();
+//             })
+//             .catch(error => console.error("Error:", error));
+//         }
 
-        // 팝업 닫기
-        function closeFileNamePopup() {
-            document.getElementById('fileNamePopup').style.display = 'none';
-        }
+//         // 팝업 닫기
+//         function closeFileNamePopup() {
+//             document.getElementById('fileNamePopup').style.display = 'none';
+//         }
 
-        // Waypoint 생성 함수 (YAML 파일 형식)
-        function createWaypoint(yaml_waypoints, robotID) {
-            if (Array.isArray(yaml_waypoints)) {
-                yaml_waypoints.forEach(point => {
+//         // Waypoint 생성 함수 (YAML 파일 형식)
+//         function createWaypoint(yaml_waypoints, robotID) {
+//             if (Array.isArray(yaml_waypoints)) {
+//                 yaml_waypoints.forEach(point => {
 
-                    // Waypoint 구분
-                    if (pointCounter === 1) {
-                        // 작업 중인 Waypoint가 있는 경우
-                        if (waypoints.length > 0) {
-                            startNewGroup();
-                        }
-                        tempLabel = point.label.charAt(0);
-                    }
-                    // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
-                    else if (pointCounter !== 1) {
-                        if (point.label.charAt(0) !== tempLabel) {
-                            startNewGroup();
-                            tempLabel = point.label.charAt(0);
-                        }
-                    }
+//                     // Waypoint 구분
+//                     if (pointCounter === 1) {
+//                         // 작업 중인 Waypoint가 있는 경우
+//                         if (waypoints.length > 0) {
+//                             startNewGroup();
+//                         }
+//                         tempLabel = point.label.charAt(0);
+//                     }
+//                     // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
+//                     else if (pointCounter !== 1) {
+//                         if (point.label.charAt(0) !== tempLabel) {
+//                             startNewGroup();
+//                             tempLabel = point.label.charAt(0);
+//                         }
+//                     }
 
-                    const waypoint = L.marker(point.latlng, {
-                        title: point.label,
-                        icon: L.divIcon({ 
-                            className: 'custom-div-icon',
-                            html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                            iconSize: [15, 15],
-                        }),
-                        draggable: false,
-                    }).addTo(map);
+//                     const waypoint = L.marker(point.latlng, {
+//                         title: point.label,
+//                         icon: L.divIcon({ 
+//                             className: 'custom-div-icon',
+//                             html: '<img src="robot_1.png" alt="Custom Icon"/>',
+//                             iconSize: [15, 15],
+//                         }),
+//                         draggable: false,
+//                     }).addTo(map);
 
-                    const arrowElement = waypoint.getElement().querySelector('img');
-                    arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
+//                     const arrowElement = waypoint.getElement().querySelector('img');
+//                     arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
 
-                    waypoint.label = point.label;
-                    waypoint.color = point.color;
-                    waypoint.latlng = point.latlng;
-                    waypoint.heading = point.heading;
-                    waypoint.type = point.type;
-                    waypoint.destination = '';
-                    waypoint.robot = robotID;
+//                     waypoint.label = point.label;
+//                     waypoint.color = point.color;
+//                     waypoint.latlng = point.latlng;
+//                     waypoint.heading = point.heading;
+//                     waypoint.type = point.type;
+//                     waypoint.destination = '';
+//                     waypoint.robot = robotID;
 
-                    waypoints.push({ 
-                        marker: waypoint, 
-                        color: point.color, 
-                        latlng: point.latlng, 
-                        label: point.label,
-                        heading: point.heading,
-                        type: point.type,
-                        destination: '',
-                        robot: robotID
-                    });
+//                     waypoints.push({ 
+//                         marker: waypoint, 
+//                         color: point.color, 
+//                         latlng: point.latlng, 
+//                         label: point.label,
+//                         heading: point.heading,
+//                         type: point.type,
+//                         destination: '',
+//                         robot: robotID
+//                     });
 
-                    selectedRobotWaypoints[robotID].push({
-                        label: point.label,
-                        latlng: point.latlng,
-                        heading: point.heading,
-                        type: point.type
-                    });
+//                     selectedRobotWaypoints[robotID].push({
+//                         label: point.label,
+//                         latlng: point.latlng,
+//                         heading: point.heading,
+//                         type: point.type
+//                     });
 
-                    if (waypoints.length > 1) {
-                        const previousWaypoint = waypoints[waypoints.length - 2].marker.getLatLng();
-                        const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(map);
+//                     if (waypoints.length > 1) {
+//                         const previousWaypoint = waypoints[waypoints.length - 2].marker.getLatLng();
+//                         const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(map);
 
-                        if (!waypoint_lines[point.label.charAt(0)]){
-                            waypoint_lines[point.label.charAt(0)] = [];
-                        }
-                        waypoint_lines[point.label.charAt(0)].push(polyline);
-                    }
+//                         if (!waypoint_lines[point.label.charAt(0)]){
+//                             waypoint_lines[point.label.charAt(0)] = [];
+//                         }
+//                         waypoint_lines[point.label.charAt(0)].push(polyline);
+//                     }
 
-                    if (pointCounter === 1) addWaypointToTable(point.label, point.color, robotID);
+//                     if (pointCounter === 1) addWaypointToTable(point.label, point.color, robotID);
             
-                    pointCounter++;
-                });
+//                     pointCounter++;
+//                 });
 
-                // Waypoint 업데이트
-                startNewGroup()
-            } else {
-                console.error('Invalid waypoints data format');
-            }
-        }
+//                 // Waypoint 업데이트
+//                 startNewGroup()
+//             } else {
+//                 console.error('Invalid waypoints data format');
+//             }
+//         }
 
-        // 팝업용 Waypoint 생성 함수 - 팝업용 지도
-        function createWaypointPopup(yaml_waypoints) {
-            if (Array.isArray(yaml_waypoints)) {
-                yaml_waypoints.forEach(point => {
+//         // 팝업용 Waypoint 생성 함수 - 팝업용 지도
+//         function createWaypointPopup(yaml_waypoints) {
+//             if (Array.isArray(yaml_waypoints)) {
+//                 yaml_waypoints.forEach(point => {
 
-                    // Waypoint 구분
-                    if (pointCounter === 1) {
-                        tempLabel = point.label.charAt(0);
-                    }
-                    // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
-                    else if (pointCounter !== 1) {
-                        if (point.label.charAt(0) !== tempLabel) {
-                            tempLabel = point.label.charAt(0);
-                        }
-                    }
+//                     // Waypoint 구분
+//                     if (pointCounter === 1) {
+//                         tempLabel = point.label.charAt(0);
+//                     }
+//                     // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
+//                     else if (pointCounter !== 1) {
+//                         if (point.label.charAt(0) !== tempLabel) {
+//                             tempLabel = point.label.charAt(0);
+//                         }
+//                     }
 
-                    const waypoint = L.marker(point.latlng, {
-                        title: point.label,
-                        icon: L.divIcon({ 
-                            className: 'custom-div-icon',
-                            html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                            iconSize: [15, 15],
-                        }),
-                        draggable: false,
-                    }).addTo(mapPopup);
+//                     const waypoint = L.marker(point.latlng, {
+//                         title: point.label,
+//                         icon: L.divIcon({ 
+//                             className: 'custom-div-icon',
+//                             html: '<img src="robot_1.png" alt="Custom Icon"/>',
+//                             iconSize: [15, 15],
+//                         }),
+//                         draggable: false,
+//                     }).addTo(mapPopup);
 
-                    const arrowElement = waypoint.getElement().querySelector('img');
-                    arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
+//                     const arrowElement = waypoint.getElement().querySelector('img');
+//                     arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
 
-                    waypoint.label = point.label;
-                    waypoint.color = point.color;
-                    waypoint.latlng = point.latlng;
-                    waypoint.heading = point.heading;
-                    waypoint.type = point.type;
+//                     waypoint.label = point.label;
+//                     waypoint.color = point.color;
+//                     waypoint.latlng = point.latlng;
+//                     waypoint.heading = point.heading;
+//                     waypoint.type = point.type;
 
-                    mapPopupWaypoints.push({ 
-                        marker: waypoint, 
-                        color: point.color, 
-                        latlng: point.latlng, 
-                        label: point.label,
-                        heading: point.heading,
-                        type: point.type,
-                    });
+//                     mapPopupWaypoints.push({ 
+//                         marker: waypoint, 
+//                         color: point.color, 
+//                         latlng: point.latlng, 
+//                         label: point.label,
+//                         heading: point.heading,
+//                         type: point.type,
+//                     });
 
-                    if (mapPopupWaypoints.length > 1) {
-                        const previousWaypoint = mapPopupWaypoints[mapPopupWaypoints.length - 2].marker.getLatLng();
-                        const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(mapPopup);
+//                     if (mapPopupWaypoints.length > 1) {
+//                         const previousWaypoint = mapPopupWaypoints[mapPopupWaypoints.length - 2].marker.getLatLng();
+//                         const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(mapPopup);
 
-                        popupWaypoint_lines.push(polyline);
-                    }
-                });
-            } else {
-                console.error('Invalid waypoints data format');
-            }
-        }
+//                         popupWaypoint_lines.push(polyline);
+//                     }
+//                 });
+//             } else {
+//                 console.error('Invalid waypoints data format');
+//             }
+//         }
 
-        // 팝업용 Waypoint 생성 함수 - 팝업용 지도(Point 추가)
-        function createWaypointPointPopup(yaml_waypoints) {
-            if (Array.isArray(yaml_waypoints)) {
-                yaml_waypoints.forEach(point => {
+//         // 팝업용 Waypoint 생성 함수 - 팝업용 지도(Point 추가)
+//         function createWaypointPointPopup(yaml_waypoints) {
+//             if (Array.isArray(yaml_waypoints)) {
+//                 yaml_waypoints.forEach(point => {
 
-                    // Waypoint 구분
-                    if (popupPointCounter === 1) {
-                        tempLabel = point.label.charAt(0);
-                    }
-                    // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
-                    else if (popupPointCounter !== 1) {
-                        if (point.label.charAt(0) !== tempLabel) {
-                            tempLabel = point.label.charAt(0);
-                        }
-                    }
+//                     // Waypoint 구분
+//                     if (popupPointCounter === 1) {
+//                         tempLabel = point.label.charAt(0);
+//                     }
+//                     // YAML 파일 내에 2개 이상의 Waypoint가 있는 경우
+//                     else if (popupPointCounter !== 1) {
+//                         if (point.label.charAt(0) !== tempLabel) {
+//                             tempLabel = point.label.charAt(0);
+//                         }
+//                     }
 
-                    const waypoint = L.marker(point.latlng, {
-                        title: point.label,
-                        icon: L.divIcon({ 
-                            className: 'custom-div-icon',
-                            html: `<div class="circle-icon">${popupPointCounter}</div>`,
-                            iconSize: [15, 15],
-                        }),
-                        draggable: false,
-                    }).addTo(mapPopupPoint);
+//                     const waypoint = L.marker(point.latlng, {
+//                         title: point.label,
+//                         icon: L.divIcon({ 
+//                             className: 'custom-div-icon',
+//                             html: `<div class="circle-icon">${popupPointCounter}</div>`,
+//                             iconSize: [15, 15],
+//                         }),
+//                         draggable: false,
+//                     }).addTo(mapPopupPoint);
 
-                    const arrowElement = waypoint.getElement().querySelector('div');
-                    arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
+//                     const arrowElement = waypoint.getElement().querySelector('div');
+//                     arrowElement.style.transform = `rotate(${1.57-point.heading}rad)`;
 
-                    waypoint.label = point.label;
-                    waypoint.color = point.color;
-                    waypoint.latlng = point.latlng;
-                    waypoint.heading = point.heading;
-                    waypoint.type = point.type;
+//                     waypoint.label = point.label;
+//                     waypoint.color = point.color;
+//                     waypoint.latlng = point.latlng;
+//                     waypoint.heading = point.heading;
+//                     waypoint.type = point.type;
 
-                    mapPopupPointWaypoints.push({ 
-                        marker: waypoint, 
-                        color: point.color, 
-                        latlng: point.latlng, 
-                        label: point.label,
-                        heading: point.heading,
-                        type: point.type,
-                    });
+//                     mapPopupPointWaypoints.push({ 
+//                         marker: waypoint, 
+//                         color: point.color, 
+//                         latlng: point.latlng, 
+//                         label: point.label,
+//                         heading: point.heading,
+//                         type: point.type,
+//                     });
 
-                    if (mapPopupPointWaypoints.length > 1) {
-                        const previousWaypoint = mapPopupPointWaypoints[mapPopupPointWaypoints.length - 2].marker.getLatLng();
-                        const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(mapPopupPoint);
+//                     if (mapPopupPointWaypoints.length > 1) {
+//                         const previousWaypoint = mapPopupPointWaypoints[mapPopupPointWaypoints.length - 2].marker.getLatLng();
+//                         const polyline = L.polyline([previousWaypoint, point.latlng], { color: point.color }).addTo(mapPopupPoint);
 
-                        popupPointWaypoint_lines.push(polyline);
-                    }
+//                         popupPointWaypoint_lines.push(polyline);
+//                     }
 
-                    popupPointCounter++;
-                });
-            } else {
-                console.error('Invalid waypoints data format');
-            }
-        }
+//                     popupPointCounter++;
+//                 });
+//             } else {
+//                 console.error('Invalid waypoints data format');
+//             }
+//         }
 
-        // "Control Mode" 버튼 클릭 시 호출되는 함수
-        function toggleControlMode() {
-            controlMode = !controlMode;
+//         // "Control Mode" 버튼 클릭 시 호출되는 함수
+//         function toggleControlMode() {
+//             controlMode = !controlMode;
 
-            if (controlMode) {
-                alert('Control Mode is now ON. Click on the point you want.');
-            }
-            else {
-                alert('Control Mode is now OFF.');
-            }
-        }
+//             if (controlMode) {
+//                 alert('Control Mode is now ON. Click on the point you want.');
+//             }
+//             else {
+//                 alert('Control Mode is now OFF.');
+//             }
+//         }
 
-        // 로봇 Speed 업데이트 팝업 함수
-        function speedUpdatePopup() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('speedUpdatePopup').style.display = 'block';
-        }
+//         // 로봇 Speed 업데이트 팝업 함수
+//         function speedUpdatePopup() {
+//             document.getElementById('overlay').style.display = 'block';
+//             document.getElementById('speedUpdatePopup').style.display = 'block';
+//         }
 
-        // 로봇 Speed 업데이트 팝업 닫는 함수
-        function closeSpeedUpdatePopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('speedUpdatePopup').style.display = 'none';
+//         // 로봇 Speed 업데이트 팝업 닫는 함수
+//         function closeSpeedUpdatePopup() {
+//             document.getElementById('overlay').style.display = 'none';
+//             document.getElementById('speedUpdatePopup').style.display = 'none';
 
-            document.getElementById('robotSpeed').value = '';
-        }
+//             document.getElementById('robotSpeed').value = '';
+//         }
 
-        // 로봇 Speed 업데이트 함수
-        function updateRobotSpeed() {
-            const robotID = selectedRobotID;
-            const speed = document.getElementById('robotSpeed').value.trim();
+//         // 로봇 Speed 업데이트 함수
+//         function updateRobotSpeed() {
+//             const robotID = selectedRobotID;
+//             const speed = document.getElementById('robotSpeed').value.trim();
 
-            // 로봇 speed 값의 유효성 검사
-            if (isNaN(speed) || speed < 0) {
-                console.log("Invalid speed input. Please enter a positive number.");
-                return;
-            }
+//             // 로봇 speed 값의 유효성 검사
+//             if (isNaN(speed) || speed < 0) {
+//                 console.log("Invalid speed input. Please enter a positive number.");
+//                 return;
+//             }
 
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('speedUpdatePopup').style.display = 'none';
+//             document.getElementById('overlay').style.display = 'none';
+//             document.getElementById('speedUpdatePopup').style.display = 'none';
 
-            document.getElementById('robotSpeed').value = '';
+//             document.getElementById('robotSpeed').value = '';
 
-            // JSON 데이터 생성
-            const data = JSON.stringify({ speed: parseFloat(speed) });
+//             // JSON 데이터 생성
+//             const data = JSON.stringify({ speed: parseFloat(speed) });
 
-            // WebSocket (Speed) 연결 상태 확인 후 속도 데이터 송신
-            if (selectedSpeedSocket[robotID].readyState === WebSocket.OPEN) {
-                selectedSpeedSocket[robotID].send(data);
-                console.log(`Robot ${robotID} speed sent via WebSocket (Speed): ${speed}`);
-            }
-            else {
-                console.log("WebSocket (Speed) connection is not open.");
-            }
+//             // WebSocket (Speed) 연결 상태 확인 후 속도 데이터 송신
+//             if (selectedSpeedSocket[robotID].readyState === WebSocket.OPEN) {
+//                 selectedSpeedSocket[robotID].send(data);
+//                 console.log(`Robot ${robotID} speed sent via WebSocket (Speed): ${speed}`);
+//             }
+//             else {
+//                 console.log("WebSocket (Speed) connection is not open.");
+//             }
 
-            // Robot Speed 값을 초기화
-            const inputSpeed = document.getElementById("robotSpeed");
-            if (inputSpeed) {
-                inputSpeed.value = "";
-            }  
-        }
+//             // Robot Speed 값을 초기화
+//             const inputSpeed = document.getElementById("robotSpeed");
+//             if (inputSpeed) {
+//                 inputSpeed.value = "";
+//             }  
+//         }
 
-        // 로봇 원격 제어 팝업 함수
-        function robotController() {
-            if (selectedRobotID === null) {
-                alert("No robots selected.");
-                return;
-            }
+        // // 로봇 원격 제어 팝업 함수
+        // function robotController() {
+        //     if (selectedRobotID === null) {
+        //         alert("No robots selected.");
+        //         return;
+        //     }
             
-            document.getElementById('controllerPopup').style.display = 'flex';
-        }
+        //     document.getElementById('controllerPopup').style.display = 'flex';
+        // }
 
-        // 속도 조절 함수
-        function 
-        adjustSpeed(type, value) {
-            const robot = robots[selectedRobotID];
+        // // 속도 조절 함수
+        // function 
+        // adjustSpeed(type, value) {
+        //     const robot = robots[selectedRobotID];
 
-            if (type === 'linear') {
-                // 선속도 업데이트, 최대 0.5, 음수 방지
-                robot.remoteLinearSpeed = Math.max(0, Math.min(0.5, robot.remoteLinearSpeed + value));
-                document.getElementById('linearSpeedDisplay').textContent = robot.remoteLinearSpeed.toFixed(2);
-            } else if (type === 'angular') {
-                // 각속도 업데이트, 최대 1.0, 음수 방지
-                robot.remoteAngularSpeed = Math.max(0, Math.min(1.0, robot.remoteAngularSpeed + value));
-                document.getElementById('angularSpeedDisplay').textContent = robot.remoteAngularSpeed.toFixed(2);
-            }
+        //     if (type === 'linear') {
+        //         // 선속도 업데이트, 최대 0.5, 음수 방지
+        //         robot.remoteLinearSpeed = Math.max(0, Math.min(0.5, robot.remoteLinearSpeed + value));
+        //         document.getElementById('linearSpeedDisplay').textContent = robot.remoteLinearSpeed.toFixed(2);
+        //     } else if (type === 'angular') {
+        //         // 각속도 업데이트, 최대 1.0, 음수 방지
+        //         robot.remoteAngularSpeed = Math.max(0, Math.min(1.0, robot.remoteAngularSpeed + value));
+        //         document.getElementById('angularSpeedDisplay').textContent = robot.remoteAngularSpeed.toFixed(2);
+        //     }
 
-            // 이미 명령을 실행하고 있을 시에는 업데이트된 속도로 재명령
-            if (robot.remoteCommandState !== 'stop') {
-                sendControl(robot.remoteCommandState);
-            }
-        }
+        //     // 이미 명령을 실행하고 있을 시에는 업데이트된 속도로 재명령
+        //     if (robot.remoteCommandState !== 'stop') {
+        //         sendControl(robot.remoteCommandState);
+        //     }
+        // }
 
         // 로봇 조작 명령을 WebSocket으로 전송
         function sendControl(command) {
@@ -2827,13 +2827,13 @@ ${waypointsYamlStr}
             
             robot.remoteCommandState = command;
 
-            if (selectedRemoteSocket[selectedRobotID].readyState === WebSocket.OPEN) {
-                const commandData = JSON.stringify({
+            if (socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
                     command: robot.remoteCommandState,
                     linear_speed: robot.remoteLinearSpeed,
                     angular_speed: robot.remoteAngularSpeed
                 });
-                selectedRemoteSocket[selectedRobotID].send(commandData);
+                socket.send(meesage);
                 console.log(`명령 전송: ${command}`);
             } else {
                 console.log("WebSocket 연결이 닫혀있습니다.");
