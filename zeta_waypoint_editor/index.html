@@ -1485,41 +1485,41 @@
         // Reset 함수
         function resetMap() {
             // 이전 Waypoints를 저장
-            totalWaypoints.push(waypoints); // 이를 통해 모든 Icon 제거 가능
+            // totalWaypoints.push(waypoints); // 이를 통해 모든 Icon 제거 가능
 
-            // 지도에서 모든 Waypoints 제거
-            totalWaypoints.forEach(group => {
-                group.forEach(point => {
-                    map.removeLayer(point.marker);
-                });
-            });
+            // // 지도에서 모든 Waypoints 제거
+            // totalWaypoints.forEach(group => {
+            //     group.forEach(point => {
+            //         map.removeLayer(point.marker);
+            //     });
+            // });
 
-            // 지도에서 모든 Control Points 제거
-            controlPoints.forEach(point => {
-                map.removeLayer(point.marker);
-            })
+            // // 지도에서 모든 Control Points 제거
+            // controlPoints.forEach(point => {
+            //     map.removeLayer(point.marker);
+            // })
 
-            // 지도에서 모든 Waypoints line 제거
-            Object.keys(waypoint_lines).forEach(groupLabel => {
-                waypoint_lines[groupLabel].forEach(line => {
-                    map.removeLayer(line);
-                });
-            });
+            // // 지도에서 모든 Waypoints line 제거
+            // Object.keys(waypoint_lines).forEach(groupLabel => {
+            //     waypoint_lines[groupLabel].forEach(line => {
+            //         map.removeLayer(line);
+            //     });
+            // });
 
-            // 모든 변수를 초기화
-            totalWaypoints = [];
-            waypoints = [];
-            groupCounter = 0;
-            pointCounter = 1;
-            waypoint_lines = [];
-            selectMode = false;
+            // // 모든 변수를 초기화
+            // totalWaypoints = [];
+            // waypoints = [];
+            // groupCounter = 0;
+            // pointCounter = 1;
+            // waypoint_lines = [];
+            // selectMode = false;
             selectedPathId = null;
 
-            // 표 정보 초기화
-            document.getElementById('waypointBody').innerHTML = ``;
-            document.getElementById('detailBody').innerHTML = ``;
-            // 표 상태 초기화
-            document.getElementById('detailTable').style.display = 'none';
+            // // 표 정보 초기화
+            // document.getElementById('waypointBody').innerHTML = ``;
+            // document.getElementById('detailBody').innerHTML = ``;
+            // // 표 상태 초기화
+            // document.getElementById('detailTable').style.display = 'none';
 
             // waypointLayer와 pathLayer에 각각의 레이어가 존재하는지 확인
             if (waypointLayer) {
