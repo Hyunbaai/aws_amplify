@@ -1590,89 +1590,89 @@
         // ==================================================================
         
         // 표에 Waypoints 정보 추가 함수
-        function addWaypointToTable(label, color, robotID) {
-            const tbody = document.getElementById('waypointBody');
-            const row = document.createElement('tr');
-            row.id = `wt-${label.charAt(0)}`;
-            if (robotID !== '') {
-                row.innerHTML = `
-                <td>${label.charAt(0)}</td>
-                <td><div class="color-box" style="background-color:${color};"></div></td>
-                <td>${robotID}</td>
-                <td>${robots[robotID].task}</td>
-                <td>${robots[robotID].departure} &#8594; ${robots[robotID].destination}</td>
-                <td><button onclick="showDetails('${label}')">Details</button></td>
-                <td><button onclick="deleteWaypoint('${label}')">Delete</button></td>
-            `;
-            }
-            else if (robotID === '') {
-                row.innerHTML = `
-                <td>${label.charAt(0)}</td>
-                <td><div class="color-box" style="background-color:${color};"></div></td>
-                <td>None</td>
-                <td>None</td>
-                <td>None</td>
-                <td><button onclick="showDetails('${label}')">Details</button></td>
-                <td><button onclick="deleteWaypoint('${label}')">Delete</button></td>
-            `;
-            }
-            tbody.appendChild(row);
-        }
+        // function addWaypointToTable(label, color, robotID) {
+        //     const tbody = document.getElementById('waypointBody');
+        //     const row = document.createElement('tr');
+        //     row.id = `wt-${label.charAt(0)}`;
+        //     if (robotID !== '') {
+        //         row.innerHTML = `
+        //         <td>${label.charAt(0)}</td>
+        //         <td><div class="color-box" style="background-color:${color};"></div></td>
+        //         <td>${robotID}</td>
+        //         <td>${robots[robotID].task}</td>
+        //         <td>${robots[robotID].departure} &#8594; ${robots[robotID].destination}</td>
+        //         <td><button onclick="showDetails('${label}')">Details</button></td>
+        //         <td><button onclick="deleteWaypoint('${label}')">Delete</button></td>
+        //     `;
+        //     }
+        //     else if (robotID === '') {
+        //         row.innerHTML = `
+        //         <td>${label.charAt(0)}</td>
+        //         <td><div class="color-box" style="background-color:${color};"></div></td>
+        //         <td>None</td>
+        //         <td>None</td>
+        //         <td>None</td>
+        //         <td><button onclick="showDetails('${label}')">Details</button></td>
+        //         <td><button onclick="deleteWaypoint('${label}')">Delete</button></td>
+        //     `;
+        //     }
+        //     tbody.appendChild(row);
+        // }
 
-        // 표에 Waypoints 상세 정보 추가 함수
-        function showDetails(label) {
-            const detailTable = document.getElementById('detailTable');
-            const detailBody = document.getElementById('detailBody');
+        // // 표에 Waypoints 상세 정보 추가 함수
+        // function showDetails(label) {
+        //     const detailTable = document.getElementById('detailTable');
+        //     const detailBody = document.getElementById('detailBody');
 
-            // 이미 동일한 Waypoints의 상세 정보가 표시된 경우, 표 상태 전환(게시 -> 숨김)
-            if (detailTable.style.display === 'table' && 
-                detailBody.firstChild &&
-                detailBody.firstChild.querySelector('td').innerText.startsWith(label.charAt(0))) {
-                    detailTable.style.display = 'none';
-                    return;
-            }
+        //     // 이미 동일한 Waypoints의 상세 정보가 표시된 경우, 표 상태 전환(게시 -> 숨김)
+        //     if (detailTable.style.display === 'table' && 
+        //         detailBody.firstChild &&
+        //         detailBody.firstChild.querySelector('td').innerText.startsWith(label.charAt(0))) {
+        //             detailTable.style.display = 'none';
+        //             return;
+        //     }
             
-            // 이전 내용을 제거하고 새 내용을 추가
-            detailBody.innerHTML = '';
+        //     // 이전 내용을 제거하고 새 내용을 추가
+        //     detailBody.innerHTML = '';
 
-            // label에 해당되는 Waypoint 찾기
-            const group = totalWaypoints.find(g => g[0].label.charAt(0) === label.charAt(0));
-            if (!group) return;
+        //     // label에 해당되는 Waypoint 찾기
+        //     const group = totalWaypoints.find(g => g[0].label.charAt(0) === label.charAt(0));
+        //     if (!group) return;
 
-            group.forEach(point => {
-                const row = document.createElement('tr');
-                row.className = `dt-${point.label.charAt(0)}`;
-                row.innerHTML = `
-                    <td>${point.label}</td>
-                    <td>${point.latlng.lat.toFixed(6)}</td>
-                    <td>${point.latlng.lng.toFixed(6)}</td>
-                    <td>${point.heading.toFixed(6)}</td>
-                    <td>
-                        <select id="type">
-                            <option value="waypoint_follower" ${point.type === 'waypoint_follower' ? 'selected' : ''}>waypoint_follower</option>
-                            <option value="navigate_through_poses" ${point.type === 'navigate_through_poses' ? 'selected' : ''}>navigate_through_poses</option>
-                        </select>
-                    </td>
-                `;
-                detailBody.appendChild(row);
-            });
+        //     group.forEach(point => {
+        //         const row = document.createElement('tr');
+        //         row.className = `dt-${point.label.charAt(0)}`;
+        //         row.innerHTML = `
+        //             <td>${point.label}</td>
+        //             <td>${point.latlng.lat.toFixed(6)}</td>
+        //             <td>${point.latlng.lng.toFixed(6)}</td>
+        //             <td>${point.heading.toFixed(6)}</td>
+        //             <td>
+        //                 <select id="type">
+        //                     <option value="waypoint_follower" ${point.type === 'waypoint_follower' ? 'selected' : ''}>waypoint_follower</option>
+        //                     <option value="navigate_through_poses" ${point.type === 'navigate_through_poses' ? 'selected' : ''}>navigate_through_poses</option>
+        //                 </select>
+        //             </td>
+        //         `;
+        //         detailBody.appendChild(row);
+        //     });
 
-            // 상세 정보 표 상태 전환(숨김 -> 게시)
-            detailTable.style.display = 'table';
-        }
+        //     // 상세 정보 표 상태 전환(숨김 -> 게시)
+        //     detailTable.style.display = 'table';
+        // }
 
-        // 두 좌표 사이의 heading을 계산하는 함수
-        function calculateHeading(startLatLng, endLatLng) {
-            const dx = endLatLng.lng - startLatLng.lng;
-            const dy = endLatLng.lat - startLatLng.lat;
-            let angle = Math.atan2(dy, dx);
+        // // 두 좌표 사이의 heading을 계산하는 함수
+        // function calculateHeading(startLatLng, endLatLng) {
+        //     const dx = endLatLng.lng - startLatLng.lng;
+        //     const dy = endLatLng.lat - startLatLng.lat;
+        //     let angle = Math.atan2(dy, dx);
 
-            if (angle < 0) {
-                angle += 2 * Math.PI;
-            }
+        //     if (angle < 0) {
+        //         angle += 2 * Math.PI;
+        //     }
 
-            return angle;
-        }
+        //     return angle;
+        // }
 
         // ==================================================================
         //
@@ -4330,7 +4330,7 @@ ${waypointsYamlStr}
                     .from('Robot') // Robot 테이블에서
                     .select('id')  // id만 선택
                     .eq('robotId', selectedRobotId) // selectedRobotId와 매칭되는 데이터 찾기
-                    .maybeSingle(); // 단일 행만 반환
+                    .maybeSingle();
 
                 if (robotError || !robotData) {
                     console.error('Robot 정보 조회 오류:', robotError);
@@ -4356,6 +4356,7 @@ ${waypointsYamlStr}
                 if (existingPath) {
                     console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
                     newPathId  = existingPath.id;
+                    
                     const pathData = {
                         type: "system",
                         args: {
