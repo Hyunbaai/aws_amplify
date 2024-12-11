@@ -1527,62 +1527,62 @@
             }
         }
         // Waypoints 삭제 함수
-        function deleteWaypoint(label) {
-            // 이전 Waypoints를 저장
-            totalWaypoints.push(waypoints); // 이를 통해 모든 Icon 제거 가능
-            // Waypoints 배열에서 해당 Waypoint 삭제
-            const index = totalWaypoints.findIndex(g => g[0].label.startsWith(label.charAt(0)));
-            if (index !== -1) {
-                // 지도에서 Waypoint 마커 삭제
-                totalWaypoints[index].forEach(point => {
-                    map.removeLayer(point.marker);
-                })
-                // Waypoints 배열에서 삭제
-                waypoints.splice(index, 1);
-                // waypointTable에서 해당 행 제거
-                const waypointId = `wt-${label.charAt(0)}`;
-                const waypointRow = document.getElementById(waypointId);
-                if (waypointRow) {
-                    waypointRow.remove();
-                }
-                // detailTable에서 해당 행 제거
-                const detailClassName = `dt-${label.charAt(0)}`;
-                const detailRow = document.querySelectorAll(`#detailBody tr.${detailClassName}`);
-                if (detailRow) {
-                    detailRow.forEach(row => {
-                        row.remove();
-                    })
-                }
-                // 선 연결 갱신
-                updatePolylines(label);
-            }
-        }
+        // function deleteWaypoint(label) {
+        //     // 이전 Waypoints를 저장
+        //     totalWaypoints.push(waypoints); // 이를 통해 모든 Icon 제거 가능
+        //     // Waypoints 배열에서 해당 Waypoint 삭제
+        //     const index = totalWaypoints.findIndex(g => g[0].label.startsWith(label.charAt(0)));
+        //     if (index !== -1) {
+        //         // 지도에서 Waypoint 마커 삭제
+        //         totalWaypoints[index].forEach(point => {
+        //             map.removeLayer(point.marker);
+        //         })
+        //         // Waypoints 배열에서 삭제
+        //         waypoints.splice(index, 1);
+        //         // waypointTable에서 해당 행 제거
+        //         const waypointId = `wt-${label.charAt(0)}`;
+        //         const waypointRow = document.getElementById(waypointId);
+        //         if (waypointRow) {
+        //             waypointRow.remove();
+        //         }
+        //         // detailTable에서 해당 행 제거
+        //         const detailClassName = `dt-${label.charAt(0)}`;
+        //         const detailRow = document.querySelectorAll(`#detailBody tr.${detailClassName}`);
+        //         if (detailRow) {
+        //             detailRow.forEach(row => {
+        //                 row.remove();
+        //             })
+        //         }
+        //         // 선 연결 갱신
+        //         updatePolylines(label);
+        //     }
+        // }
 
-        // 선 연결 갱신 함수
-        function updatePolylines(label) {
-            // 삭제되는 Waypoint에 해당되는 선 모두 제거
-            waypoint_lines[label.charAt(0)].forEach(line => {
-                map.removeLayer(line);
-            });
-        }
+        // // 선 연결 갱신 함수
+        // function updatePolylines(label) {
+        //     // 삭제되는 Waypoint에 해당되는 선 모두 제거
+        //     waypoint_lines[label.charAt(0)].forEach(line => {
+        //         map.removeLayer(line);
+        //     });
+        // }
 
-        // 기존 Waypoint를 찾는 함수 (동일 Waypoint 생성용)
-        function findNearestWaypoint(latlng, maxDistance = 3) {
-            let nearestWaypoint = null;
-            let minDistance = maxDistance;
+        // // 기존 Waypoint를 찾는 함수 (동일 Waypoint 생성용)
+        // function findNearestWaypoint(latlng, maxDistance = 3) {
+        //     let nearestWaypoint = null;
+        //     let minDistance = maxDistance;
 
-            totalWaypoints.forEach(group => {
-                group.forEach(point => {
-                    const distance = map.distance(latlng, point.latlng);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        nearestWaypoint = point;
-                    }
-                });
-            });
+        //     totalWaypoints.forEach(group => {
+        //         group.forEach(point => {
+        //             const distance = map.distance(latlng, point.latlng);
+        //             if (distance < minDistance) {
+        //                 minDistance = distance;
+        //                 nearestWaypoint = point;
+        //             }
+        //         });
+        //     });
 
-            return nearestWaypoint;
-        }
+        //     return nearestWaypoint;
+        // }
 
         // ==================================================================
         //
@@ -2847,59 +2847,59 @@
         }
 
         // 팝업창에 드래그 기능을 추가하는 함수
-        function makeElementDraggable(popupId, headerClass) {
-            const popup = document.getElementById(popupId);
-            const header = popup.querySelector(headerClass);
+        // function makeElementDraggable(popupId, headerClass) {
+        //     const popup = document.getElementById(popupId);
+        //     const header = popup.querySelector(headerClass);
         
-            let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+        //     let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
         
-            header.onmousedown = dragMouseDown;
+        //     header.onmousedown = dragMouseDown;
         
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
+        //     function dragMouseDown(e) {
+        //         e = e || window.event;
+        //         e.preventDefault();
         
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+        //         mouseX = e.clientX;
+        //         mouseY = e.clientY;
         
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
+        //         document.onmouseup = closeDragElement;
+        //         document.onmousemove = elementDrag;
+        //     }
         
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
+        //     function elementDrag(e) {
+        //         e = e || window.event;
+        //         e.preventDefault();
         
-                posX = mouseX - e.clientX;
-                posY = mouseY - e.clientY;
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+        //         posX = mouseX - e.clientX;
+        //         posY = mouseY - e.clientY;
+        //         mouseX = e.clientX;
+        //         mouseY = e.clientY;
         
-                popup.style.top = (popup.offsetTop - posY) + "px";
-                popup.style.left = (popup.offsetLeft - posX) + "px";
-            }
+        //         popup.style.top = (popup.offsetTop - posY) + "px";
+        //         popup.style.left = (popup.offsetLeft - posX) + "px";
+        //     }
         
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
+        //     function closeDragElement() {
+        //         document.onmouseup = null;
+        //         document.onmousemove = null;
+        //     }
+        // }
         
-        // 팝업 열기 함수
-        function openPopup(popupId) {
-            document.getElementById('overlay').style.display = 'block'; // 배경 어둡게 처리
-            const popup = document.getElementById(popupId);
-            popup.style.display = 'block'; // 팝업 창 열기
+        // // 팝업 열기 함수
+        // function openPopup(popupId) {
+        //     document.getElementById('overlay').style.display = 'block'; // 배경 어둡게 처리
+        //     const popup = document.getElementById(popupId);
+        //     popup.style.display = 'block'; // 팝업 창 열기
         
-            // 팝업을 드래그 가능하게 설정
-            makeElementDraggable(popupId, '.popup-header');
-        }
+        //     // 팝업을 드래그 가능하게 설정
+        //     makeElementDraggable(popupId, '.popup-header');
+        // }
         
-        // 팝업 닫기 함수
-        function closePopup(popupId) {
-            document.getElementById('overlay').style.display = 'none'; // 배경 숨기기
-            document.getElementById(popupId).style.display = 'none'; // 팝업 창 숨기기
-        }
+        // // 팝업 닫기 함수
+        // function closePopup(popupId) {
+        //     document.getElementById('overlay').style.display = 'none'; // 배경 숨기기
+        //     document.getElementById(popupId).style.display = 'none'; // 팝업 창 숨기기
+        // }
 
         // ==================================================================
         //
@@ -2983,12 +2983,6 @@
             const popupHeight = Math.min(window.innerHeight * 0.8, 600); // 최대 높이 80%
             robotListPopup.style.width = `${popupWidth}px`;
             robotListPopup.style.height = `${popupHeight}px`;
-        }
-
-        // Robot Name 조회 함수
-        function getRobotNameById(robotId) {
-            const robot = robots.find(r => r.robotId === robotId);
-            return robot ? robot.name : (robotId !== "000000" ? robotId : "");
         }
 
         // 팝업 닫기
@@ -3129,94 +3123,94 @@
         }
 
         // 로봇의 상태를 시각화하는 함수
-        function setupStatusSocket(id) {
-            const robot = robots[id];
-            robot.statusSocket.onmessage = function (event) {
-                let data = JSON.parse(event.data.replace(/status_data:\s*/g, '"status_data":'));
-                let statusData = JSON.parse(data.status_data);
-                let gps = statusData.gps;
-                let heading = statusData.heading;
-                let speed = statusData.speed;
+        // function setupStatusSocket(id) {
+        //     const robot = robots[id];
+        //     robot.statusSocket.onmessage = function (event) {
+        //         let data = JSON.parse(event.data.replace(/status_data:\s*/g, '"status_data":'));
+        //         let statusData = JSON.parse(data.status_data);
+        //         let gps = statusData.gps;
+        //         let heading = statusData.heading;
+        //         let speed = statusData.speed;
 
-                if (gps && gps.latitude !== undefined && gps.longitude !== undefined && heading !== undefined) {
-                    robot.marker.setLatLng([gps.latitude, gps.longitude]);
-                    robot.lat = gps.latitude;
-                    robot.lng = gps.longitude;
-                    robot.heading = heading;
-                    robot.speed = speed;
+        //         if (gps && gps.latitude !== undefined && gps.longitude !== undefined && heading !== undefined) {
+        //             robot.marker.setLatLng([gps.latitude, gps.longitude]);
+        //             robot.lat = gps.latitude;
+        //             robot.lng = gps.longitude;
+        //             robot.heading = heading;
+        //             robot.speed = speed;
 
-                    // 현재 위치를 기반으로 로봇의 waypoint 추적
-                    trackRobotWaypoint(robot);
-                    // 로봇의 주행 거리와 시간을 업데이트
-                    updateDistanceAndTime(robot);
-                    // 로봇간의 교착 확률 계산 및 시각화
-                    updateMatrix();
-                }
+        //             // 현재 위치를 기반으로 로봇의 waypoint 추적
+        //             trackRobotWaypoint(robot);
+        //             // 로봇의 주행 거리와 시간을 업데이트
+        //             updateDistanceAndTime(robot);
+        //             // 로봇간의 교착 확률 계산 및 시각화
+        //             updateMatrix();
+        //         }
 
-                let path = statusData.path;
-                if (Array.isArray(path) && path.length > 0) {
-                    let LatLngs = path.map(point => [point.latitude, point.longitude]);
+        //         let path = statusData.path;
+        //         if (Array.isArray(path) && path.length > 0) {
+        //             let LatLngs = path.map(point => [point.latitude, point.longitude]);
 
-                    if (robot.pathLine) {
-                        map.removeLayer(robot.pathLine);
-                    }
+        //             if (robot.pathLine) {
+        //                 map.removeLayer(robot.pathLine);
+        //             }
 
-                    robot.pathLine = L.polyline(LatLngs, { color: 'red' }).addTo(map);
-                }
-            };
-        }
+        //             robot.pathLine = L.polyline(LatLngs, { color: 'red' }).addTo(map);
+        //         }
+        //     };
+        // }
 
-        // 로봇의 위치와 Waypoint를 비교하여 현재 주행 중인 Waypoint 추적 함수
-        function trackRobotWaypoint(robot) {
-            let closestWaypoint = null;
-            let closestDistance = robotArrivedDistance;
+        // // 로봇의 위치와 Waypoint를 비교하여 현재 주행 중인 Waypoint 추적 함수
+        // function trackRobotWaypoint(robot) {
+        //     let closestWaypoint = null;
+        //     let closestDistance = robotArrivedDistance;
 
-            // 로봇이 현재 추적 중인지 확인
-            let currentWaypointIndex = robotCurrentWaypoints[robot.id]
-                ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
-                : 0;
+        //     // 로봇이 현재 추적 중인지 확인
+        //     let currentWaypointIndex = robotCurrentWaypoints[robot.id]
+        //         ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
+        //         : 0;
             
-            // 로봇이 주행 상태이면 추적
-            if (robot.task !== '') {
-                const currentWaypoint = selectedRobotWaypoints[robot.id][currentWaypointIndex];
-                const distance = map.distance([robot.lat, robot.lng], currentWaypoint.latlng);
+        //     // 로봇이 주행 상태이면 추적
+        //     if (robot.task !== '') {
+        //         const currentWaypoint = selectedRobotWaypoints[robot.id][currentWaypointIndex];
+        //         const distance = map.distance([robot.lat, robot.lng], currentWaypoint.latlng);
 
-                // 가까운 거리 내에 있는 경우에만 추적
-                if (distance <= closestDistance) {
-                    closestWaypoint = currentWaypoint;
-                }
+        //         // 가까운 거리 내에 있는 경우에만 추적
+        //         if (distance <= closestDistance) {
+        //             closestWaypoint = currentWaypoint;
+        //         }
 
-                // 현재 waypoint에 도달하면 다음 waypoint로 이동
-                if (closestWaypoint) {
-                    if (!robotCurrentWaypoints[robot.id]) {
-                        robotCurrentWaypoints[robot.id] = closestWaypoint.label;
-                    }
-                    else if (robotCurrentWaypoints[robot.id] === closestWaypoint.label) {
-                        console.log(`Robot ${robot.id} reached waypoint: ${closestWaypoint.label}`);
-                        // 다음 waypoint로 이동
-                        robotCurrentWaypoints[robot.id] = selectedRobotWaypoints[robot.id][currentWaypointIndex + 1]?.label || closestWaypoint.label;
-                    }
+        //         // 현재 waypoint에 도달하면 다음 waypoint로 이동
+        //         if (closestWaypoint) {
+        //             if (!robotCurrentWaypoints[robot.id]) {
+        //                 robotCurrentWaypoints[robot.id] = closestWaypoint.label;
+        //             }
+        //             else if (robotCurrentWaypoints[robot.id] === closestWaypoint.label) {
+        //                 console.log(`Robot ${robot.id} reached waypoint: ${closestWaypoint.label}`);
+        //                 // 다음 waypoint로 이동
+        //                 robotCurrentWaypoints[robot.id] = selectedRobotWaypoints[robot.id][currentWaypointIndex + 1]?.label || closestWaypoint.label;
+        //             }
 
-                    // 로봇이 마지막 waypoint에 도착했다면 로봇 task, departure, destination 초기화
-                    if (closestWaypoint.label === selectedRobotWaypoints[robot.id][selectedRobotWaypoints[robot.id].length - 1].label) {
-                        updateRobotInfo('', '', '', robot.id);
-                        robotCurrentWaypoints[robot.id] = '';
+        //             // 로봇이 마지막 waypoint에 도착했다면 로봇 task, departure, destination 초기화
+        //             if (closestWaypoint.label === selectedRobotWaypoints[robot.id][selectedRobotWaypoints[robot.id].length - 1].label) {
+        //                 updateRobotInfo('', '', '', robot.id);
+        //                 robotCurrentWaypoints[robot.id] = '';
 
-                        // 로봇의 주행 경로 초기화
-                        selectedRobotWaypoints[robotID] = [];
+        //                 // 로봇의 주행 경로 초기화
+        //                 selectedRobotWaypoints[robotID] = [];
                         
-                    }
-                }
-            }
-        }
+        //             }
+        //         }
+        //     }
+        // }
 
-        // 로봇의 정보를 업데이트하는 함수
-        function updateRobotInfo(task, departure, destination, id) {
-            const robot = robots[id];
-            robot.task = task;
-            robot.departure = departure;
-            robot.destination = destination;
-        }
+        // // 로봇의 정보를 업데이트하는 함수
+        // function updateRobotInfo(task, departure, destination, id) {
+        //     const robot = robots[id];
+        //     robot.task = task;
+        //     robot.departure = departure;
+        //     robot.destination = destination;
+        // }
 
         // ==================================================================
         //
@@ -3225,203 +3219,203 @@
         // ==================================================================
 
         // 로봇의 주행 거리를 계산하는 함수 (로봇 현위치 ~ Waypoint End)
-        function calculateRemainingDistance(robot, index) {
-            let totalDistance = 0;
+        // function calculateRemainingDistance(robot, index) {
+        //     let totalDistance = 0;
 
-            // 로봇의 위치에서 주행하고자 하는 첫번째 waypoint까지의 거리 계산
-            totalDistance += map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][index].latlng);
+        //     // 로봇의 위치에서 주행하고자 하는 첫번째 waypoint까지의 거리 계산
+        //     totalDistance += map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][index].latlng);
 
-            // 남은 waypoints 간의 거리 합산
-            for (let i = index; i < selectedRobotWaypoints[robot.id].length - 1; i++) {
-                totalDistance += map.distance(selectedRobotWaypoints[robot.id][i].latlng, selectedRobotWaypoints[robot.id][i+1].latlng);
-            }
+        //     // 남은 waypoints 간의 거리 합산
+        //     for (let i = index; i < selectedRobotWaypoints[robot.id].length - 1; i++) {
+        //         totalDistance += map.distance(selectedRobotWaypoints[robot.id][i].latlng, selectedRobotWaypoints[robot.id][i+1].latlng);
+        //     }
             
-            return totalDistance;
-        }
+        //     return totalDistance;
+        // }
 
-        // 로봇의 주행 완료에 걸리는 시간을 계산하는 함수
-        function calculateRemainingTime(robot, distance) {
-            // 주행 명령을 받지 않았거나, 주행 완료된 경우
-            if (distance === 0) {
-                return 0;
-            } 
-            // 주행 중 로봇의 속도가 0이 아닌 경우
-            else if (robot.speed > 0) {
-                return distance / robot.speed;
-            }
-            // 주행 중 로봇의 속도가 0인 경우
-            else {
-                return Infinity;
-            }
-        }
+        // // 로봇의 주행 완료에 걸리는 시간을 계산하는 함수
+        // function calculateRemainingTime(robot, distance) {
+        //     // 주행 명령을 받지 않았거나, 주행 완료된 경우
+        //     if (distance === 0) {
+        //         return 0;
+        //     } 
+        //     // 주행 중 로봇의 속도가 0이 아닌 경우
+        //     else if (robot.speed > 0) {
+        //         return distance / robot.speed;
+        //     }
+        //     // 주행 중 로봇의 속도가 0인 경우
+        //     else {
+        //         return Infinity;
+        //     }
+        // }
 
-        // 로봇의 주행 거리 및 시간을 업데이트하는 함수
-        function updateDistanceAndTime(robot) {
-            // 로봇이 현재 추적 중인지 확인
-            let currentWaypointIndex = robotCurrentWaypoints[robot.id]? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id]): 0;
+        // // 로봇의 주행 거리 및 시간을 업데이트하는 함수
+        // function updateDistanceAndTime(robot) {
+        //     // 로봇이 현재 추적 중인지 확인
+        //     let currentWaypointIndex = robotCurrentWaypoints[robot.id]? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id]): 0;
 
-            // 로봇 팝업 정보
-            const distanceElement = document.getElementById(`distance-${robot.id}`);
-            const speedElement = document.getElementById(`speed-${robot.id}`);
-            const timeElement = document.getElementById(`time-${robot.id}`);
+        //     // 로봇 팝업 정보
+        //     const distanceElement = document.getElementById(`distance-${robot.id}`);
+        //     const speedElement = document.getElementById(`speed-${robot.id}`);
+        //     const timeElement = document.getElementById(`time-${robot.id}`);
             
-            // 로봇에 주행 경로가 입력된 경우에만 실행 + 로봇이 주행 중인 경우
-            if (selectedRobotWaypoints[robot.id] && robot.task !== '') {
-                // 로봇의 남은 주행 거리 계산
-                let remainingDistance = calculateRemainingDistance(robot, currentWaypointIndex);
+        //     // 로봇에 주행 경로가 입력된 경우에만 실행 + 로봇이 주행 중인 경우
+        //     if (selectedRobotWaypoints[robot.id] && robot.task !== '') {
+        //         // 로봇의 남은 주행 거리 계산
+        //         let remainingDistance = calculateRemainingDistance(robot, currentWaypointIndex);
 
-                // 로봇의 남은 주행 시간 계산 (주행 거리에서 오차 범위 제거)
-                let remainingTime = calculateRemainingTime(robot, remainingDistance - robotArrivedDistance);
+        //         // 로봇의 남은 주행 시간 계산 (주행 거리에서 오차 범위 제거)
+        //         let remainingTime = calculateRemainingTime(robot, remainingDistance - robotArrivedDistance);
 
-                // 로봇 팝업 정보 업데이트
-                distanceElement.textContent = remainingDistance.toFixed(2);
-                speedElement.textContent = robot.speed.toFixed(2);
-                timeElement.textContent = remainingTime.toFixed(2);
+        //         // 로봇 팝업 정보 업데이트
+        //         distanceElement.textContent = remainingDistance.toFixed(2);
+        //         speedElement.textContent = robot.speed.toFixed(2);
+        //         timeElement.textContent = remainingTime.toFixed(2);
 
-                // console.log(`[Robot ${robot.id}] Remaining Distance: ${remainingDistance} meters`);
-                // console.log(`[Robot ${robot.id}] Remaining Time: ${remainingTime} seconds`);
-            }
-        }
+        //         // console.log(`[Robot ${robot.id}] Remaining Distance: ${remainingDistance} meters`);
+        //         // console.log(`[Robot ${robot.id}] Remaining Time: ${remainingTime} seconds`);
+        //     }
+        // }
 
-        // 오른쪽 사이드바 열기/닫기 토글 함수
-        function toggleSidebarRight() {
-            const sidebarRight = document.getElementById('sidebar-right');
-            sidebarRight.classList.toggle('open');
-        }
+        // // 오른쪽 사이드바 열기/닫기 토글 함수
+        // function toggleSidebarRight() {
+        //     const sidebarRight = document.getElementById('sidebar-right');
+        //     sidebarRight.classList.toggle('open');
+        // }
 
-        // 왼쪽 사이드바 열기/닫기 토글 함수
-        function toggleSidebarLeft() {
-            const sidebarLeft = document.getElementById('sidebar-left');
-            sidebarLeft.classList.toggle('open');
-        }
+        // // 왼쪽 사이드바 열기/닫기 토글 함수
+        // function toggleSidebarLeft() {
+        //     const sidebarLeft = document.getElementById('sidebar-left');
+        //     sidebarLeft.classList.toggle('open');
+        // }
         
-        // 로봇 팝업창을 생성하는 함수
-        function addRobotInfoPopup(id) {
-            const robotInfoContainer = document.getElementById('robotInfoContainer');
+        // // 로봇 팝업창을 생성하는 함수
+        // function addRobotInfoPopup(id) {
+        //     const robotInfoContainer = document.getElementById('robotInfoContainer');
 
-            // 팝업창 생성
-            const robotInfoPopup = document.createElement('div');
-            robotInfoPopup.classList.add('popup');
-            robotInfoPopup.id = `popup-${id}`;
-            robotInfoPopup.innerHTML = `
-                <h4>로봇 ${id} 정보</h4>
-                <div class="info">
-                    <p><strong>남은 거리:</strong> <span id="distance-${id}">0</span> m</p>
-                    <p><strong>로봇 속도:</strong> <span id="speed-${id}">0</span> m/s</p>
-                    <p><strong>남은 시간:</strong> <span id="time-${id}">0</span> sec</p>
-                </div>
-            `;
+        //     // 팝업창 생성
+        //     const robotInfoPopup = document.createElement('div');
+        //     robotInfoPopup.classList.add('popup');
+        //     robotInfoPopup.id = `popup-${id}`;
+        //     robotInfoPopup.innerHTML = `
+        //         <h4>로봇 ${id} 정보</h4>
+        //         <div class="info">
+        //             <p><strong>남은 거리:</strong> <span id="distance-${id}">0</span> m</p>
+        //             <p><strong>로봇 속도:</strong> <span id="speed-${id}">0</span> m/s</p>
+        //             <p><strong>남은 시간:</strong> <span id="time-${id}">0</span> sec</p>
+        //         </div>
+        //     `;
 
-            // 팝업창을 컨테이너에 추가
-            robotInfoContainer.appendChild(robotInfoPopup);
-        }
+        //     // 팝업창을 컨테이너에 추가
+        //     robotInfoContainer.appendChild(robotInfoPopup);
+        // }
 
-        // 교착 확률에 따른 클래스 지정 함수
-        function getProbabilityClass(probability) {
-            if (probability < 0.33) return 'low-probability';
-            if (probability < 0.66) return 'medium-probability';
-            return 'high-probability';
-        }
+        // // 교착 확률에 따른 클래스 지정 함수
+        // function getProbabilityClass(probability) {
+        //     if (probability < 0.33) return 'low-probability';
+        //     if (probability < 0.66) return 'medium-probability';
+        //     return 'high-probability';
+        // }
 
-        // 행렬 생성 함수
-        function initializeMatrix() {
-            const robotCount = Object.keys(robots).length;
-            matrixContainer.style.gridTemplateColumns = `repeat(${robotCount + 1}, 3vh)`;
-            matrixContainer.innerHTML = ''; // 행렬 초기화
+        // // 행렬 생성 함수
+        // function initializeMatrix() {
+        //     const robotCount = Object.keys(robots).length;
+        //     matrixContainer.style.gridTemplateColumns = `repeat(${robotCount + 1}, 3vh)`;
+        //     matrixContainer.innerHTML = ''; // 행렬 초기화
 
-            // 첫 번째 행 라벨 추가
-            const headerCell = document.createElement('div');
-            headerCell.classList.add('matrix-cell', 'label-init-cell');
-            matrixContainer.appendChild(headerCell); // 빈 셀
+        //     // 첫 번째 행 라벨 추가
+        //     const headerCell = document.createElement('div');
+        //     headerCell.classList.add('matrix-cell', 'label-init-cell');
+        //     matrixContainer.appendChild(headerCell); // 빈 셀
 
-            for (let i = 0; i < robotCount; i++) {
-                const labelCell = document.createElement('div');
-                labelCell.classList.add('matrix-cell', 'label-cell');
-                labelCell.textContent = `Robot ${i + 1}`; // 라벨 추가
-                matrixContainer.appendChild(labelCell);
-            }
+        //     for (let i = 0; i < robotCount; i++) {
+        //         const labelCell = document.createElement('div');
+        //         labelCell.classList.add('matrix-cell', 'label-cell');
+        //         labelCell.textContent = `Robot ${i + 1}`; // 라벨 추가
+        //         matrixContainer.appendChild(labelCell);
+        //     }
 
-            for (let i = 0; i < robotCount; i++) {
-                // 각 로봇의 라벨 추가
-                const labelCell = document.createElement('div');
-                labelCell.classList.add('matrix-cell', 'label-cell');
-                labelCell.textContent = `Robot ${i + 1}`; // 라벨 추가
-                matrixContainer.appendChild(labelCell);
-                for (let j = 0; j < robotCount; j++) {
-                    if (i === j) {
-                        // 동일 로봇 간에는 교착 확률을 표시 X
-                        const emptyCell = document.createElement('div');
-                        emptyCell.classList.add('matrix-cell');
-                        matrixContainer.appendChild(emptyCell);
-                        continue;
-                    }
-                    const cell = document.createElement('div');
-                    cell.id = `prob-${i}-${j}`;
-                    cell.classList.add('matrix-cell');
-                    matrixContainer.appendChild(cell);
-                }
-            }
-        }
+        //     for (let i = 0; i < robotCount; i++) {
+        //         // 각 로봇의 라벨 추가
+        //         const labelCell = document.createElement('div');
+        //         labelCell.classList.add('matrix-cell', 'label-cell');
+        //         labelCell.textContent = `Robot ${i + 1}`; // 라벨 추가
+        //         matrixContainer.appendChild(labelCell);
+        //         for (let j = 0; j < robotCount; j++) {
+        //             if (i === j) {
+        //                 // 동일 로봇 간에는 교착 확률을 표시 X
+        //                 const emptyCell = document.createElement('div');
+        //                 emptyCell.classList.add('matrix-cell');
+        //                 matrixContainer.appendChild(emptyCell);
+        //                 continue;
+        //             }
+        //             const cell = document.createElement('div');
+        //             cell.id = `prob-${i}-${j}`;
+        //             cell.classList.add('matrix-cell');
+        //             matrixContainer.appendChild(cell);
+        //         }
+        //     }
+        // }
 
-        // 행렬 업데이트 함수
-        function updateMatrix() {
-            const robotCount = Object.keys(robots).length;
-            for (let i = 0; i < robotCount; i++) {
-                for (let j = 0; j < robotCount; j++) {
-                    // 스스로와의 교착 확률은 계산하지 않음
-                    if (i === j) continue;
+        // // 행렬 업데이트 함수
+        // function updateMatrix() {
+        //     const robotCount = Object.keys(robots).length;
+        //     for (let i = 0; i < robotCount; i++) {
+        //         for (let j = 0; j < robotCount; j++) {
+        //             // 스스로와의 교착 확률은 계산하지 않음
+        //             if (i === j) continue;
 
-                    // 주행 명령을 받지 않은 로봇과의 교착 확률은 계산하지 않음
-                    if (!selectedRobotWaypoints[i + 1] || !selectedRobotWaypoints[j + 1]) continue;
-                    const cell = document.getElementById(`prob-${i}-${j}`);
-                    let probability = 0.0;
-                    let sectionNum = 0;
+        //             // 주행 명령을 받지 않은 로봇과의 교착 확률은 계산하지 않음
+        //             if (!selectedRobotWaypoints[i + 1] || !selectedRobotWaypoints[j + 1]) continue;
+        //             const cell = document.getElementById(`prob-${i}-${j}`);
+        //             let probability = 0.0;
+        //             let sectionNum = 0;
                     
-                    // 혼합 ID 생성
-                    const mixID = generateMixID(robots[i + 1].id, robots[j + 1].id);
+        //             // 혼합 ID 생성
+        //             const mixID = generateMixID(robots[i + 1].id, robots[j + 1].id);
 
-                    // 교착 확률 및 교착 지점 업데이트
-                    ({ P_deadlock: probability, deadlockSectionNum: sectionNum } = calculateDeadlockProbability(robots[i + 1], robots[j + 1], selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1]), mixID);
+        //             // 교착 확률 및 교착 지점 업데이트
+        //             ({ P_deadlock: probability, deadlockSectionNum: sectionNum } = calculateDeadlockProbability(robots[i + 1], robots[j + 1], selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1]), mixID);
 
-                    // 셀 업데이트
-                    cell.textContent = (probability * 100).toFixed(1) + '%';
-                    cell.className = getProbabilityClass(probability);
+        //             // 셀 업데이트
+        //             cell.textContent = (probability * 100).toFixed(1) + '%';
+        //             cell.className = getProbabilityClass(probability);
 
-                    // 교착 확률이 0.5(50%)가 넘는 경우 로봇 우선순위 세팅 함수 실행
-                    if (probability > 0.5) {
-                        setPriority(robots[i + 1], robots[j + 1], selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1], sectionNum, mixID);
-                    }
+        //             // 교착 확률이 0.5(50%)가 넘는 경우 로봇 우선순위 세팅 함수 실행
+        //             if (probability > 0.5) {
+        //                 setPriority(robots[i + 1], robots[j + 1], selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1], sectionNum, mixID);
+        //             }
 
-                    if (deadlockSolveFlag[mixID]) {
-                        resolveDeadlock(selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1], sectionNum, mixID);
-                    }
-                }
-            }
-        }
+        //             if (deadlockSolveFlag[mixID]) {
+        //                 resolveDeadlock(selectedRobotWaypoints[i + 1], selectedRobotWaypoints[j + 1], sectionNum, mixID);
+        //             }
+        //         }
+        //     }
+        // }
 
-        // 교착 확률 행렬 확대 함수
-        function zoomIn() {
-            scale += zoomStep;
-            updateMatrixScale();
-        }
+        // // 교착 확률 행렬 확대 함수
+        // function zoomIn() {
+        //     scale += zoomStep;
+        //     updateMatrixScale();
+        // }
 
-        // 교착 확률 행렬 축소 함수
-        function zoomOut() {
-            scale = Math.max(0.5, scale - zoomStep); // 최소 스케일 제한
-            updateMatrixScale();
-        }
+        // // 교착 확률 행렬 축소 함수
+        // function zoomOut() {
+        //     scale = Math.max(0.5, scale - zoomStep); // 최소 스케일 제한
+        //     updateMatrixScale();
+        // }
 
-        // 행렬 스케일 업데이트 함수
-        function updateMatrixScale() {
-            const matrixContainer = document.getElementById('probabilityMatrix');
+        // // 행렬 스케일 업데이트 함수
+        // function updateMatrixScale() {
+        //     const matrixContainer = document.getElementById('probabilityMatrix');
 
-            // 행렬 스케일 조정
-            matrixContainer.style.transform = `scale(${scale})`;
+        //     // 행렬 스케일 조정
+        //     matrixContainer.style.transform = `scale(${scale})`;
 
-            // 행렬의 확대/축소에 맞게 Wrapper에서 스크롤 가능하도록 설정
-            const wrapper = document.getElementById('matrixContainerWrapper');
-            wrapper.style.overflow = 'auto';
-        }
+        //     // 행렬의 확대/축소에 맞게 Wrapper에서 스크롤 가능하도록 설정
+        //     const wrapper = document.getElementById('matrixContainerWrapper');
+        //     wrapper.style.overflow = 'auto';
+        // }
 
         // ==================================================================
         //
@@ -3430,433 +3424,433 @@
         // ==================================================================
 
         // 교착 확률 수치화 모델 (거리 기반 동적 모델)
-        function calculateDeadlockProbability(robot1, robot2, waypoints1, waypoints2, mixID) {
+        // function calculateDeadlockProbability(robot1, robot2, waypoints1, waypoints2, mixID) {
 
-            let P_c = 0.0;              // 경로 교차 지점 기반 확률
-            let P_d = 0.0;              // 거리 기반 확률
-            let P_deadlock = 0.0;       // 최종 교착 확률
-            let P_d_temp = [];          // 각 교착 지점의 거리 기반 확률
-            let P_deadlock_temp = [];   // 각 교착 지점의 교착 확률
-            let deadlockSectionNum = 0; // 교착 확률이 높은 지점의 번호
-            let zero_count = 0;         // 교착 확률이 0인 지점을 카운트
-            let drivingDirection = 0;   // 교착 지점에서의 주행 방향 관계
+        //     let P_c = 0.0;              // 경로 교차 지점 기반 확률
+        //     let P_d = 0.0;              // 거리 기반 확률
+        //     let P_deadlock = 0.0;       // 최종 교착 확률
+        //     let P_d_temp = [];          // 각 교착 지점의 거리 기반 확률
+        //     let P_deadlock_temp = [];   // 각 교착 지점의 교착 확률
+        //     let deadlockSectionNum = 0; // 교착 확률이 높은 지점의 번호
+        //     let zero_count = 0;         // 교착 확률이 0인 지점을 카운트
+        //     let drivingDirection = 0;   // 교착 지점에서의 주행 방향 관계
 
-            // 경로 교차 지점 탐색
-            const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
+        //     // 경로 교차 지점 탐색
+        //     const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
 
-            // 경로 교차 지점 존재 시 확률 계산
-            if (intersectionPoints && intersectionPoints.length >= 1) {
-                const overlapSegmentNum = intersectionPoints.length;
+        //     // 경로 교차 지점 존재 시 확률 계산
+        //     if (intersectionPoints && intersectionPoints.length >= 1) {
+        //         const overlapSegmentNum = intersectionPoints.length;
 
-                for (let i = 0; i < overlapSegmentNum; i++) {
-                    // 경로 교착 지점 기반 확률
-                    ({ P_c: P_c, drivingDirection: drivingDirection } = calculateSegmentCrossingProbability(robot1, robot2, intersectionPoints[i]));
+        //         for (let i = 0; i < overlapSegmentNum; i++) {
+        //             // 경로 교착 지점 기반 확률
+        //             ({ P_c: P_c, drivingDirection: drivingDirection } = calculateSegmentCrossingProbability(robot1, robot2, intersectionPoints[i]));
 
-                    // 거리 기반 확률
-                    const overlapWaypointNum = intersectionPoints[i].length;
-                    const overlapDistance = calculateOverlappingSegmentDistance(intersectionPoints[i])
-                    const D_min = drivingDirection * overlapDistance;
+        //             // 거리 기반 확률
+        //             const overlapWaypointNum = intersectionPoints[i].length;
+        //             const overlapDistance = calculateOverlappingSegmentDistance(intersectionPoints[i])
+        //             const D_min = drivingDirection * overlapDistance;
 
-                    const robot1OverlapStartIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[i], overlapWaypointNum, 'Start')
-                    const robot1OverlapEndIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[i], overlapWaypointNum, 'End')
-                    const robot2OverlapStartIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[i], overlapWaypointNum, 'Start')
-                    const robot2OverlapEndIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[i], overlapWaypointNum, 'End')
-                    const robot1CurrentIndex = findRobotWaypointIndex(robot1, robotCurrentWaypoints[robot1.id], 'label');
-                    const robot2CurrentIndex = findRobotWaypointIndex(robot2, robotCurrentWaypoints[robot2.id], 'label');
+        //             const robot1OverlapStartIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[i], overlapWaypointNum, 'Start')
+        //             const robot1OverlapEndIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[i], overlapWaypointNum, 'End')
+        //             const robot2OverlapStartIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[i], overlapWaypointNum, 'Start')
+        //             const robot2OverlapEndIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[i], overlapWaypointNum, 'End')
+        //             const robot1CurrentIndex = findRobotWaypointIndex(robot1, robotCurrentWaypoints[robot1.id], 'label');
+        //             const robot2CurrentIndex = findRobotWaypointIndex(robot2, robotCurrentWaypoints[robot2.id], 'label');
 
-                    let distance = 0;
+        //             let distance = 0;
 
-                    const robot1ToOverlapStart = calculateRemainingDistanceToPoint(robot1, robot1OverlapStartIndex);
-                    const robot2ToOverlapStart = calculateRemainingDistanceToPoint(robot2, robot2OverlapStartIndex);
-                    const robot1ToOverlapEnd = calculateRemainingDistanceToPoint(robot1, robot1OverlapEndIndex);
-                    const robot2ToOverlapEnd = calculateRemainingDistanceToPoint(robot2, robot2OverlapEndIndex);
+        //             const robot1ToOverlapStart = calculateRemainingDistanceToPoint(robot1, robot1OverlapStartIndex);
+        //             const robot2ToOverlapStart = calculateRemainingDistanceToPoint(robot2, robot2OverlapStartIndex);
+        //             const robot1ToOverlapEnd = calculateRemainingDistanceToPoint(robot1, robot1OverlapEndIndex);
+        //             const robot2ToOverlapEnd = calculateRemainingDistanceToPoint(robot2, robot2OverlapEndIndex);
 
-                    if (drivingDirection === 2) {
-                        if (robot1CurrentIndex < robot1OverlapStartIndex && robot2CurrentIndex < robot2OverlapStartIndex) {
-                            distance = robot1ToOverlapStart + overlapDistance + robot2ToOverlapStart;
-                        }
-                        else if (robot1CurrentIndex >= robot1OverlapStartIndex && robot2CurrentIndex < robot2OverlapStartIndex) {
-                            distance = robot1ToOverlapEnd + robot2ToOverlapStart;
-                        }
-                        else if (robot1CurrentIndex < robot1OverlapStartIndex && robot2CurrentIndex >= robot2OverlapStartIndex) {
-                            distance = robot1ToOverlapStart + robot2ToOverlapEnd;
-                        }
-                    }
-                    else if (drivingDirection === 1) {
-                        if (robot1CurrentIndex <= robot1OverlapStartIndex && robot2CurrentIndex <= robot2OverlapStartIndex) {
-                            distance = robot1ToOverlapStart + robot2ToOverlapStart;
-                        }
-                        else if (robot1CurrentIndex > robot1OverlapStartIndex && robot2CurrentIndex <= robot2OverlapStartIndex) {
-                            distance = robot2ToOverlapStart - robot1ToOverlapStart;
-                        }
-                        else if (robot1CurrentIndex <= robot1OverlapStartIndex && robot2CurrentIndex > robot2OverlapStartIndex) {
-                            distance = robot1ToOverlapStart - robot2ToOverlapStart;
-                        }
-                    }
+        //             if (drivingDirection === 2) {
+        //                 if (robot1CurrentIndex < robot1OverlapStartIndex && robot2CurrentIndex < robot2OverlapStartIndex) {
+        //                     distance = robot1ToOverlapStart + overlapDistance + robot2ToOverlapStart;
+        //                 }
+        //                 else if (robot1CurrentIndex >= robot1OverlapStartIndex && robot2CurrentIndex < robot2OverlapStartIndex) {
+        //                     distance = robot1ToOverlapEnd + robot2ToOverlapStart;
+        //                 }
+        //                 else if (robot1CurrentIndex < robot1OverlapStartIndex && robot2CurrentIndex >= robot2OverlapStartIndex) {
+        //                     distance = robot1ToOverlapStart + robot2ToOverlapEnd;
+        //                 }
+        //             }
+        //             else if (drivingDirection === 1) {
+        //                 if (robot1CurrentIndex <= robot1OverlapStartIndex && robot2CurrentIndex <= robot2OverlapStartIndex) {
+        //                     distance = robot1ToOverlapStart + robot2ToOverlapStart;
+        //                 }
+        //                 else if (robot1CurrentIndex > robot1OverlapStartIndex && robot2CurrentIndex <= robot2OverlapStartIndex) {
+        //                     distance = robot2ToOverlapStart - robot1ToOverlapStart;
+        //                 }
+        //                 else if (robot1CurrentIndex <= robot1OverlapStartIndex && robot2CurrentIndex > robot2OverlapStartIndex) {
+        //                     distance = robot1ToOverlapStart - robot2ToOverlapStart;
+        //                 }
+        //             }
 
-                    // 다양한 이유로 교착 지점에 로봇이 정지해서 속도(시간을 계산)에 기반을 한 교착 지점 기반 확률이 정상적으로 계산되지 않은 경우
-                    // ex. 장애물 조우, 비상정지, 교착 상황 회피를 위한 정지 등
-                    if (robot1ToOverlapStart <= 0 && robot2ToOverlapStart > 0) {
-                        if (robot1.speed < 0.01) {
-                            P_c = 1;
-                        }
-                    }
-                    else if (robot1ToOverlapStart > 0 && robot2ToOverlapStart <= 0) {
-                        if (robot2.speed < 0.01) {
-                            P_c = 1;
-                        }
-                    }
+        //             // 다양한 이유로 교착 지점에 로봇이 정지해서 속도(시간을 계산)에 기반을 한 교착 지점 기반 확률이 정상적으로 계산되지 않은 경우
+        //             // ex. 장애물 조우, 비상정지, 교착 상황 회피를 위한 정지 등
+        //             if (robot1ToOverlapStart <= 0 && robot2ToOverlapStart > 0) {
+        //                 if (robot1.speed < 0.01) {
+        //                     P_c = 1;
+        //                 }
+        //             }
+        //             else if (robot1ToOverlapStart > 0 && robot2ToOverlapStart <= 0) {
+        //                 if (robot2.speed < 0.01) {
+        //                     P_c = 1;
+        //                 }
+        //             }
 
-                    P_d = 1 / (1 + Math.exp(2 * (distance - D_min)));
-                    // console.log(`Robot ${robot1.id} and Robot ${robot2.id} [direction]: ${drivingDirection}, [distance]: ${distance}, [P_d]: ${P_d}`);
-                    P_d_temp[i] = P_d;
-                    P_deadlock_temp[i] = P_d * P_c;
-                    // console.log(`Robot ${robot1.id} Section ${i} Deadlock Prob: ${P_deadlock_temp[i]} and Distance Prob: ${P_d_temp[i]}`);
-                }
+        //             P_d = 1 / (1 + Math.exp(2 * (distance - D_min)));
+        //             // console.log(`Robot ${robot1.id} and Robot ${robot2.id} [direction]: ${drivingDirection}, [distance]: ${distance}, [P_d]: ${P_d}`);
+        //             P_d_temp[i] = P_d;
+        //             P_deadlock_temp[i] = P_d * P_c;
+        //             // console.log(`Robot ${robot1.id} Section ${i} Deadlock Prob: ${P_deadlock_temp[i]} and Distance Prob: ${P_d_temp[i]}`);
+        //         }
                 
-                // 각 교착 지점 중 임계 확률 이상인 지점 탐색
-                for (let i = 0; i < overlapSegmentNum; i++) {
-                    if (P_deadlock_temp[i] > 0.5) {
-                        P_deadlock = P_deadlock_temp[i];
-                        deadlockSectionNum = i;
-                    }
-                    else if (P_deadlock_temp[i] < 0.1 || isNaN(P_deadlock_temp[i])) {
-                        zero_count += 1;
-                    }
-                }
+        //         // 각 교착 지점 중 임계 확률 이상인 지점 탐색
+        //         for (let i = 0; i < overlapSegmentNum; i++) {
+        //             if (P_deadlock_temp[i] > 0.5) {
+        //                 P_deadlock = P_deadlock_temp[i];
+        //                 deadlockSectionNum = i;
+        //             }
+        //             else if (P_deadlock_temp[i] < 0.1 || isNaN(P_deadlock_temp[i])) {
+        //                 zero_count += 1;
+        //             }
+        //         }
 
-                // 각 교착 지점에서의 교착 확률이 모두 0인 경우에는 거리 기반 확률로 판단
-                if (zero_count === overlapSegmentNum) {
-                    for (let i = 0; i < overlapSegmentNum; i++) {
-                        if (P_d_temp[i] > 0.9) {
-                            P_deadlock = 0.0;
-                            deadlockSectionNum = i;
-                        }
-                    }
-                }
-            }
+        //         // 각 교착 지점에서의 교착 확률이 모두 0인 경우에는 거리 기반 확률로 판단
+        //         if (zero_count === overlapSegmentNum) {
+        //             for (let i = 0; i < overlapSegmentNum; i++) {
+        //                 if (P_d_temp[i] > 0.9) {
+        //                     P_deadlock = 0.0;
+        //                     deadlockSectionNum = i;
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            return { P_deadlock, deadlockSectionNum };
-        }
+        //     return { P_deadlock, deadlockSectionNum };
+        // }
 
-        // 교착 지점 탐지 함수
-        function findIntersectionPoint(waypoints1, waypoints2) {
-            const overlappingSegments = [];
-            let tempSegment = [];
+        // // 교착 지점 탐지 함수
+        // function findIntersectionPoint(waypoints1, waypoints2) {
+        //     const overlappingSegments = [];
+        //     let tempSegment = [];
             
-            for (let i = 0; i < waypoints1.length; i++) {
-                for (let j = 0; j < waypoints2.length; j++) {
+        //     for (let i = 0; i < waypoints1.length; i++) {
+        //         for (let j = 0; j < waypoints2.length; j++) {
 
-                    // 경로 상 waypoint 중 일치하는 지점이 있는 지 확인
-                    if (waypoints1[i].latlng.lat === waypoints2[j].latlng.lat && waypoints1[i].latlng.lng === waypoints2[j].latlng.lng) {
-                        // waypoint가 일치 시에는 임시 배열에 저장 
-                        tempSegment.push({ lat: waypoints1[i].latlng.lat, lng: waypoints1[i].latlng.lng });
+        //             // 경로 상 waypoint 중 일치하는 지점이 있는 지 확인
+        //             if (waypoints1[i].latlng.lat === waypoints2[j].latlng.lat && waypoints1[i].latlng.lng === waypoints2[j].latlng.lng) {
+        //                 // waypoint가 일치 시에는 임시 배열에 저장 
+        //                 tempSegment.push({ lat: waypoints1[i].latlng.lat, lng: waypoints1[i].latlng.lng });
 
-                        if (i < waypoints1.length - 1) {
-                            // 해당 waypoint의 다음 waypoint도 겹치는 지 확인
-                            if (j === 0) {
-                                if (waypoints1[i + 1].latlng.lat !== waypoints2[j + 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j + 1].latlng.lng) {
-                                    // 겹친 경로 저장
-                                    if (tempSegment.length > 0) {
-                                        overlappingSegments.push([...tempSegment]);
-                                    }
+        //                 if (i < waypoints1.length - 1) {
+        //                     // 해당 waypoint의 다음 waypoint도 겹치는 지 확인
+        //                     if (j === 0) {
+        //                         if (waypoints1[i + 1].latlng.lat !== waypoints2[j + 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j + 1].latlng.lng) {
+        //                             // 겹친 경로 저장
+        //                             if (tempSegment.length > 0) {
+        //                                 overlappingSegments.push([...tempSegment]);
+        //                             }
             
-                                    tempSegment = [];   // 임시 배열 초기화
-                                }
-                            }
-                            else if (j > 0) {
-                                if ((waypoints1[i + 1].latlng.lat !== waypoints2[j + 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j + 1].latlng.lng) &&
-                                    (waypoints1[i + 1].latlng.lat !== waypoints2[j - 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j - 1].latlng.lng)) {
+        //                             tempSegment = [];   // 임시 배열 초기화
+        //                         }
+        //                     }
+        //                     else if (j > 0) {
+        //                         if ((waypoints1[i + 1].latlng.lat !== waypoints2[j + 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j + 1].latlng.lng) &&
+        //                             (waypoints1[i + 1].latlng.lat !== waypoints2[j - 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j - 1].latlng.lng)) {
                                     
-                                    // 겹친 경로 저장
-                                    if (tempSegment.length > 0) {
-                                        overlappingSegments.push([...tempSegment]);
-                                    }
+        //                             // 겹친 경로 저장
+        //                             if (tempSegment.length > 0) {
+        //                                 overlappingSegments.push([...tempSegment]);
+        //                             }
             
-                                    tempSegment = [];   // 임시 배열 초기화
-                                }
-                            }
-                            else if (j === waypoints2.length - 1) {
-                                if (waypoints1[i + 1].latlng.lat !== waypoints2[j - 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j - 1].latlng.lng) {
-                                    // 겹친 경로 저장
-                                    if (tempSegment.length > 0) {
-                                        overlappingSegments.push([...tempSegment]);
-                                    }
+        //                             tempSegment = [];   // 임시 배열 초기화
+        //                         }
+        //                     }
+        //                     else if (j === waypoints2.length - 1) {
+        //                         if (waypoints1[i + 1].latlng.lat !== waypoints2[j - 1].latlng.lat && waypoints1[i + 1].latlng.lng !== waypoints2[j - 1].latlng.lng) {
+        //                             // 겹친 경로 저장
+        //                             if (tempSegment.length > 0) {
+        //                                 overlappingSegments.push([...tempSegment]);
+        //                             }
             
-                                    tempSegment = [];   // 임시 배열 초기화
-                                }
-                            }
-                        }
-                        else {
-                            // waypoint가 끝났을 경우 겹친 경로 존재 시에 저장
-                            if (tempSegment.length > 0) {
-                                overlappingSegments.push([...tempSegment]);
-                            }
-                        }
-                    }
-                }
-            }
+        //                             tempSegment = [];   // 임시 배열 초기화
+        //                         }
+        //                     }
+        //                 }
+        //                 else {
+        //                     // waypoint가 끝났을 경우 겹친 경로 존재 시에 저장
+        //                     if (tempSegment.length > 0) {
+        //                         overlappingSegments.push([...tempSegment]);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            return overlappingSegments.length > 0 ? overlappingSegments : null;
-        }
+        //     return overlappingSegments.length > 0 ? overlappingSegments : null;
+        // }
 
-        // 겹친 경로에서 로봇의 교착 확률 계산 함수
-        function calculateSegmentCrossingProbability(robot1, robot2, overlapSegment) {
-            const startPoint = overlapSegment[0];
-            const endPoint = overlapSegment[overlapSegment.length - 1];
+        // // 겹친 경로에서 로봇의 교착 확률 계산 함수
+        // function calculateSegmentCrossingProbability(robot1, robot2, overlapSegment) {
+        //     const startPoint = overlapSegment[0];
+        //     const endPoint = overlapSegment[overlapSegment.length - 1];
 
-            const pointIndex1_1 = findRobotWaypointIndex(robot1, startPoint, 'point');
-            const pointIndex1_2 = findRobotWaypointIndex(robot1, endPoint, 'point');
-            const pointIndex2_1 = findRobotWaypointIndex(robot2, startPoint, 'point');
-            const pointIndex2_2 = findRobotWaypointIndex(robot2, endPoint, 'point');
+        //     const pointIndex1_1 = findRobotWaypointIndex(robot1, startPoint, 'point');
+        //     const pointIndex1_2 = findRobotWaypointIndex(robot1, endPoint, 'point');
+        //     const pointIndex2_1 = findRobotWaypointIndex(robot2, startPoint, 'point');
+        //     const pointIndex2_2 = findRobotWaypointIndex(robot2, endPoint, 'point');
 
-            // 기준 로봇과 상대방 로봇의 주행 방향 관계
-            // 정방향 = 1 / 역방향 = 2
-            let drivingDirection = 2
+        //     // 기준 로봇과 상대방 로봇의 주행 방향 관계
+        //     // 정방향 = 1 / 역방향 = 2
+        //     let drivingDirection = 2
             
-            // 겹친 경로에서 상대방 로봇의 주행 방향이 기준이 되는 로봇과 일치하는 지 판단 
-            if (pointIndex2_1 < pointIndex2_2) {    
-                drivingDirection = 1;
-            }
+        //     // 겹친 경로에서 상대방 로봇의 주행 방향이 기준이 되는 로봇과 일치하는 지 판단 
+        //     if (pointIndex2_1 < pointIndex2_2) {    
+        //         drivingDirection = 1;
+        //     }
 
-            // 교차지점을 이미 지나친 경우 교차 확률은 0
-            if (drivingDirection === 2) {
-                // 역방향일 경우
-                if (checkPassIntersection(robot1, pointIndex1_2) || checkPassIntersection(robot2, pointIndex2_1)) {
-                    return 0;
-                }
-            }
-            else if (drivingDirection === 1) {
-                // 정방향일 경우
-                if (checkPassIntersection(robot1, pointIndex1_2) || checkPassIntersection(robot2, pointIndex2_2)) {
-                    return 0;
-                }
-            }
+        //     // 교차지점을 이미 지나친 경우 교차 확률은 0
+        //     if (drivingDirection === 2) {
+        //         // 역방향일 경우
+        //         if (checkPassIntersection(robot1, pointIndex1_2) || checkPassIntersection(robot2, pointIndex2_1)) {
+        //             return 0;
+        //         }
+        //     }
+        //     else if (drivingDirection === 1) {
+        //         // 정방향일 경우
+        //         if (checkPassIntersection(robot1, pointIndex1_2) || checkPassIntersection(robot2, pointIndex2_2)) {
+        //             return 0;
+        //         }
+        //     }
         
-            // 각 로봇의 waypoint 사이 남은 거리 계산
-            const distanceToIntersection1 = calculateRemainingDistanceToPoint(robot1, pointIndex1_2);
-            // 상대방 로봇의 경우 주행 방향에 따라 다르게 계산
-            let distanceToIntersection2 = 0.0;
-            if (drivingDirection === 2)      { distanceToIntersection2 = calculateRemainingDistanceToPoint(robot2, pointIndex2_1); }  // 역방향
-            else if (drivingDirection === 1) { distanceToIntersection2 = calculateRemainingDistanceToPoint(robot2, pointIndex2_2); }  // 정방향
+        //     // 각 로봇의 waypoint 사이 남은 거리 계산
+        //     const distanceToIntersection1 = calculateRemainingDistanceToPoint(robot1, pointIndex1_2);
+        //     // 상대방 로봇의 경우 주행 방향에 따라 다르게 계산
+        //     let distanceToIntersection2 = 0.0;
+        //     if (drivingDirection === 2)      { distanceToIntersection2 = calculateRemainingDistanceToPoint(robot2, pointIndex2_1); }  // 역방향
+        //     else if (drivingDirection === 1) { distanceToIntersection2 = calculateRemainingDistanceToPoint(robot2, pointIndex2_2); }  // 정방향
         
-            // 두 로봇이 각 waypoint 사이를 이동하는 시간 계산
-            const timeToIntersection1 = Math.abs(calculateRemainingTime(robot1, distanceToIntersection1));
-            const timeToIntersection2 = Math.abs(calculateRemainingTime(robot2, distanceToIntersection2));
+        //     // 두 로봇이 각 waypoint 사이를 이동하는 시간 계산
+        //     const timeToIntersection1 = Math.abs(calculateRemainingTime(robot1, distanceToIntersection1));
+        //     const timeToIntersection2 = Math.abs(calculateRemainingTime(robot2, distanceToIntersection2));
         
-            // 두 로봇이 만날 확률을 구간 내에서 수치화
-            const distanceDifference = Math.abs(distanceToIntersection1 - distanceToIntersection2);
-            const timeDifference = Math.abs(timeToIntersection1 - timeToIntersection2);
+        //     // 두 로봇이 만날 확률을 구간 내에서 수치화
+        //     const distanceDifference = Math.abs(distanceToIntersection1 - distanceToIntersection2);
+        //     const timeDifference = Math.abs(timeToIntersection1 - timeToIntersection2);
             
-            // 거리 차이와 시간 차이를 종합적으로 고려하여 만날 확률을 계산
-            // 설정 기준: waypoint 간의 간격 및 기존 속도로 주행 시 소요 시간
-            const proximityThreshold = calculateOverlappingSegmentDistance(overlapSegment)      // 두 로봇이 가까워질 때의 임계 거리 (단위: m)
-            const timeThreshold = proximityThreshold / maxRobotSpeed;                           // 두 로봇의 시간 차이 임계값 (초)
+        //     // 거리 차이와 시간 차이를 종합적으로 고려하여 만날 확률을 계산
+        //     // 설정 기준: waypoint 간의 간격 및 기존 속도로 주행 시 소요 시간
+        //     const proximityThreshold = calculateOverlappingSegmentDistance(overlapSegment)      // 두 로봇이 가까워질 때의 임계 거리 (단위: m)
+        //     const timeThreshold = proximityThreshold / maxRobotSpeed;                           // 두 로봇의 시간 차이 임계값 (초)
         
-            const distanceFactor = 1 / (1 + Math.exp(0.2 * (distanceDifference - proximityThreshold)));
-            const timeFactor = 1 / (1 + Math.exp(1.0 * (timeDifference - timeThreshold)));
+        //     const distanceFactor = 1 / (1 + Math.exp(0.2 * (distanceDifference - proximityThreshold)));
+        //     const timeFactor = 1 / (1 + Math.exp(1.0 * (timeDifference - timeThreshold)));
         
-            // 최종 교차 확률은 거리와 시간의 조합으로 결정
-            const P_c = distanceFactor * timeFactor;
+        //     // 최종 교차 확률은 거리와 시간의 조합으로 결정
+        //     const P_c = distanceFactor * timeFactor;
 
-            return { P_c , drivingDirection };
-        }        
+        //     return { P_c , drivingDirection };
+        // }        
 
-        // 좌표 또는 라벨과 일치하는 waypoint index 탐색 함수
-        function findRobotWaypointIndex(robot, targetPointInfo, type) {
-            let targetIndex = 0;
+        // // 좌표 또는 라벨과 일치하는 waypoint index 탐색 함수
+        // function findRobotWaypointIndex(robot, targetPointInfo, type) {
+        //     let targetIndex = 0;
 
-            if (type === 'point') {
-                for (let i = 0; i < selectedRobotWaypoints[robot.id].length; i++) {
-                    const point = selectedRobotWaypoints[robot.id][i];
+        //     if (type === 'point') {
+        //         for (let i = 0; i < selectedRobotWaypoints[robot.id].length; i++) {
+        //             const point = selectedRobotWaypoints[robot.id][i];
                     
-                    // waypoint 좌표 일치 시에 index 저장
-                    if (point.latlng.lat === targetPointInfo.lat && point.latlng.lng === targetPointInfo.lng) {
-                        targetIndex = i;
-                    }
-                }
-            }
-            else if (type === 'label') {
-                for (let i = 0; i < selectedRobotWaypoints[robot.id].length; i++) {
-                    const point = selectedRobotWaypoints[robot.id][i];
+        //             // waypoint 좌표 일치 시에 index 저장
+        //             if (point.latlng.lat === targetPointInfo.lat && point.latlng.lng === targetPointInfo.lng) {
+        //                 targetIndex = i;
+        //             }
+        //         }
+        //     }
+        //     else if (type === 'label') {
+        //         for (let i = 0; i < selectedRobotWaypoints[robot.id].length; i++) {
+        //             const point = selectedRobotWaypoints[robot.id][i];
                     
-                    // waypoint 라벨 일치 시에 index 저장
-                    if (point.label === targetPointInfo) {
-                        targetIndex = i;
-                    }
-                }
-            }
+        //             // waypoint 라벨 일치 시에 index 저장
+        //             if (point.label === targetPointInfo) {
+        //                 targetIndex = i;
+        //             }
+        //         }
+        //     }
 
-            return targetIndex;
-        }
+        //     return targetIndex;
+        // }
 
-        // 로봇이 겹친 경로를 지났는 지 확인하는 함수
-        function checkPassIntersection(robot, targetIndex) {
-            let currentWaypointIndex = robotCurrentWaypoints[robot.id]
-                ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
-                : 0;
+        // // 로봇이 겹친 경로를 지났는 지 확인하는 함수
+        // function checkPassIntersection(robot, targetIndex) {
+        //     let currentWaypointIndex = robotCurrentWaypoints[robot.id]
+        //         ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
+        //         : 0;
 
-            return currentWaypointIndex > targetIndex;
-        }
+        //     return currentWaypointIndex > targetIndex;
+        // }
 
-        // 목표 Waypoint로부터 로봇의 주행 거리를 계산하는 함수 (로봇 현위치 ~ Target Waypoint)
-        function calculateRemainingDistanceToPoint(robot, index) {
-            let totalDistance = 0;
+        // // 목표 Waypoint로부터 로봇의 주행 거리를 계산하는 함수 (로봇 현위치 ~ Target Waypoint)
+        // function calculateRemainingDistanceToPoint(robot, index) {
+        //     let totalDistance = 0;
 
-            let currentWaypointIndex = robotCurrentWaypoints[robot.id]
-                ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
-                : 0;
+        //     let currentWaypointIndex = robotCurrentWaypoints[robot.id]
+        //         ? selectedRobotWaypoints[robot.id].findIndex(point => point.label === robotCurrentWaypoints[robot.id])
+        //         : 0;
 
-            // Case 1: 로봇의 현위치 index가 목표 waypoint index와 같을 경우
-            // 로봇의 현위치로부터 목표 waypoint까지의 거리
-            if (currentWaypointIndex === index) {
-                totalDistance = map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][currentWaypointIndex].latlng);
-            }
+        //     // Case 1: 로봇의 현위치 index가 목표 waypoint index와 같을 경우
+        //     // 로봇의 현위치로부터 목표 waypoint까지의 거리
+        //     if (currentWaypointIndex === index) {
+        //         totalDistance = map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][currentWaypointIndex].latlng);
+        //     }
 
-            // Case 2: 로봇의 현위치 index가 목표 waypoint index보다 작을 경우
-            // 로봇의 현위치로부터 목표 waypoint까지의 거리 + 목표 Waypoint까지의 남은 waypoint 간의 거리
-            if (currentWaypointIndex < index) {
-                // 로봇의 현위치로부터 목표 waypoint까지의 거리 합산
-                totalDistance += map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][currentWaypointIndex].latlng);
-                // 목표 Waypoint까지의 남은 waypoint 간의 거리 합산
-                for (let i = currentWaypointIndex; i < index; i++) {
-                    totalDistance += map.distance(selectedRobotWaypoints[robot.id][i].latlng, selectedRobotWaypoints[robot.id][i + 1].latlng);
-                }
-            }
+        //     // Case 2: 로봇의 현위치 index가 목표 waypoint index보다 작을 경우
+        //     // 로봇의 현위치로부터 목표 waypoint까지의 거리 + 목표 Waypoint까지의 남은 waypoint 간의 거리
+        //     if (currentWaypointIndex < index) {
+        //         // 로봇의 현위치로부터 목표 waypoint까지의 거리 합산
+        //         totalDistance += map.distance([robot.lat, robot.lng], selectedRobotWaypoints[robot.id][currentWaypointIndex].latlng);
+        //         // 목표 Waypoint까지의 남은 waypoint 간의 거리 합산
+        //         for (let i = currentWaypointIndex; i < index; i++) {
+        //             totalDistance += map.distance(selectedRobotWaypoints[robot.id][i].latlng, selectedRobotWaypoints[robot.id][i + 1].latlng);
+        //         }
+        //     }
 
-            // Case 3: 로봇의 현위치 index가 목표 waypoint index보다 클 경우
-            // 로봇의 현위치로부터 목표 waypoint까지의 거리 차감
-            if (currentWaypointIndex > index) {
-                totalDistance -= map.distance(selectedRobotWaypoints[robot.id][index].latlng, [robot.lat, robot.lng]);
-            }
+        //     // Case 3: 로봇의 현위치 index가 목표 waypoint index보다 클 경우
+        //     // 로봇의 현위치로부터 목표 waypoint까지의 거리 차감
+        //     if (currentWaypointIndex > index) {
+        //         totalDistance -= map.distance(selectedRobotWaypoints[robot.id][index].latlng, [robot.lat, robot.lng]);
+        //     }
 
-            // console.log(`Robot ${robot.id}: Total Distance to Waypoint ${selectedRobotWaypoints[robot.id][index].label} is ${totalDistance} meter.`);
+        //     // console.log(`Robot ${robot.id}: Total Distance to Waypoint ${selectedRobotWaypoints[robot.id][index].label} is ${totalDistance} meter.`);
             
-            return totalDistance;
-        }
+        //     return totalDistance;
+        // }
 
-        // 겹친 경로의 주행 거리를 계산하는 함수
-        function calculateOverlappingSegmentDistance(overlapSegment) {
-            let totalDistance = 0;
+        // // 겹친 경로의 주행 거리를 계산하는 함수
+        // function calculateOverlappingSegmentDistance(overlapSegment) {
+        //     let totalDistance = 0;
 
-            for (let i = 0; i < overlapSegment.length - 1; i++) {
-                totalDistance += map.distance([overlapSegment[i].lat, overlapSegment[i].lng], [overlapSegment[i + 1].lat, overlapSegment[i + 1].lng]);
-            }
+        //     for (let i = 0; i < overlapSegment.length - 1; i++) {
+        //         totalDistance += map.distance([overlapSegment[i].lat, overlapSegment[i].lng], [overlapSegment[i + 1].lat, overlapSegment[i + 1].lng]);
+        //     }
 
-            return totalDistance;
-        }
+        //     return totalDistance;
+        // }
 
-        // 로봇 우선순위 세팅 함수 (교착 상황)
-        function setPriority(robot1, robot2, waypoints1, waypoints2, sectionNum, mixID) {
+        // // 로봇 우선순위 세팅 함수 (교착 상황)
+        // function setPriority(robot1, robot2, waypoints1, waypoints2, sectionNum, mixID) {
 
-            // 경로 교차 지점 탐색
-            const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
-            const overlapWaypointNum = intersectionPoints[sectionNum].length; 
+        //     // 경로 교차 지점 탐색
+        //     const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
+        //     const overlapWaypointNum = intersectionPoints[sectionNum].length; 
 
-            const robot1OverlapStartIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
-            const robot2OverlapStartIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
+        //     const robot1OverlapStartIndex = findIntersectionStartAndEnd(robot1, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
+        //     const robot2OverlapStartIndex = findIntersectionStartAndEnd(robot2, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
 
-            // 겹친 경로까지의 거리 계산
-            const robot1ToOverlapStart = calculateRemainingDistanceToPoint(robot1, robot1OverlapStartIndex);
-            const robot2ToOverlapStart = calculateRemainingDistanceToPoint(robot2, robot2OverlapStartIndex);
+        //     // 겹친 경로까지의 거리 계산
+        //     const robot1ToOverlapStart = calculateRemainingDistanceToPoint(robot1, robot1OverlapStartIndex);
+        //     const robot2ToOverlapStart = calculateRemainingDistanceToPoint(robot2, robot2OverlapStartIndex);
 
-            // 겹친 경로까지의 거리를 비교하여 우선순위 판단
-            if (robot1ToOverlapStart > robot2ToOverlapStart) {
-                robot1.priority = 'low';
-                robot2.priority = 'high';
-            }
-            else if (robot1ToOverlapStart < robot2ToOverlapStart) {
-                robot1.priority = 'high';
-                robot2.priority = 'low';
-            }
+        //     // 겹친 경로까지의 거리를 비교하여 우선순위 판단
+        //     if (robot1ToOverlapStart > robot2ToOverlapStart) {
+        //         robot1.priority = 'low';
+        //         robot2.priority = 'high';
+        //     }
+        //     else if (robot1ToOverlapStart < robot2ToOverlapStart) {
+        //         robot1.priority = 'high';
+        //         robot2.priority = 'low';
+        //     }
 
-            // 교착 상태 우선순위 객체 추가
-            if (!deadlockPriority[mixID]) {
-                deadlockPriority[mixID] = { highRobot: [], lowRobot: [] };
-            }
+        //     // 교착 상태 우선순위 객체 추가
+        //     if (!deadlockPriority[mixID]) {
+        //         deadlockPriority[mixID] = { highRobot: [], lowRobot: [] };
+        //     }
 
-             // 교착 상태 우선순위 객체에 높은 로봇과 낮은 로봇 저장
-            deadlockPriority[mixID] = {
-                highRobot: robot1.priority === 'high' ? robot1 : robot2,
-                lowRobot: robot1.priority === 'low' ? robot1 : robot2
-            };
+        //      // 교착 상태 우선순위 객체에 높은 로봇과 낮은 로봇 저장
+        //     deadlockPriority[mixID] = {
+        //         highRobot: robot1.priority === 'high' ? robot1 : robot2,
+        //         lowRobot: robot1.priority === 'low' ? robot1 : robot2
+        //     };
 
-            console.log(`High robot is [Robot ${deadlockPriority[mixID].highRobot.id}] and Low robot is [Robot ${deadlockPriority[mixID].lowRobot.id}]`);
+        //     console.log(`High robot is [Robot ${deadlockPriority[mixID].highRobot.id}] and Low robot is [Robot ${deadlockPriority[mixID].lowRobot.id}]`);
 
-            // 교착 상태 해결 플래그 추가
-            if (!deadlockSolveFlag[mixID]) {
-                deadlockSolveFlag[mixID] = { solveFlag: true, stopFlag: false, redriveFlag: false };
-            }
-        }
+        //     // 교착 상태 해결 플래그 추가
+        //     if (!deadlockSolveFlag[mixID]) {
+        //         deadlockSolveFlag[mixID] = { solveFlag: true, stopFlag: false, redriveFlag: false };
+        //     }
+        // }
 
-        // 교착 상황 해결 함수
-        function resolveDeadlock(waypoints1, waypoints2, sectionNum, mixID) {
-            // 우선순위 높은 로봇 및 낮은 로봇
-            const highRobot = deadlockPriority[mixID].highRobot;
-            const lowRobot = deadlockPriority[mixID].lowRobot;
+        // // 교착 상황 해결 함수
+        // function resolveDeadlock(waypoints1, waypoints2, sectionNum, mixID) {
+        //     // 우선순위 높은 로봇 및 낮은 로봇
+        //     const highRobot = deadlockPriority[mixID].highRobot;
+        //     const lowRobot = deadlockPriority[mixID].lowRobot;
 
-            // 경로 교차 지점 탐색
-            const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
-            const overlapWaypointNum = intersectionPoints[sectionNum].length;
+        //     // 경로 교차 지점 탐색
+        //     const intersectionPoints = findIntersectionPoint(waypoints1, waypoints2);
+        //     const overlapWaypointNum = intersectionPoints[sectionNum].length;
 
-            const highRobotOverlapStartIndex = findIntersectionStartAndEnd(highRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
-            const lowRobotOverlapStartIndex = findIntersectionStartAndEnd(lowRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
-            const highRobotOverlapEndIndex = findIntersectionStartAndEnd(highRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'End');
-            const lowRobotOverlapEndIndex = findIntersectionStartAndEnd(lowRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'End');
+        //     const highRobotOverlapStartIndex = findIntersectionStartAndEnd(highRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
+        //     const lowRobotOverlapStartIndex = findIntersectionStartAndEnd(lowRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'Start');
+        //     const highRobotOverlapEndIndex = findIntersectionStartAndEnd(highRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'End');
+        //     const lowRobotOverlapEndIndex = findIntersectionStartAndEnd(lowRobot, intersectionPoints[sectionNum], overlapWaypointNum, 'End');
 
-            // 겹친 경로까지의 거리 계산
-            const highRobotToOverlapStart = calculateRemainingDistanceToPoint(highRobot, highRobotOverlapStartIndex);
-            const lowRobotToOverlapStart = calculateRemainingDistanceToPoint(lowRobot, lowRobotOverlapStartIndex);
+        //     // 겹친 경로까지의 거리 계산
+        //     const highRobotToOverlapStart = calculateRemainingDistanceToPoint(highRobot, highRobotOverlapStartIndex);
+        //     const lowRobotToOverlapStart = calculateRemainingDistanceToPoint(lowRobot, lowRobotOverlapStartIndex);
             
-            // 교착 상태 해결에 필요한 current index를 탐색
-            const highRobotCurrentIndex = findRobotWaypointIndex(highRobot, robotCurrentWaypoints[highRobot.id], 'label');
-            const lowRobotCurrentIndex = findRobotWaypointIndex(lowRobot, robotCurrentWaypoints[lowRobot.id], 'label');
+        //     // 교착 상태 해결에 필요한 current index를 탐색
+        //     const highRobotCurrentIndex = findRobotWaypointIndex(highRobot, robotCurrentWaypoints[highRobot.id], 'label');
+        //     const lowRobotCurrentIndex = findRobotWaypointIndex(lowRobot, robotCurrentWaypoints[lowRobot.id], 'label');
 
-            console.log(`Robot ${highRobot.id} Current Index: ${highRobotCurrentIndex} / End Index: ${highRobotOverlapEndIndex}`);
+        //     console.log(`Robot ${highRobot.id} Current Index: ${highRobotCurrentIndex} / End Index: ${highRobotOverlapEndIndex}`);
 
-            // 1. 우선순위 낮은 로봇이 겹친 경로로부터 1m 떨어진 위치에 도착 시 정지 명령 전달
-            if (!deadlockSolveFlag[mixID].stopFlag) {
-                console.log(`[High] Robot ${highRobot.id}: ${highRobotToOverlapStart} / [Low] Robot ${lowRobot.id}: ${lowRobotToOverlapStart}`);
-                if (lowRobotToOverlapStart <= 2.0) {
-                    updateRobotSpeed(0.00, lowRobot.id);
-                    deadlockSolveFlag[mixID].stopFlag = true;
-                }
-            }
-            // 2. 우선순위 높은 로봇이 겹친 경로를 주행 완료 시 우선순위 낮은 로봇에게 주행 재개 명령 전달
-            else if (deadlockSolveFlag[mixID].stopFlag && !deadlockSolveFlag[mixID].redriveFlag) {
-                if (highRobotCurrentIndex > highRobotOverlapEndIndex) {
-                    console.log(`Robot ${highRobot.id} Current Index: ${highRobotCurrentIndex} / End Index: ${highRobotOverlapEndIndex}`);
-                    updateRobotSpeed(maxRobotSpeed, lowRobot.id);
-                    deadlockSolveFlag[mixID].redriveFlag = true;
-                }
-            }
-            else if (deadlockSolveFlag[mixID].redriveFlag) {
-                // 우선순위 및 플래그 삭제
-                delete deadlockPriority[mixID];
-                delete deadlockSolveFlag[mixID];
-            }
-        }
+        //     // 1. 우선순위 낮은 로봇이 겹친 경로로부터 1m 떨어진 위치에 도착 시 정지 명령 전달
+        //     if (!deadlockSolveFlag[mixID].stopFlag) {
+        //         console.log(`[High] Robot ${highRobot.id}: ${highRobotToOverlapStart} / [Low] Robot ${lowRobot.id}: ${lowRobotToOverlapStart}`);
+        //         if (lowRobotToOverlapStart <= 2.0) {
+        //             updateRobotSpeed(0.00, lowRobot.id);
+        //             deadlockSolveFlag[mixID].stopFlag = true;
+        //         }
+        //     }
+        //     // 2. 우선순위 높은 로봇이 겹친 경로를 주행 완료 시 우선순위 낮은 로봇에게 주행 재개 명령 전달
+        //     else if (deadlockSolveFlag[mixID].stopFlag && !deadlockSolveFlag[mixID].redriveFlag) {
+        //         if (highRobotCurrentIndex > highRobotOverlapEndIndex) {
+        //             console.log(`Robot ${highRobot.id} Current Index: ${highRobotCurrentIndex} / End Index: ${highRobotOverlapEndIndex}`);
+        //             updateRobotSpeed(maxRobotSpeed, lowRobot.id);
+        //             deadlockSolveFlag[mixID].redriveFlag = true;
+        //         }
+        //     }
+        //     else if (deadlockSolveFlag[mixID].redriveFlag) {
+        //         // 우선순위 및 플래그 삭제
+        //         delete deadlockPriority[mixID];
+        //         delete deadlockSolveFlag[mixID];
+        //     }
+        // }
 
-        // 로봇마다 겹친 경로의 시작과 끝 index를 탐색해주는 함수
-        function findIntersectionStartAndEnd(robot, intersectionPoints, length, seq) {
-            // 처음 point와 마지막 point의 index 탐색
-            const firstPointIndex = findRobotWaypointIndex(robot, intersectionPoints[0], 'point');
-            const lastPointIndex = findRobotWaypointIndex(robot, intersectionPoints[length - 1], 'point');
+        // // 로봇마다 겹친 경로의 시작과 끝 index를 탐색해주는 함수
+        // function findIntersectionStartAndEnd(robot, intersectionPoints, length, seq) {
+        //     // 처음 point와 마지막 point의 index 탐색
+        //     const firstPointIndex = findRobotWaypointIndex(robot, intersectionPoints[0], 'point');
+        //     const lastPointIndex = findRobotWaypointIndex(robot, intersectionPoints[length - 1], 'point');
 
-            // 원하는 순서의 index 반환
-            if (seq === 'Start') {
-                return firstPointIndex < lastPointIndex? firstPointIndex : lastPointIndex;
-            }
-            else if (seq === 'End') {
-                return firstPointIndex > lastPointIndex? firstPointIndex : lastPointIndex;
-            }
-        } 
+        //     // 원하는 순서의 index 반환
+        //     if (seq === 'Start') {
+        //         return firstPointIndex < lastPointIndex? firstPointIndex : lastPointIndex;
+        //     }
+        //     else if (seq === 'End') {
+        //         return firstPointIndex > lastPointIndex? firstPointIndex : lastPointIndex;
+        //     }
+        // } 
         
-        // 혼합 ID 생성 함수(교착 상황을 케이스 별로 구분하는 용도)
-        function generateMixID(id1, id2) {
-            const ids = [id1, id2].sort();
-            return `${ids[0]}_${ids[1]}`;
-        }
+        // // 혼합 ID 생성 함수(교착 상황을 케이스 별로 구분하는 용도)
+        // function generateMixID(id1, id2) {
+        //     const ids = [id1, id2].sort();
+        //     return `${ids[0]}_${ids[1]}`;
+        // }
 
          // DB Robot 팝업 열기 및 데이터 조회 함수
          async function openDBRobotPopup() {
@@ -3900,78 +3894,78 @@
         }
 
         // 새로운 로봇 데이터를 추가할 수 있는 폼을 표시하는 함수
-        function openAddRobotPopup() {
-            const popupContainer = document.createElement('div');
-            popupContainer.id = 'newRobotPopup';  // ID 추가
-            popupContainer.style = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 90%;
-                max-width: 300px;
-                padding: 20px;
-                background-color: #ffffff;
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                font-size: 14px;
-                z-index: 1000;
-            `;
+        // function openAddRobotPopup() {
+        //     const popupContainer = document.createElement('div');
+        //     popupContainer.id = 'newRobotPopup';  // ID 추가
+        //     popupContainer.style = `
+        //         position: fixed;
+        //         top: 50%;
+        //         left: 50%;
+        //         transform: translate(-50%, -50%);
+        //         width: 90%;
+        //         max-width: 300px;
+        //         padding: 20px;
+        //         background-color: #ffffff;
+        //         border-radius: 8px;
+        //         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        //         font-size: 14px;
+        //         z-index: 1000;
+        //     `;
 
-            popupContainer.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="margin: 0; font-size: 18px;">Add New Robot</h3>
-                    <button onclick="closeAddRobotPopup()" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer;">&times;</button>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <label>Robot ID:</label>
-                    <input type="text" id="newRobotId" placeholder="Enter Robot ID" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"/>
+        //     popupContainer.innerHTML = `
+        //         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        //             <h3 style="margin: 0; font-size: 18px;">Add New Robot</h3>
+        //             <button onclick="closeAddRobotPopup()" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer;">&times;</button>
+        //         </div>
+        //         <div style="display: flex; flex-direction: column; gap: 10px;">
+        //             <label>Robot ID:</label>
+        //             <input type="text" id="newRobotId" placeholder="Enter Robot ID" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"/>
                     
-                    <label>Name:</label>
-                    <input type="text" id="newRobotName" placeholder="Enter Robot Name" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"/>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                    <button onclick="addNewRobot()" style="width: 48%; padding: 10px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
-                    <button onclick="closeAddRobotPopup()" style="width: 48%; padding: 10px; font-size: 16px; background-color: #f8f9fa; color: black; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;">Cancel</button>
-                </div>
-            `;
+        //             <label>Name:</label>
+        //             <input type="text" id="newRobotName" placeholder="Enter Robot Name" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"/>
+        //         </div>
+        //         <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+        //             <button onclick="addNewRobot()" style="width: 48%; padding: 10px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
+        //             <button onclick="closeAddRobotPopup()" style="width: 48%; padding: 10px; font-size: 16px; background-color: #f8f9fa; color: black; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;">Cancel</button>
+        //         </div>
+        //     `;
 
-            document.body.appendChild(popupContainer);
-        }
+        //     document.body.appendChild(popupContainer);
+        // }
 
-        // 팝업을 닫는 함수
-        function closeAddRobotPopup() {
-            const popupContainer = document.querySelector('#newRobotPopup');
-            if (popupContainer) {
-                document.body.removeChild(popupContainer);
-            }
-        }
+        // // 팝업을 닫는 함수
+        // function closeAddRobotPopup() {
+        //     const popupContainer = document.querySelector('#newRobotPopup');
+        //     if (popupContainer) {
+        //         document.body.removeChild(popupContainer);
+        //     }
+        // }
 
 
         // 새로운 로봇 데이터를 Supabase DB에 추가하는 함수
-        async function addNewRobot() {
-            const robotId = document.getElementById("newRobotId").value;
-            const name = document.getElementById("newRobotName").value;
+        // async function addNewRobot() {
+        //     const robotId = document.getElementById("newRobotId").value;
+        //     const name = document.getElementById("newRobotName").value;
 
-            if (!robotId || !name) {
-                alert("Robot ID와 Name을 모두 입력하세요.");
-                return;
-            }
+        //     if (!robotId || !name) {
+        //         alert("Robot ID와 Name을 모두 입력하세요.");
+        //         return;
+        //     }
 
-            // DB에 robotId, name, siteId(1)로만 데이터 삽입
-            const { error } = await supabase.from('Robot').insert([
-                { robotId, name, siteId: 1 }  // ID는 자동 생성됨
-            ]);
+        //     // DB에 robotId, name, siteId(1)로만 데이터 삽입
+        //     const { error } = await supabase.from('Robot').insert([
+        //         { robotId, name, siteId: 1 }  // ID는 자동 생성됨
+        //     ]);
 
-            if (error) {
-                console.error("로봇 추가 오류:", error);
-                alert("로봇 추가에 실패했습니다.");
-            } else {
-                alert("새로운 로봇이 추가되었습니다.");
-                closeAddRobotPopup();  // 팝업 닫기
-                fetchRobotList();  // 로봇 목록 갱신
-            }
-        }
+        //     if (error) {
+        //         console.error("로봇 추가 오류:", error);
+        //         alert("로봇 추가에 실패했습니다.");
+        //     } else {
+        //         alert("새로운 로봇이 추가되었습니다.");
+        //         closeAddRobotPopup();  // 팝업 닫기
+        //         fetchRobotList();  // 로봇 목록 갱신
+        //     }
+        // }
 
         
 
