@@ -865,19 +865,19 @@
             </div>
     
             <!-- 속도 조절 (오른쪽) -->
-            <!-- <div class="speed-control"> -->
+            <div class="speed-control">
                 <!-- 선속도 조절 -->
-                <!-- <div class="speed-control-section">
+                <div class="speed-control-section">
                     <label>Linear</label>
                     <div class="speed-display" id="linearSpeedDisplay">0.5</div>
                     <div class="adjust-buttons">
                         <button onclick="adjustSpeed('linear', 0.05)">▲</button>
                         <button onclick="adjustSpeed('linear', -0.05)">▼</button>
                     </div>
-                </div> -->
+                </div>
     
                 <!-- 각속도 조절 -->
-                <!-- <div class="speed-control-section">
+                <div class="speed-control-section">
                     <label>Angular</label>
                     <div class="speed-display" id="angularSpeedDisplay">0.5</div>
                     <div class="adjust-buttons">
@@ -886,7 +886,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <!-- Close 버튼 -->
         <div class="close-button">
             <button onclick="closeControllerPopup()">Close</button>
@@ -2797,7 +2797,7 @@
                 alert("No robots selected.");
                 return;
             }
-        
+            
             document.getElementById('controllerPopup').style.display = 'flex';
         }
 
