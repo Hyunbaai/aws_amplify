@@ -2920,6 +2920,7 @@
             // WebSocket의 currentMqttData와 연결 상태를 확인
             robots.forEach(robot => {
                 const matchedData = newRobotData.find(data => 
+                data.robot_id && // null 또는 undefined가 아닌 경우에만 실행
                 data.robot_id.trim().toLowerCase() === robot.robotId.trim().toLowerCase()
             );
                 const connectionId = matchedData ? matchedData.connection_id : null;
