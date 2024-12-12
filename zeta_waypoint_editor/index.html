@@ -4221,7 +4221,7 @@
 
         // DB에서 모든 Waypoint를 불러와 한 번에 전송하는 함수
         async function sendAllWaypoints(pathId,commandType = 0, reverse = false) {
-            console.log("reverse status: ", reverse);
+
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 console.error("WebSocket 연결이 열려 있지 않습니다. 연결을 재설정합니다.");
                 alert("WebSocket 연결이 닫혀 있습니다. 다시 시도해 주세요.");
@@ -4297,9 +4297,10 @@
                             request_id: requestId, // request_id 추가
                         },
                     };
+                    console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
                 }
 
-                console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
+                
 
                 // ACK 처리 로직
                 // const ackPromise = new Promise((resolve, reject) => {
