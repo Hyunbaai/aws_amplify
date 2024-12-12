@@ -4228,7 +4228,12 @@
             }
 
             if (!selectedRobotId) {
-                alert("먼저 로봇을 선택해주세요.");
+                alert("로봇을 선택해주세요.");
+                return;
+            }
+
+            if (!pathId) {
+                alert("Path를 선택해주세요.");
                 return;
             }
 
