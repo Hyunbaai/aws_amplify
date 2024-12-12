@@ -943,8 +943,8 @@
         <label>[DB Data]</label>
         <button onclick="openDBRobotPopup()"> DB Waypoint List </button>
         <button id="startNavigationBtn" onclick="sendAllWaypoints(selectedPathId)">Start Navigation</button>
-        <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,reverse=true)">Reverse Waypoint</button>
-        <button id="cancelBtn" onclick="sendAllWaypoints(selectedPathId,commandType=-1)"style="background-color: #dc3545; color: white;">Navigation Cancel</button>
+        <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,0,true)">Reverse Waypoint</button>
+        <button id="cancelBtn" onclick="sendAllWaypoints(selectedPathId,-1,false)"style="background-color: #dc3545; color: white;">Navigation Cancel</button>
     </div>
 
     <!-- Path 목록을 표시하는 팝업 -->
