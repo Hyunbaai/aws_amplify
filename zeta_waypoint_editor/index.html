@@ -2793,7 +2793,7 @@
 
         // 로봇 원격 제어 팝업 함수
         function robotController() {
-            if (selectedRobotID === null) {
+            if (selectedRobotId === null) {
                 alert("No robots selected.");
                 return;
             }
@@ -2824,7 +2824,7 @@
 
         // 로봇 조작 명령을 WebSocket으로 전송
         function sendControl(command) {
-            const robot = robots[selectedRobotID];
+            const robot = robots[selectedRobotId];
             
             robot.remoteCommandState = command;
 
