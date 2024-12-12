@@ -4216,9 +4216,6 @@
             document.getElementById("pathListPopup").style.display = "none"; // 두 번째 팝업 숨기기
         }
 
-        let isSocketInitialized = false; // WebSocket이 초기화되었는지 확인하는 변수
-
-
         // DB에서 모든 Waypoint를 불러와 한 번에 전송하는 함수
         async function sendAllWaypoints(pathId,commandType = 0, reverse = false) {
 
@@ -4255,7 +4252,6 @@
                     alert("선택된 Path에 Waypoint가 없습니다.");
                     return;
                 }
-
 
                 // connection_id 찾기
                 const matchedRobotData = newRobotData.find(data =>
@@ -4297,11 +4293,11 @@
                             request_id: requestId, // request_id 추가
                         },
                     };
-                    
                 }
 
                 console.log("전송할 WebSocket 데이터:", JSON.stringify(pathData, null, 2));
                 socket.send(JSON.stringify(pathData));
+                return;
 
             } catch (error) {
                 console.error("Unexpected error while loading waypoints from database:", error);
