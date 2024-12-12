@@ -942,8 +942,9 @@
     <div id="db-data-section">
         <label>[DB Data]</label>
         <button onclick="openDBRobotPopup()"> DB Waypoint List </button>
-        <button id="startNavigationBtn" onclick="startNavigation(selectedPathId)">Start Navigation</button>
-        <button id="reverseNavigationBtn" onclick="startReverseNavigation(selectedPathId)">Reverse Waypoint</button>
+        <button id="startNavigationBtn" onclick="sendAllWaypoints(selectedPathId)">Start Navigation</button>
+        <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,reverse=true)">Reverse Waypoint</button>
+        <button id="cancleBtn" onclick="sendAllWaypoints(selectedPathId,commandType=-1)"style="background-color: #dc3545; color: white;">Cancel</button>
     </div>
 
     <!-- Path 목록을 표시하는 팝업 -->
@@ -4758,20 +4759,6 @@
             }));
         }
         
-
-        // 특정 Path ID로 Waypoints를 불러와 모두 전송
-        function startNavigation(pathId) {
-            if (!isSocketInitialized) {
-            }
-            sendAllWaypoints(pathId); // Waypoints를 한 번에 전송
-        }
-
-        // 기존의 startNavigation 함수와 유사하게 Waypoints를 역순으로 전송하는 함수 추가
-        function startReverseNavigation(pathId) {
-            if (!isSocketInitialized) {
-            }
-            sendAllWaypoints(pathId,commandType=0, reverse=true); // 역방향 Waypoints 전송을 위한 플래그 추가
-        }
 
         // 특정 Path ID로 Waypoints를 불러와 지도에 표시
         function showWaypointsForPath(pathId) {
