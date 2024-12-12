@@ -1028,17 +1028,31 @@
 
                 
                     if (message.amr_data_db && Array.isArray(message.amr_data_db)) {
-                        newRobotData = message.amr_data_db.map((amrData) => {
-                            return {
-                                connection_id: amrData.connection_id,
-                                robot_id: amrData.data?.robot_id || null,
-                                timestamp: amrData.data?.timestamp || null,
-                                status: amrData.data?.system_values?.status || "unknown",
-                            };
+                        const tempRobotData = {};
+
+                        message.amr_data_db.forEach((amrData) => {
+                            const robotId = amrData.data?.robot_id || null;
+                            const timestamp = amrData.data?.timestamp || null;
+
+                            // robot_id가 null이면 무시
+                            if (!robotId) return;
+
+                            // 기존 데이터와 timestamp 비교
+                            if (!tempRobotData[robotId] || new Date(tempRobotData[robotId].timestamp) < new Date(timestamp)) {
+                                tempRobotData[robotId] = {
+                                    connection_id: amrData.connection_id,
+                                    robot_id: robotId,
+                                    timestamp: timestamp,
+                                    status: amrData.data?.system_values?.status || "unknown",
+                                };
+                            }
                         });
 
-                        console.log("New Robot Data:", newRobotData);  
-                    };
+                        // Object.values를 사용해 최종 배열 생성
+                        newRobotData = Object.values(tempRobotData);
+
+                        console.log("New Robot Data:", newRobotData);
+                    }
                     if (message.mqtt_data) {
                         const incomingData = message.mqtt_data;
 
