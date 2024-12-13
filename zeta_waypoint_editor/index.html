@@ -3211,7 +3211,7 @@
             } else {
                 // 새 마커 생성
                 const marker = L.marker([latitude, longitude], { icon: createArrowIcon(robotColor) }).addTo(robotLayer)
-                marker.bindPopup(`<strong>Robot:</strong> ${robotname}`).openPopup();
+                // marker.bindPopup(`<strong>Robot:</strong> ${robotname}`).openPopup();
 
                 // 마커를 robotMarkers에 저장
                 robotMarkers[robotname] = marker;
