@@ -991,6 +991,10 @@
         const robotMarkers = {};
         let robotname;
 
+        // Waypoint 데이터를 저장할 변수
+        let initialLatLngs = {};
+        let initialYaws = {};
+
 
         // WebSocket 연결 설정
         function connectWebSocket() {
@@ -1191,108 +1195,108 @@
             motionThreshold: 5
         };
 
-        // 터치 이벤트 전파 방지
-        const sidebarRight = document.getElementById('sidebar-right');
-        const sidebarLeft = document.getElementById('sidebar-left');
+        // // 터치 이벤트 전파 방지
+        // const sidebarRight = document.getElementById('sidebar-right');
+        // const sidebarLeft = document.getElementById('sidebar-left');
 
-        sidebarRight.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
-        sidebarRight.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
-        sidebarRight.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
-        sidebarLeft.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
-        sidebarLeft.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
-        sidebarLeft.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
+        // sidebarRight.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+        // sidebarRight.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+        // sidebarRight.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
+        // sidebarLeft.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+        // sidebarLeft.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+        // sidebarLeft.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
 
-        // 교착 확률 시각화 행렬
-        const matrixContainer = document.getElementById('probabilityMatrix');
-        const zoomStep = 0.1; // 줌 인/아웃 스텝 설정
+        // // 교착 확률 시각화 행렬
+        // const matrixContainer = document.getElementById('probabilityMatrix');
+        // const zoomStep = 0.1; // 줌 인/아웃 스텝 설정
 
-        // 스크롤 시 지도에서 이벤트 전파 방지
-        matrixContainer.addEventListener('touchstart', function(event) {
-            event.stopPropagation(); // 이벤트 전파 방지
-        }, { passive: false });
+        // // 스크롤 시 지도에서 이벤트 전파 방지
+        // matrixContainer.addEventListener('touchstart', function(event) {
+        //     event.stopPropagation(); // 이벤트 전파 방지
+        // }, { passive: false });
 
-        matrixContainer.addEventListener('touchmove', function(event) {
-            event.stopPropagation(); // 이벤트 전파 방지
-        }, { passive: false });
+        // matrixContainer.addEventListener('touchmove', function(event) {
+        //     event.stopPropagation(); // 이벤트 전파 방지
+        // }, { passive: false });
 
-        // 로봇이 도착을 인식하는 거리 (현재: 시뮬레이션)
-        const robotArrivedDistance = 0.33615246791265885; 
+        // // 로봇이 도착을 인식하는 거리 (현재: 시뮬레이션)
+        // const robotArrivedDistance = 0.33615246791265885; 
 
-        // 로봇의 최대 속도 (일반적으로 해당 속도로 주행)
-        const maxRobotSpeed = 0.50;
+        // // 로봇의 최대 속도 (일반적으로 해당 속도로 주행)
+        // const maxRobotSpeed = 0.50;
 
-        // 거리에 따라 부여된 장소 점수
-        const locationScore = {
-            hyundong: 1,
-            nehemia: 2,
-            newton: 3
-        }
+        // // 거리에 따라 부여된 장소 점수
+        // const locationScore = {
+        //     hyundong: 1,
+        //     nehemia: 2,
+        //     newton: 3
+        // }
 
-        // 유형에 따라 부여된 작업 점수
-        const taskPriority = {
-            return: 1,
-            delivery: 2
-        }
+        // // 유형에 따라 부여된 작업 점수
+        // const taskPriority = {
+        //     return: 1,
+        //     delivery: 2
+        // }
 
-        // Waypoint 목록용 변수 선언
-        // const waypointListButton = document.getElementById('waypointListButton');
-        const waypointPopup = document.getElementById('waypoint-popup');
-        const overlay = document.getElementById('overlay');
-        const fileListElement = document.getElementById('file-list');
-        const closeButton = document.getElementById('closeButton');
+        // // Waypoint 목록용 변수 선언
+        // // const waypointListButton = document.getElementById('waypointListButton');
+        // const waypointPopup = document.getElementById('waypoint-popup');
+        // const overlay = document.getElementById('overlay');
+        // const fileListElement = document.getElementById('file-list');
+        // const closeButton = document.getElementById('closeButton');
 
 
-        // Close 버튼 클릭 시 Waypoint 목록 닫기
-        closeButton.addEventListener('touchstart', () => {
-            waypointPopup.style.display = 'none';
-            overlay.style.display = 'none';
-        });
+        // // Close 버튼 클릭 시 Waypoint 목록 닫기
+        // closeButton.addEventListener('touchstart', () => {
+        //     waypointPopup.style.display = 'none';
+        //     overlay.style.display = 'none';
+        // });
 
-        // Waypoint 저장 목록용 변수 선언
-        // const saveWaypointButton = document.getElementById('saveWaypointButton');
-        const saveWaypointPopup = document.getElementById('save-waypoint-popup');
-        const saveFileListElement = document.getElementById('file-save-list');
-        const saveButton = document.getElementById('saveButton');
-        const saveCloseButton = document.getElementById('saveCloseButton');
-
-        
-        // Save 버튼 클릭 시 Waypoint 저장
-        saveButton.addEventListener('touchstart', () => {
-            // 선택된 값 가져오기
-            const task = document.getElementById('task').value;
-            const departure = document.getElementById('departure').value;
-            const destination = document.getElementById('destination').value;
-
-            if (!task || !departure || !destination) {
-                alert("All fields must be selected!");
-                return;
-            }
-
-            saveWaypointName();
-        });
-
-        // Close 버튼 클릭 시 Waypoint 저장 목록 닫기
-        saveCloseButton.addEventListener('touchstart', () => {
-            saveWaypointPopup.style.display = 'none';
-            overlay.style.display = 'none';
-
-            document.querySelectorAll('.select-button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-
-            saveSelectedWaypoints = [];
-        });
+        // // Waypoint 저장 목록용 변수 선언
+        // // const saveWaypointButton = document.getElementById('saveWaypointButton');
+        // const saveWaypointPopup = document.getElementById('save-waypoint-popup');
+        // const saveFileListElement = document.getElementById('file-save-list');
+        // const saveButton = document.getElementById('saveButton');
+        // const saveCloseButton = document.getElementById('saveCloseButton');
 
         
+        // // Save 버튼 클릭 시 Waypoint 저장
+        // saveButton.addEventListener('touchstart', () => {
+        //     // 선택된 값 가져오기
+        //     const task = document.getElementById('task').value;
+        //     const departure = document.getElementById('departure').value;
+        //     const destination = document.getElementById('destination').value;
 
-        const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // 알파벳 배열
+        //     if (!task || !departure || !destination) {
+        //         alert("All fields must be selected!");
+        //         return;
+        //     }
+
+        //     saveWaypointName();
+        // });
+
+        // // Close 버튼 클릭 시 Waypoint 저장 목록 닫기
+        // saveCloseButton.addEventListener('touchstart', () => {
+        //     saveWaypointPopup.style.display = 'none';
+        //     overlay.style.display = 'none';
+
+        //     document.querySelectorAll('.select-button').forEach(btn => {
+        //         btn.classList.remove('selected');
+        //     });
+
+        //     saveSelectedWaypoints = [];
+        // });
+
         
-        let isDragging = false;
-        let startLatLng = null;
-        let tempMarker = null;
-        let touchTimeout;               // 두 손가락 터치 확인을 위한 타임아웃
-        let isTwoFingerTouch = false;   // 두 손가락 터치 여부 확인
-        let pointMode = false;          // 포인트 생성 기능을 위한 변수
+
+        // const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // 알파벳 배열
+        
+        // let isDragging = false;
+        // let startLatLng = null;
+        // let tempMarker = null;
+        // let touchTimeout;               // 두 손가락 터치 확인을 위한 타임아웃
+        // let isTwoFingerTouch = false;   // 두 손가락 터치 여부 확인
+        // let pointMode = false;          // 포인트 생성 기능을 위한 변수
 
         // // 커스텀 토글 버튼
         // const toggleButton = L.control({ position: 'bottomright' });
@@ -1330,185 +1334,185 @@
         // ==================================================================
 
         // // Point Mode 활성화 함수
-        function enablePointMode() {
-            $('#map').on('touchstart', onTouchStart);
-            $('#map').on('touchmove', onTouchMove);
-            $('#map').on('touchend', onTouchEnd);
-        }
+        // function enablePointMode() {
+        //     $('#map').on('touchstart', onTouchStart);
+        //     $('#map').on('touchmove', onTouchMove);
+        //     $('#map').on('touchend', onTouchEnd);
+        // }
 
-        // Point Mode 비활성화 함수
-        function disablePointMode() {
-            $('#map').off('touchstart', onTouchStart);
-            $('#map').off('touchmove', onTouchMove);
-            $('#map').off('touchend', onTouchEnd);
-        }
+        // // Point Mode 비활성화 함수
+        // function disablePointMode() {
+        //     $('#map').off('touchstart', onTouchStart);
+        //     $('#map').off('touchmove', onTouchMove);
+        //     $('#map').off('touchend', onTouchEnd);
+        // }
 
-        // Waypoint 생성 1단계: Point 세팅 (화면 터치)
-        function onTouchStart(e) {
-            // 기존 타임아웃 및 상태 초기화
-            clearTimeout(touchTimeout);
-            isTwoFingerTouch = false;
-            isDragging = false;
+        // // Waypoint 생성 1단계: Point 세팅 (화면 터치)
+        // function onTouchStart(e) {
+        //     // 기존 타임아웃 및 상태 초기화
+        //     clearTimeout(touchTimeout);
+        //     isTwoFingerTouch = false;
+        //     isDragging = false;
 
-            // 두 손가락 이상일 경우 포인트 생성 중지
-            if (e.touches.length > 1) { 
-                isTwoFingerTouch = true;
-                return;
-            }
+        //     // 두 손가락 이상일 경우 포인트 생성 중지
+        //     if (e.touches.length > 1) { 
+        //         isTwoFingerTouch = true;
+        //         return;
+        //     }
 
-            touchTimeout = setTimeout(() => {
-                if(!isTwoFingerTouch && e.touches.length === 1) {
-                    isDragging = true;
+        //     touchTimeout = setTimeout(() => {
+        //         if(!isTwoFingerTouch && e.touches.length === 1) {
+        //             isDragging = true;
            
-                    // 원래 이벤트 객체에서 터치 위치 가져오기
-                    const touch = e.touches[0];
-                    const containerPoint = map.mouseEventToContainerPoint(touch); 
-                    startLatLng = map.containerPointToLatLng(containerPoint);
+        //             // 원래 이벤트 객체에서 터치 위치 가져오기
+        //             const touch = e.touches[0];
+        //             const containerPoint = map.mouseEventToContainerPoint(touch); 
+        //             startLatLng = map.containerPointToLatLng(containerPoint);
                     
-                    e.preventDefault();
-                    e.stopPropagation();
+        //             e.preventDefault();
+        //             e.stopPropagation();
 
-                    map.dragging.disable();
+        //             map.dragging.disable();
 
-                    tempMarker = L.marker(startLatLng, {
-                        icon: L.divIcon({
-                            className: 'custom-div-icon',
-                            html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                            iconSize: [15, 15],
-                        }),
-                        draggable: false,
-                    }).addTo(map);
-                }
-            }, 50);
-        }
+        //             tempMarker = L.marker(startLatLng, {
+        //                 icon: L.divIcon({
+        //                     className: 'custom-div-icon',
+        //                     html: '<img src="robot_1.png" alt="Custom Icon"/>',
+        //                     iconSize: [15, 15],
+        //                 }),
+        //                 draggable: false,
+        //             }).addTo(map);
+        //         }
+        //     }, 50);
+        // }
 
-        // Waypoint 생성 2단계: Heading 세팅 (터치한 채로 드래그)
-        function onTouchMove(e) {
-            if (!isDragging) return;
+        // // Waypoint 생성 2단계: Heading 세팅 (터치한 채로 드래그)
+        // function onTouchMove(e) {
+        //     if (!isDragging) return;
 
-            e.preventDefault();
-            e.stopPropagation();
+        //     e.preventDefault();
+        //     e.stopPropagation();
 
-            const touch = e.touches[0];
-            const containerPoint = map.mouseEventToContainerPoint(touch); 
-            const currentLatLng = map.containerPointToLatLng(containerPoint);
-            const angle = calculateHeading(startLatLng, currentLatLng);
+        //     const touch = e.touches[0];
+        //     const containerPoint = map.mouseEventToContainerPoint(touch); 
+        //     const currentLatLng = map.containerPointToLatLng(containerPoint);
+        //     const angle = calculateHeading(startLatLng, currentLatLng);
 
-            tempMarker.setLatLng(startLatLng);
+        //     tempMarker.setLatLng(startLatLng);
 
-            const arrowElement = tempMarker.getElement().querySelector('img');
-            arrowElement.style.transform = `rotate(${1.57-angle}rad)`;
-        }
+        //     const arrowElement = tempMarker.getElement().querySelector('img');
+        //     arrowElement.style.transform = `rotate(${1.57-angle}rad)`;
+        // }
 
-        // Waypoint 생성 3단계: 최종 Waypoint 생성 (터치 해제)
-        function onTouchEnd(e) {
-            clearTimeout(touchTimeout); 
-            if (!isDragging || isTwoFingerTouch) return; 
+        // // Waypoint 생성 3단계: 최종 Waypoint 생성 (터치 해제)
+        // function onTouchEnd(e) {
+        //     clearTimeout(touchTimeout); 
+        //     if (!isDragging || isTwoFingerTouch) return; 
             
-            isDragging = false;
-            e.preventDefault();
-            e.stopPropagation();
+        //     isDragging = false;
+        //     e.preventDefault();
+        //     e.stopPropagation();
 
-            const endLatLng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e.changedTouches[0]));
-            const color = document.getElementById('colorPicker').value;
-            const label = `${ALPHABET[groupCounter]}-${pointCounter}`;
-            const heading = calculateHeading(startLatLng, endLatLng);
+        //     const endLatLng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e.changedTouches[0]));
+        //     const color = document.getElementById('colorPicker').value;
+        //     const label = `${ALPHABET[groupCounter]}-${pointCounter}`;
+        //     const heading = calculateHeading(startLatLng, endLatLng);
 
-            let waypointToUse = findNearestWaypoint(startLatLng);
+        //     let waypointToUse = findNearestWaypoint(startLatLng);
             
-            if (controlMode === false) {
-                if (waypointToUse) {
-                    startLatLng = waypointToUse.latlng;
-                }
-                const waypoint = L.marker(startLatLng, {
-                    title: label,
-                    icon: L.divIcon({ 
-                        className: 'custom-div-icon',
-                        html: '<img src="robot_1.png" alt="Custom Icon"/>',
-                        iconSize: [15, 15],
-                    }),
-                    draggable: false,
-                }).addTo(map);
+        //     if (controlMode === false) {
+        //         if (waypointToUse) {
+        //             startLatLng = waypointToUse.latlng;
+        //         }
+        //         const waypoint = L.marker(startLatLng, {
+        //             title: label,
+        //             icon: L.divIcon({ 
+        //                 className: 'custom-div-icon',
+        //                 html: '<img src="robot_1.png" alt="Custom Icon"/>',
+        //                 iconSize: [15, 15],
+        //             }),
+        //             draggable: false,
+        //         }).addTo(map);
     
-                const arrowElement = waypoint.getElement().querySelector('img');
-                arrowElement.style.transform = `rotate(${1.57-heading}rad)`;
+        //         const arrowElement = waypoint.getElement().querySelector('img');
+        //         arrowElement.style.transform = `rotate(${1.57-heading}rad)`;
     
-                waypoint.label = label;
-                waypoint.color = color;
-                waypoint.latlng = startLatLng;
-                waypoint.heading = heading;
-                waypoint.type = 'waypoint_follower';
-                waypoint.robot = '';
+        //         waypoint.label = label;
+        //         waypoint.color = color;
+        //         waypoint.latlng = startLatLng;
+        //         waypoint.heading = heading;
+        //         waypoint.type = 'waypoint_follower';
+        //         waypoint.robot = '';
 
-                waypoints.push({ 
-                    marker: waypoint, 
-                    color: color, 
-                    latlng: startLatLng, 
-                    label: label,
-                    heading: heading,
-                    type: 'waypoint_follower',   // 기본 타입을 waypoint_follower로 
-                    robot: ''
-                });
+        //         waypoints.push({ 
+        //             marker: waypoint, 
+        //             color: color, 
+        //             latlng: startLatLng, 
+        //             label: label,
+        //             heading: heading,
+        //             type: 'waypoint_follower',   // 기본 타입을 waypoint_follower로 
+        //             robot: ''
+        //         });
         
-                // Waypoints 간의 선 연결
-                if (waypoints.length > 1) {
-                    const previousWaypoint = waypoints[waypoints.length - 2].marker.getLatLng();
-                    const polyline = L.polyline([previousWaypoint, startLatLng], { color: color }).addTo(map);
+        //         // Waypoints 간의 선 연결
+        //         if (waypoints.length > 1) {
+        //             const previousWaypoint = waypoints[waypoints.length - 2].marker.getLatLng();
+        //             const polyline = L.polyline([previousWaypoint, startLatLng], { color: color }).addTo(map);
 
-                    // 선을 그룹별로 저장
-                    if (!waypoint_lines[label.charAt(0)]){
-                        waypoint_lines[label.charAt(0)] = [];
-                    }
-                    waypoint_lines[label.charAt(0)].push(polyline);
-                }
+        //             // 선을 그룹별로 저장
+        //             if (!waypoint_lines[label.charAt(0)]){
+        //                 waypoint_lines[label.charAt(0)] = [];
+        //             }
+        //             waypoint_lines[label.charAt(0)].push(polyline);
+        //         }
         
-                // 표에 Waypoints 정보 추가
-                if (pointCounter === 1) addWaypointToTable(label, color, waypoint.robot);
+        //         // 표에 Waypoints 정보 추가
+        //         if (pointCounter === 1) addWaypointToTable(label, color, waypoint.robot);
         
-                pointCounter++; // point 카운터 증가
-            }
-            else if (controlMode === true) {         
-                const controlPoint = L.marker(startLatLng, {
-                    icon: L.divIcon({ 
-                        className: 'custom-div-icon',
-                        html: '<img src="robot_2.png" alt="Custom Icon"/>',
-                        iconSize: [15, 15],
-                    }),
-                    draggable: true,
-                }).addTo(map);
+        //         pointCounter++; // point 카운터 증가
+        //     }
+        //     else if (controlMode === true) {         
+        //         const controlPoint = L.marker(startLatLng, {
+        //             icon: L.divIcon({ 
+        //                 className: 'custom-div-icon',
+        //                 html: '<img src="robot_2.png" alt="Custom Icon"/>',
+        //                 iconSize: [15, 15],
+        //             }),
+        //             draggable: true,
+        //         }).addTo(map);
     
-                const arrowElement = controlPoint.getElement().querySelector('img');
-                arrowElement.style.transform = `rotate(${1.57-heading}rad)`;
+        //         const arrowElement = controlPoint.getElement().querySelector('img');
+        //         arrowElement.style.transform = `rotate(${1.57-heading}rad)`;
                 
-                controlPoint.color = color;
-                controlPoint.latlng = startLatLng;
-                controlPoint.heading = heading;
-                controlPoint.type = 'waypoint_follower';
-                controlPoint.robot = '';
+        //         controlPoint.color = color;
+        //         controlPoint.latlng = startLatLng;
+        //         controlPoint.heading = heading;
+        //         controlPoint.type = 'waypoint_follower';
+        //         controlPoint.robot = '';
 
-                controlPoints.push({ 
-                    marker: controlPoint, 
-                    color: color, 
-                    latlng: startLatLng, 
-                    label: label,
-                    heading: heading,
-                    type: 'waypoint_follower',   // 기본 타입을 waypoint_follower로 
-                    robot: ''
-                });
+        //         controlPoints.push({ 
+        //             marker: controlPoint, 
+        //             color: color, 
+        //             latlng: startLatLng, 
+        //             label: label,
+        //             heading: heading,
+        //             type: 'waypoint_follower',   // 기본 타입을 waypoint_follower로 
+        //             robot: ''
+        //         });
 
-                const waypointData = {
-                    latitude: startLatLng.lat,
-                    longitude: startLatLng.lng,
-                    heading: heading
-                };
+        //         const waypointData = {
+        //             latitude: startLatLng.lat,
+        //             longitude: startLatLng.lng,
+        //             heading: heading
+        //         };
 
-                selectedControlSocket[selectedRobotID].send(JSON.stringify(waypointData));
-                console.log("Sent waypoint data:", waypointData);
-            }
+        //         selectedControlSocket[selectedRobotID].send(JSON.stringify(waypointData));
+        //         console.log("Sent waypoint data:", waypointData);
+        //     }
 
-            map.dragging.enable();
-            map.removeLayer(tempMarker);
-        }
+        //     map.dragging.enable();
+        //     map.removeLayer(tempMarker);
+        // }
 
 
         // Reset 함수
@@ -4616,10 +4620,6 @@
                 `)
                 .openOn(map); // 지도 위에 팝업 표시
         }
-
-        // Waypoint 데이터를 저장할 변수
-        const initialLatLngs = {};
-        const initialYaws = {};
 
         // 첫 번째 편집 모드로 전환하는 함수
         function enterEditMode(id) {
