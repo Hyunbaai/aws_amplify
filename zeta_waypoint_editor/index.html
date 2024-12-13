@@ -2879,6 +2879,13 @@
                     request_id: uuidv4() // 유니크한 ID 생성
                 }
             };
+
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(messageData));
+                console.log(`명령 전송: ${JSON.stringify(messageData)}`);
+            } else {
+                console.error("WebSocket 연결이 닫혀있습니다.");
+            }
         }
 
         // 로봇 원격 제어 팝업 닫는 함수
