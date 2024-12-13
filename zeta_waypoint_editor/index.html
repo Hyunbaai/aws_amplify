@@ -4133,6 +4133,7 @@
                 `;
                 addWaypointButton.onclick = (e) => {
                     e.stopPropagation(); // Path 클릭 이벤트 중지
+                    closePathListPopup(); // 팝업 닫기
                     enableAddWaypointMode(path.id);
                 };
 
