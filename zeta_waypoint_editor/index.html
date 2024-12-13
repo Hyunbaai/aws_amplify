@@ -1072,8 +1072,8 @@
                                     // JSON.parse를 사용하여 nav2_eta_path 데이터 파싱
                                     const nav2Data = JSON.parse(incomingData.data.nav2_eta_paths);
 
-                                    // heading 값 추출 (없으면 기본값 0)
-                                    const heading = parseFloat(nav2Data.heading) || 0;
+                                    // heading 값이 숫자인지 확인하고 추출 (기본값은 0)
+                                    const heading = typeof nav2Data.heading === 'number' ? nav2Data.heading : 0;
 
                                     // 선택된 로봇 마커 위치 및 heading 업데이트
                                     updateMarkerPosition(robotname, latitude, longitude, heading);
