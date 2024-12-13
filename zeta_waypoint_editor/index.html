@@ -4134,7 +4134,8 @@
                 addWaypointButton.onclick = (e) => {
                     e.stopPropagation(); // Path 클릭 이벤트 중지
                     closePathListPopup(); // 팝업 닫기
-                    enableAddWaypointMode(path.id);
+                    loadWaypointsFromDatabase(selectedPathId)
+                    enableAddWaypointMode(selectedPathId);
                 };
 
                 // 삭제 버튼 (X 아이콘)
