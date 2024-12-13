@@ -1695,18 +1695,18 @@
         //     detailTable.style.display = 'table';
         // }
 
-        // // 두 좌표 사이의 heading을 계산하는 함수
-        // function calculateHeading(startLatLng, endLatLng) {
-        //     const dx = endLatLng.lng - startLatLng.lng;
-        //     const dy = endLatLng.lat - startLatLng.lat;
-        //     let angle = Math.atan2(dy, dx);
+        // 두 좌표 사이의 heading을 계산하는 함수
+        function calculateHeading(startLatLng, endLatLng) {
+            const dx = endLatLng.lng - startLatLng.lng;
+            const dy = endLatLng.lat - startLatLng.lat;
+            let angle = Math.atan2(dy, dx);
 
-        //     if (angle < 0) {
-        //         angle += 2 * Math.PI;
-        //     }
+            if (angle < 0) {
+                angle += 2 * Math.PI;
+            }
 
-        //     return angle;
-        // }
+            return angle;
+        }
 
         // ==================================================================
         //
