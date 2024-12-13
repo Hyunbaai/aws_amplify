@@ -1067,20 +1067,25 @@
                             const latitude = parseFloat(incomingData.data.fix_filtered_latitude) || 0;
                             const longitude = parseFloat(incomingData.data.fix_filtered_longitude) || 0;
 
-                           // nav2_eta_path 데이터 파싱
-                            if (incomingData.data.nav2_eta_paths) {
+                            if (incomingData.data.nav2_eta_path) {
                                 try {
+                                    // JSON.parse를 사용하여 nav2_eta_path 데이터 파싱
                                     const nav2Data = JSON.parse(incomingData.data.nav2_eta_path);
-                                    const heading = parseFloat(nav2Data.heading) || 0; // heading 값 파싱
-                                    
+
+                                    // heading 값 추출 (없으면 기본값 0)
+                                    const heading = parseFloat(nav2Data.heading) || 0;
+
                                     // 선택된 로봇 마커 위치 및 heading 업데이트
                                     updateMarkerPosition(robotname, latitude, longitude, heading);
                                 } catch (error) {
                                     console.error("Error parsing nav2_eta_path:", error);
+
+                                    // JSON 파싱 실패 시 기본값으로 호출
+                                    updateMarkerPosition(robotname, latitude, longitude, 0);
                                 }
                             } else {
                                 // nav2_eta_path가 없을 경우 기본값으로 호출
-                                updateMarkerPosition(robotname, latitude, longitude, 0); // 기본 heading은 0
+                                updateMarkerPosition(robotname, latitude, longitude, 0);
                             }
                         }
                         console.log("Updated mqtt_data:", mqtt_data);
