@@ -4117,7 +4117,7 @@
                 pathName.onclick = () => {
                     selectedPathId = path.id; // 선택된 Path ID 저장
                     closePathListPopup(); // 팝업 닫기
-                    showWaypointsForPath(path.id);
+                    loadWaypointsFromDatabase(path.id);
                 };
 
                 // Add Waypoint 버튼
@@ -4856,11 +4856,6 @@
             }));
         }
         
-
-        // 특정 Path ID로 Waypoints를 불러와 지도에 표시
-        function showWaypointsForPath(pathId) {
-            loadWaypointsFromDatabase(pathId);
-        }
 
         // 웨이포인트 삭제 함수
         async function deleteWaypoint(id) {
