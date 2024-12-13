@@ -1067,8 +1067,21 @@
                             const latitude = parseFloat(incomingData.data.fix_filtered_latitude) || 0;
                             const longitude = parseFloat(incomingData.data.fix_filtered_longitude) || 0;
 
-                            // 선택된 로봇 마커 위치 업데이트
-                            updateMarkerPosition(robotname, latitude, longitude);
+                           // nav2_eta_path 데이터 파싱
+                            if (incomingData.data.nav2_eta_paths) {
+                                try {
+                                    const nav2Data = JSON.parse(incomingData.data.nav2_eta_path);
+                                    const heading = parseFloat(nav2Data.heading) || 0; // heading 값 파싱
+                                    
+                                    // 선택된 로봇 마커 위치 및 heading 업데이트
+                                    updateMarkerPosition(robotname, latitude, longitude, heading);
+                                } catch (error) {
+                                    console.error("Error parsing nav2_eta_path:", error);
+                                }
+                            } else {
+                                // nav2_eta_path가 없을 경우 기본값으로 호출
+                                updateMarkerPosition(robotname, latitude, longitude, 0); // 기본 heading은 0
+                            }
                         }
                         console.log("Updated mqtt_data:", mqtt_data);
                     };
@@ -3155,19 +3168,45 @@
             map.setView([latitude, longitude], 17);
         }
 
-        function updateMarkerPosition(robotId, latitude, longitude) {
+        function updateMarkerPosition(robotname, latitude, longitude, heading=0) {
             if (!robotLayer) {
                 console.error("Robot layer is not initialized!");
                 return;
             }
 
+             // 로봇 이름에 따른 색상 지정
+            const robotColor = (() => {
+                switch (robotname.toLowerCase()) {
+                    case 'yellow': return 'yellow';
+                    case 'tank orange': return 'orange';
+                    case 'blue': return 'blue';
+                    case 'tank purple': return 'purple';
+                    case 'pink': return 'pink';
+                    default: return 'green'; // 기본 색상
+                }
+            })();
+
+            // 화살표 아이콘 생성 함수
+            const createArrowIcon = (color) => {
+
+                const headingInDegrees = (heading * 180) / Math.PI; // 라디안 -> 각도 변환
+                const adjustedHeading = (360 - headingInDegrees) % 360; // 시계 방향으로 회전 조정
+                
+                return L.divIcon({
+                    html: `<div class="transform" style="color: ${color}; font-size: 24px; transform: rotate(${adjustedHeading}deg;">➤</div>`,
+                    className: 'arrow-icon',
+                    iconSize: [24, 24], // 아이콘 크기
+                });
+            };
+
              // 기존 마커가 존재하면 위치 업데이트
-            if (robotMarkers[robotId]) {
-                robotMarkers[robotId].setLatLng([latitude, longitude]);
+            if (robotMarkers[robotname]) {
+                robotMarkers[robotname].setLatLng([latitude, longitude]);
+                robotMarkers[robotname].setIcon(createArrowIcon(robotColor));
             } else {
                 // 새 마커 생성
-                const marker = L.marker([latitude, longitude]).addTo(robotLayer);
-                marker.bindPopup(`<strong>Robot:</strong> ${robotId}`).openPopup();
+                const marker = L.marker([latitude, longitude], { icon: createArrowIcon(robotColor) }).addTo(robotLayer)
+                marker.bindPopup(`<strong>Robot:</strong> ${robotname}`).openPopup();
 
                 // 마커를 robotMarkers에 저장
                 robotMarkers[robotId] = marker;
@@ -3175,7 +3214,7 @@
 
             // 다른 로봇의 마커는 제거
             Object.keys(robotMarkers).forEach(id => {
-                if (id !== robotId) {
+                if (id !== robotname) {
                     robotLayer.removeLayer(robotMarkers[id]); // 지도에서 제거
                     delete robotMarkers[id]; // robotMarkers 객체에서 제거
                 }
