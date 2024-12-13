@@ -983,6 +983,8 @@
 
 
     <script>
+        
+        import { wheelCommands } from './wheelCommands.js';
 
         let socket; // WebSocket 객체
         
@@ -2839,27 +2841,68 @@
 
         // 로봇 조작 명령을 WebSocket으로 전송
         function sendControl(command) {
-            const robot = robots[selectedRobotId];
-            
-            robot.remoteCommandState = command;
 
-            if (socket.readyState === WebSocket.OPEN) {
-                const message = JSON.stringify({
-                    command: robot.remoteCommandState,
-                    linear_speed: robot.remoteLinearSpeed,
-                    angular_speed: robot.remoteAngularSpeed
-                });
-                socket.send(meesage);
-                console.log(`명령 전송: ${command}`);
-            } else {
-                console.log("WebSocket 연결이 닫혀있습니다.");
+            if (!selectedRobotId) {
+                console.error("선택된 로봇이 없습니다.");
+                return;
             }
+
+            // connectionId 가져오기
+            const connectionId = getConnectionId(newRobotData,selectedRobotId);
+
+            if (!connectionId) {
+                console.error("Connection ID가 없습니다. WebSocket 연결을 확인하세요.");
+                return;
+            }
+
+            // wheelCommands에서 command 매핑
+            const matchedCommand = wheelCommands[command]?.[0];
+            if (!matchedCommand) {
+                console.error(`유효하지 않은 명령: ${command}`);
+                return;
+            }
+
+            const { command: commandType, value } = matchedCommand;
+
+            const uuidv4 = (() => {
+                    // UUID 생성 로직 간단 구현
+                    return () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = (Math.random() * 16) | 0;
+                    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                    });
+                })();
+            
+            // 데이터 구조 생성
+            const messageData = {
+                type: "system",
+                args: {
+                    command: "wheel_control",
+                    connection_id: connectionId,
+                    robot_id: selectedRobotId,
+                    value: value, // wheelCommands에서 가져온 값
+                    function: commandType, // wheelCommands에서 가져온 명령 유형
+                    request_id: uuidv4() // 유니크한 ID 생성
+                }
+            };
         }
 
         // 로봇 원격 제어 팝업 닫는 함수
         function closeControllerPopup() {
             document.getElementById('controllerPopup').style.display = 'none';
         }
+
+        function getConnectionId(newRobotData, selectedRobotId) {
+            // selectedRobotId와 매칭되는 connectionId 찾기
+            const matchedData = newRobotData.find(data =>
+                data.robot_id && // null 또는 undefined가 아닌 경우에만 실행
+                data.robot_id.trim().toLowerCase() === selectedRobotId.trim().toLowerCase()
+            );
+
+            // connectionId가 존재하면 반환, 없으면 null 반환
+            return matchedData ? matchedData.connection_id : null;
+        }
+
 
         // 팝업창에 드래그 기능을 추가하는 함수
         // function makeElementDraggable(popupId, headerClass) {
