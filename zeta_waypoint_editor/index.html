@@ -863,29 +863,6 @@
                 <button class="controller-btn right" onclick="sendControl('right')">→</button>
                 <button class="controller-btn down" onclick="sendControl('backward')">↓</button>
             </div>
-    
-            <!-- 속도 조절 (오른쪽) -->
-            <div class="speed-control">
-                <!-- 선속도 조절 -->
-                <div class="speed-control-section">
-                    <label>Linear</label>
-                    <div class="speed-display" id="linearSpeedDisplay">0.5</div>
-                    <div class="adjust-buttons">
-                        <button onclick="adjustSpeed('linear', 0.05)">▲</button>
-                        <button onclick="adjustSpeed('linear', -0.05)">▼</button>
-                    </div>
-                </div>
-    
-                <!-- 각속도 조절 -->
-                <div class="speed-control-section">
-                    <label>Angular</label>
-                    <div class="speed-display" id="angularSpeedDisplay">0.5</div>
-                    <div class="adjust-buttons">
-                        <button onclick="adjustSpeed('angular', 0.05)">▲</button>
-                        <button onclick="adjustSpeed('angular', -0.05)">▼</button>
-                    </div>
-                </div>
-            </div>
         </div>
         <!-- Close 버튼 -->
         <div class="close-button">
