@@ -1078,7 +1078,6 @@
 
                                     // heading 값이 숫자인지 확인하고 추출 (기본값은 0)
                                     const heading = typeof nav2Data.heading === 'number' ? nav2Data.heading : 0;
-                                    console.log("heading:", heading);
 
                                     // 선택된 로봇 마커 위치 및 heading 업데이트
                                     updateMarkerPosition(robotname, latitude, longitude, heading);
@@ -3201,11 +3200,10 @@
 
                 const headingInDegrees = (heading * 180) / Math.PI; // 라디안 -> 각도 변환
                 const adjustedHeading = (360 - headingInDegrees) % 360; // 시계 방향으로 회전 조정
-                console.log("adjustedHeading:", adjustedHeading);
                 
                 
                 return L.divIcon({
-                    html: `<div class="transform" style="color: ${color}; font-size: 12px; transform: rotate(${adjustedHeading}deg);">➤</div>`,
+                    html: `<div class="transform" style="color: ${color}; font-size: 18px; transform: rotate(${adjustedHeading}deg);">➤</div>`,
                     className: 'arrow-icon',
                     iconSize: [10, 10], // 아이콘 크기
                 });
@@ -3215,6 +3213,7 @@
             if (robotMarkers[robotname]) {
                 robotMarkers[robotname].setLatLng([latitude, longitude]);
                 robotMarkers[robotname].setIcon(createArrowIcon(robotColor));
+                robotMarkers[robotname].setZIndexOffset(1000); // z-index 설정
             } else {
                 // 새 마커 생성
                 const marker = L.marker([latitude, longitude], { icon: createArrowIcon(robotColor) }).addTo(robotLayer)
