@@ -3207,7 +3207,7 @@
                 return L.divIcon({
                     html: `<div class="transform" style="color: ${color}; font-size: 24px; transform: rotate(${adjustedHeading}deg);">➤</div>`,
                     className: 'arrow-icon',
-                    iconSize: [15, 15], // 아이콘 크기
+                    iconSize: [10, 10], // 아이콘 크기
                 });
             };
 
@@ -4581,7 +4581,7 @@
                         icon: L.divIcon({
                             className: 'custom-div-icon',
                             html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-yaw}rad);"/>`,
-                            iconSize: [15, 15],
+                            iconSize: [10, 10],
                         }),
                         draggable: false,
                     }).addTo(waypointLayer);
@@ -4855,7 +4855,7 @@
             marker.setIcon(L.divIcon({
                 className: 'custom-div-icon',
                 html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2*Math.PI-yaw}rad);"/>`,
-                iconSize: [15, 15],
+                iconSize: [10, 10],
             }));
         }
         
@@ -4921,7 +4921,7 @@
                     icon: L.divIcon({
                         className: 'custom-div-icon',
                         html: '<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(0rad);"/>',
-                        iconSize: [15, 15],
+                        iconSize: [10, 10],
                     }),
                     draggable: false,
                 }).addTo(map);
