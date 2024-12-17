@@ -3201,6 +3201,8 @@
 
                 const headingInDegrees = (heading * 180) / Math.PI; // 라디안 -> 각도 변환
                 const adjustedHeading = (360 - headingInDegrees) % 360; // 시계 방향으로 회전 조정
+                console.log("adjustedHeading:", adjustedHeading);
+                
                 
                 return L.divIcon({
                     html: `<div class="transform" style="color: ${color}; font-size: 24px; transform: rotate(${adjustedHeading}deg;">➤</div>`,
