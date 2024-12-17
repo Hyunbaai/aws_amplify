@@ -1052,7 +1052,7 @@
                         newRobotData = Object.values(tempRobotData);
 
                         console.log("New Robot Data:", newRobotData);
-                    }
+                    } 
                     if (message.mqtt_data) {
                         const incomingData = message.mqtt_data;
 
@@ -1078,6 +1078,7 @@
 
                                     // heading 값이 숫자인지 확인하고 추출 (기본값은 0)
                                     const heading = typeof nav2Data.heading === 'number' ? nav2Data.heading : 0;
+                                    console.log("heading:", heading);
 
                                     // 선택된 로봇 마커 위치 및 heading 업데이트
                                     updateMarkerPosition(robotname, latitude, longitude, heading);
