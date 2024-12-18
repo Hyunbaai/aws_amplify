@@ -1030,6 +1030,11 @@
                     if (message.amr_data_db && Array.isArray(message.amr_data_db)|| message.amr_data) {
                         const tempRobotData = {};
 
+                        // 기존 newRobotData의 내용을 tempRobotData에 복사
+                        newRobotData.forEach((robot) => {
+                            tempRobotData[robot.robot_id] = robot;
+                        });
+
                         // amr_data_db가 배열인 경우 처리
                         if (Array.isArray(message.amr_data_db)) {
                             message.amr_data_db.forEach((amrData) => {
@@ -1056,8 +1061,11 @@
                             const timestamp = amrData.data?.timestamp || null;
 
                             if (robotId) {
-                                // 기존 데이터와 timestamp 비교 후 업데이트
-                                if (!tempRobotData[robotId] || new Date(tempRobotData[robotId].timestamp) < new Date(timestamp)) {
+                                // 기존 데이터가 존재하면 connection_id 업데이트
+                                if (tempRobotData[robotId]) {
+                                    tempRobotData[robotId].connection_id = amrData.connection_id;
+                                } else {
+                                    // 새로운 robotId인 경우 추가
                                     tempRobotData[robotId] = {
                                         connection_id: amrData.connection_id,
                                         robot_id: robotId,
