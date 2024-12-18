@@ -1011,7 +1011,7 @@
             socket.onmessage = (event) => {
                 try{
                     const message = JSON.parse(event.data);
-                    console.log('Received message:', message);
+                    // console.log('Received message:', message);
 
                      // ACK 처리
                     if (message.request_id && ackPromises.current.has(message.request_id)) {
@@ -1119,7 +1119,7 @@
                                 updateMarkerPosition(robotname, latitude, longitude, 0);
                             }
                         }
-                        console.log("Updated mqtt_data:", mqtt_data);
+                        // console.log("Updated mqtt_data:", mqtt_data);
                     };
 
                 } catch (error){
