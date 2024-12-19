@@ -4481,6 +4481,7 @@
                 if (existingPath) {
                     console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
                     newPathId  = existingPath.id;
+                    selectedPathId=newPathId;
                     
                     const pathData = {
                         type: "system",
@@ -4526,6 +4527,7 @@
                 }
 
                 newPathId = newPath[0].id;
+                selectedPathId=newPathId;
 
                 // Reverse Waypoints를 새로운 Path에 추가
                 const waypointData  = reversedWaypoints.map(wp =>({
