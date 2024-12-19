@@ -1175,43 +1175,43 @@
         
 
         
-        let waypoints = [];                 // Waypoints를 저장할 배열
-        let totalWaypoints = [];            // 전체 Waypoints를 저장할 배열
-        let groupCounter = 0;               // Waypoints 그룹 카운터
-        let pointCounter = 1;               // Waypoints의 point 카운터
-        let waypoint_lines = {};            // Waypoints의 line을 저장할 객체
-        let selectMode = false;             // Select Mode 상태 저장
-        let controlMode = false;            // Control Mode 상태 저장
-        let controlPoints = [];             // Control Points를 저장할 배열
-        let tempLabel = '';                 
-        let robots = {};                    // 로봇 정보를 저장하는 객체
+        // let waypoints = [];                 // Waypoints를 저장할 배열
+        // let totalWaypoints = [];            // 전체 Waypoints를 저장할 배열
+        // let groupCounter = 0;               // Waypoints 그룹 카운터
+        // let pointCounter = 1;               // Waypoints의 point 카운터
+        // let waypoint_lines = {};            // Waypoints의 line을 저장할 객체
+        // let selectMode = false;             // Select Mode 상태 저장
+        // let controlMode = false;            // Control Mode 상태 저장
+        // let controlPoints = [];             // Control Points를 저장할 배열
+        // let tempLabel = '';                 
+        // let robots = {};                    // 로봇 정보를 저장하는 객체
         
-        let selectedWaypointSocket = {};    // 선택된 로봇의 waypoint websocket을 저장
-        let selectedControlSocket = {};     // 선택된 로봇의 control websocket을 저장
-        let selectedSpeedSocket = {};       // 선택된 로봇의 speed websocket을 저장
-        let selectedRemoteSocket = {};      // 선택된 로봇의 remote websocket을 저장
-        let robotCounter = 1;               // 선택된 로봇 카운터
-        let robotCurrentWaypoints = {};     // 로봇의 현재 위치를 저장하는 객체
-        let deadlockDetected = {};          // 로봇의 교착 상태 여부 및 포인트를 저장하는 객체
-        let deadlockPriority = {};          // 로봇의 교착 상태 우선순위 로봇 객체를 저장하는 객체
-        let deadlockSolveFlag = {};         // 로봇의 교착 상태 해결 플래그를 저장하는 객체
-        let selectedRobotWaypoints = {};    // 선택된 로봇의 주행 경로를 저장하는 함수
-        let currentYamlData = null;         // 현재 YAML 데이터를 저장하는 변수
-        let reverseMode = false;            // Reverse 모드 상태 변수
-        let mapPopupWaypoints = [];         // 팝업용 지도의 Waypoints를 저장할 배열
-        let popupWaypoint_lines = [];       // 팝업용 지도의 Waypoints의 line을 저장할 배열
-        let mapPopupPointWaypoints = [];    // 팝업용 지도(Point 추가)의 Waypoints를 저장할 배열
-        let popupPointWaypoint_lines = [];  // 팝업용 지도(Point 추가)의 Waypoints의 line을 저장할 배열
-        let pointLineMode = true;           // 팝업용 지도(Point 추가)의 Waypoint Line 시각화 모드 상태 변수
-        let popupPointCounter = 1;          // 팝업용 지도(Point 추가)의 Waypoint의 point 카운터
-        let addPointMode = false;           // 팝업용 지도(Point 추가)의 Point 추가 모드 상태 저장
-        let addPopupWaypoints = [];         // 팝업용 지도(Point 추가)에 추가되는 Point를 저장할 배열
-        let saveSelectedWaypoints = [];     // Waypoints 중에서 저장하기 위해 선택된 Waypoint를 저장할 배열
-        let viewFileMode = false;           // Waypoint 파일 시각화 상태 저장
-        let deleteYamlFileName = null;      // 삭제하는 YAML 파일명을 저장하는 변수
-        let scale = 1;                      // 로봇 교착 확률 행렬 스케일을 저장하는 변수
-        let linearSpeed = 0.5;              // 로봇 원격 제어의 초기 선속도
-        let angularSpeed = 0.5;             // 로봇 원격 제어의 초기 각속도
+        // let selectedWaypointSocket = {};    // 선택된 로봇의 waypoint websocket을 저장
+        // let selectedControlSocket = {};     // 선택된 로봇의 control websocket을 저장
+        // let selectedSpeedSocket = {};       // 선택된 로봇의 speed websocket을 저장
+        // let selectedRemoteSocket = {};      // 선택된 로봇의 remote websocket을 저장
+        // let robotCounter = 1;               // 선택된 로봇 카운터
+        // let robotCurrentWaypoints = {};     // 로봇의 현재 위치를 저장하는 객체
+        // let deadlockDetected = {};          // 로봇의 교착 상태 여부 및 포인트를 저장하는 객체
+        // let deadlockPriority = {};          // 로봇의 교착 상태 우선순위 로봇 객체를 저장하는 객체
+        // let deadlockSolveFlag = {};         // 로봇의 교착 상태 해결 플래그를 저장하는 객체
+        // let selectedRobotWaypoints = {};    // 선택된 로봇의 주행 경로를 저장하는 함수
+        // let currentYamlData = null;         // 현재 YAML 데이터를 저장하는 변수
+        // let reverseMode = false;            // Reverse 모드 상태 변수
+        // let mapPopupWaypoints = [];         // 팝업용 지도의 Waypoints를 저장할 배열
+        // let popupWaypoint_lines = [];       // 팝업용 지도의 Waypoints의 line을 저장할 배열
+        // let mapPopupPointWaypoints = [];    // 팝업용 지도(Point 추가)의 Waypoints를 저장할 배열
+        // let popupPointWaypoint_lines = [];  // 팝업용 지도(Point 추가)의 Waypoints의 line을 저장할 배열
+        // let pointLineMode = true;           // 팝업용 지도(Point 추가)의 Waypoint Line 시각화 모드 상태 변수
+        // let popupPointCounter = 1;          // 팝업용 지도(Point 추가)의 Waypoint의 point 카운터
+        // let addPointMode = false;           // 팝업용 지도(Point 추가)의 Point 추가 모드 상태 저장
+        // let addPopupWaypoints = [];         // 팝업용 지도(Point 추가)에 추가되는 Point를 저장할 배열
+        // let saveSelectedWaypoints = [];     // Waypoints 중에서 저장하기 위해 선택된 Waypoint를 저장할 배열
+        // let viewFileMode = false;           // Waypoint 파일 시각화 상태 저장
+        // let deleteYamlFileName = null;      // 삭제하는 YAML 파일명을 저장하는 변수
+        // let scale = 1;                      // 로봇 교착 확률 행렬 스케일을 저장하는 변수
+        // let linearSpeed = 0.5;              // 로봇 원격 제어의 초기 선속도
+        // let angularSpeed = 0.5;             // 로봇 원격 제어의 초기 각속도
 
 
         // Mobile 손가락 제어 변수 세팅
