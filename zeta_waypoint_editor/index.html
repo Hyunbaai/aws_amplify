@@ -778,38 +778,7 @@
 </head>
 <body>
     <h3 id="title">Zeta Satellite Robotics Waypoint Editor</h3>
-    <!-- 지도가 표시될 영역 -->
-    <div id="map">
-        <!-- 사이드바(오른쪽) 열기/닫기 버튼 -->
-        <!-- <div class="toggle-sidebar-right-btn" onclick="toggleSidebarRight()">Info</div> -->
 
-        <!-- 사이드바(오른쪽) (로봇 정보 팝업 저장) -->
-        <!-- <div id="sidebar-right" class="sidebar-right">
-            <h3 style="font-size: 2vh;">Robot Information</h3> -->
-            <!-- 로봇 정보 팝업이 추가될 영역 -->
-            <!-- <div id="robotInfoContainer"></div>
-        </div> -->
-
-        <!-- 사이드바(왼쪽) 열기/닫기 버튼 -->
-        <!-- <div class="toggle-sidebar-left-btn" onclick="toggleSidebarLeft()">Deadlock</div> -->
-
-        <!-- 사이드바(왼쪽) (로봇 교착 확률 행렬) -->
-        <!-- <div id="sidebar-left" class="sidebar-left">
-            <div class="header-container">
-                <h3 class="header-title">Deadlock Probability</h3>
-                <div class="zoom-buttons">
-                    <button onclick="zoomIn()">+</button>
-                    <button onclick="zoomOut()">-</button>
-                </div>
-            </div> -->
-            <!-- 행렬을 감싸는 Wrapper 추가 -->
-            <!-- <div id="matrixContainerWrapper">
-                <div id="probabilityMatrix"> -->
-                    <!-- 교착 확률 행렬이 동적으로 추가 -->
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- 사용자가 로봇을 추가 및 제어할 수 있는 버튼 -->
     <div id="robot-control">
         <label>[Robot Control] </label>
@@ -818,11 +787,6 @@
         <select id="selectedRobotDropdown" onchange="handleRobotSelectionChange()" >
             <option value="">Selected a Robot</option>
         </select>
-        <!-- <button onclick="toggleControlMode()">Control Mode</button> -->
-        <!-- <input type="file" id="fileInput" accept=".yaml" />
-        <button id="loadWaypointButton">Load Waypoint</button> -->
-        <!-- <button id="waypointListButton">Waypoint List</button> -->
-        <!-- <button onclick="speedUpdatePopup()">Update Speed</button> -->
         <button onclick="robotController()">Robot Controller</button>
     </div>
 
@@ -833,7 +797,7 @@
         <!-- <button onclick="closeRobotListPopup()">Close</button> -->
     </div>
 
-    <!-- Waypoint 목록 -->
+    <!-- Waypoint 목록
     <div id="overlay" style="display: none;"></div>
     <div id="waypoint-popup">
         <h2>Waypoint List</h2>
@@ -841,8 +805,8 @@
         <ul id="file-list"></ul>
         <button id="closeButton">Close</button>
     </div>
-    <!-- Waypoint 삭제 확인 팝업 -->
-    <div id="deleteConfirmationPopup" class="popup-overlay" style="display: none;">
+    Waypoint 삭제 확인 팝업 -->
+    <!-- <div id="deleteConfirmationPopup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
             <h3>Are you sure you want to delete that file?</h3>
             <div class="button-row-delete">
@@ -850,7 +814,7 @@
                 <button id="cancelDeleteButton" onclick="cancelDelete()">Cancel</button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- 컨트롤러 팝업 -->
     <div id="controllerPopup" class="controller-popup" style="display: none;">
@@ -869,25 +833,12 @@
             <button onclick="closeControllerPopup()">Close</button>
         </div>
     </div>
-    <!-- 로봇 속도 업데이트 팝업 -->
-    <div id="overlay" style="display: none;"></div>
-    <div id="speedUpdatePopup" class="draggable-popup" style="top: 65%; display:none;">
-        <div id="popupHeader" class="popup-header"></div>
-        <h3>Enter New Robot Speed</h3>
-        <input type="text" id="robotSpeed" placeholder="Enter robot speed">
-        <button onclick="updateRobotSpeed()">Update</button>
-        <button onclick="closeSpeedUpdatePopup()">Close</button>
-    </div>
     <!-- 사용자가 Waypoint를 생성 및 저장할 수 있는 버튼 -->
     <div id="waypoint-edit">
         <label>[Waypoint Edit] </label>
         <button onclick="resetMap()">Reset</button>
-        <!-- <button onclick="startNewGroup()">Start New Group</button> -->
-        <!-- <input type="color" id="colorPicker" value="#0000ff">  -->
-        <!-- <button onclick="toggleSelectMode()">Select Mode</button> -->
-        <!-- <button id="saveWaypointButton">Save Waypoint</button> -->
     </div>
-    <!-- 저장 Waypoint 목록 -->
+    <!-- 저장 Waypoint 목록
     <div id="overlay" style="display: none;"></div>
     <div id="save-waypoint-popup">
         <h2>Waypoint Save List</h2>
@@ -913,7 +864,7 @@
         <ul id="file-save-list"></ul>
         <button id="saveButton">Save</button>
         <button id="saveCloseButton">Close</button>
-    </div>
+    </div> -->
 
     <!-- 새로운 DB Data 섹션 -->
     <div id="db-data-section">
@@ -940,7 +891,7 @@
         <button onclick="closePathListPopup()" style="margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">닫기</button>
     </div>
 
-    <!-- 저장할 YAML 파일명 입력 팝업 -->
+    <!-- 저장할 YAML 파일명 입력 팝업
     <div id="yamlFileNamePopup" class="draggable-popup" style="display:none;">
         <div id="popupHeader" class="popup-header"></div>
         <h3>Enter New Yaml File Name</h3>
@@ -955,7 +906,7 @@
         <table id="detailTable">
             <tbody id="detailBody"></tbody>
         </table>
-    </div>
+    </div> -->
 
 
 
