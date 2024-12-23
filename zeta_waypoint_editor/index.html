@@ -734,6 +734,7 @@
         <button id="startNavigationBtn" onclick="sendAllWaypoints(selectedPathId)">Start Navigation</button>
         <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,0,true)">Reverse Waypoint</button>
         <button id="cancelBtn" onclick="sendAllWaypoints(selectedPathId,-1,false)"style="background-color: #dc3545; color: white;">Navigation Cancel</button>
+        <button id="clonePathButton" onclick="openRobotSelectionPopup()">Clone Path</button>
     </div>
 
     <!-- Path 목록을 표시하는 팝업 -->
@@ -1899,9 +1900,259 @@
             }
         }
 
-        
-        
-        
+        function openRobotSelectionPopup() {
+            // Supabase에서 모든 로봇 리스트 가져오기
+            supabase
+                .from('Robot')
+                .select('id, robotId, name')
+                .order('id', { ascending: true })
+                .then(({ data: robots, error }) => {
+                    if (error) {
+                        console.error('Error fetching robots:', error);
+                        alert('Failed to load robots.');
+                        return;
+                    }
+
+                    // 팝업 UI 생성
+                    const popup = document.createElement('div');
+                    popup.id = 'robotSelectionPopup';
+                    popup.style = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        border: 1px solid black;
+                        padding: 20px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        z-index: 1000;
+                        max-width: 400px;
+                        max-height: 300px;
+                        overflow-y: auto;
+                    `;
+
+                    popup.innerHTML = `
+                        <h3>Select a Robot</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            ${robots
+                                .map(
+                                    robot => `
+                                    <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;" 
+                                        onclick="fetchPathList('${robot.robotId}')">
+                                        <strong>${robot.name}</strong> (${robot.robotId})
+                                    </li>
+                                `
+                                )
+                                .join('')}
+                        </ul>
+                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer;" 
+                            onclick="closePopup('robotSelectionPopup')">Cancel</button>
+                    `;
+
+                    document.body.appendChild(popup);
+                });
+        }
+
+        function closePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                document.body.removeChild(popup);
+            }
+        }
+
+        function fetchPathList(robotId) {
+            closePopup('robotSelectionPopup'); // 이전 팝업 닫기
+
+            supabase
+                .from('Path')
+                .select('id, name, description')
+                .eq('robotId', robotId)
+                .order('id', { ascending: true })
+                .then(({ data: paths, error }) => {
+                    if (error) {
+                        console.error('Error fetching paths:', error);
+                        alert('Failed to load paths.');
+                        return;
+                    }
+
+                    // Path 리스트 팝업 생성
+                    const popup = document.createElement('div');
+                    popup.id = 'pathSelectionPopup';
+                    popup.style = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        border: 1px solid black;
+                        padding: 20px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        z-index: 1000;
+                        max-width: 400px;
+                        max-height: 400px;
+                        overflow-y: auto;
+                    `;
+
+                    popup.innerHTML = `
+                        <h3>Select a Path to Clone</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            ${paths
+                                .map(
+                                    path => `
+                                    <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <strong>${path.name}</strong><br>
+                                                <small>${path.description}</small>
+                                            </div>
+                                            <div>
+                                                <button onclick="previewPath('${path.id}')" style="margin-right: 10px;">Preview</button>
+                                                <button onclick="clonePath('${path.id}', '${path.name}', '${path.description}')">Clone</button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                `
+                                )
+                                .join('')}
+                        </ul>
+                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer;" 
+                            onclick="closePopup('pathSelectionPopup')">Cancel</button>
+                    `;
+
+                    document.body.appendChild(popup);
+                });
+        }
+
+        async function clonePath(pathId, pathName, pathDescription) {
+            closePopup('pathSelectionPopup'); // 이전 팝업 닫기
+
+            if (!selectedRobotId) {
+                alert('Please select a robot to clone the path to.');
+                return;
+            }
+
+            try {
+                // 현재 로봇 정보 가져오기
+                const { data: currentRobot, error: currentRobotError } = await supabase
+                    .from('Robot')
+                    .select('id')
+                    .eq('robotId', selectedRobotId)
+                    .single();
+
+                if (currentRobotError) {
+                    console.error('Error fetching current robot data:', currentRobotError);
+                    alert('Failed to fetch the current robot data.');
+                    return;
+                }
+
+                const currentRobotId = currentRobot.id;
+
+                // 선택된 Path의 Waypoints 가져오기
+                const { data: waypoints, error: waypointError } = await supabase
+                    .from('Waypoint')
+                    .select('*')
+                    .eq('pathId', pathId);
+
+                if (waypointError) {
+                    console.error('Error fetching waypoints:', waypointError);
+                    return;
+                }
+
+                // Path 복제
+                const { data: newPath, error: newPathError } = await supabase
+                    .from('Path')
+                    .insert({
+                        robotId: currentRobotId,
+                        name: `${pathName}_clone`,
+                        description: pathDescription,
+                        color: 'gray', // 기본 색상
+                        type: 0, // 기본 타입
+                    })
+                    .select()
+                    .single();
+
+                if (newPathError) {
+                    console.error('Error cloning path:', newPathError);
+                    alert('Failed to clone the path.');
+                    return;
+                }
+
+                // Waypoints 복제
+                const clonedWaypoints = waypoints.map(wp => ({
+                    pathId: newPath.id,
+                    latitude: wp.latitude,
+                    longitude: wp.longitude,
+                    yaw: wp.yaw,
+                    name: wp.name,
+                    type: wp.type,
+                    color: wp.color,
+                }));
+
+                const { error: waypointCloneError } = await supabase
+                    .from('Waypoint')
+                    .insert(clonedWaypoints);
+
+                if (waypointCloneError) {
+                    console.error('Error cloning waypoints:', waypointCloneError);
+                    alert('Failed to clone the waypoints.');
+                    return;
+                }
+
+                alert('Path successfully cloned!');
+            } catch (error) {
+                console.error('Unexpected error cloning path:', error);
+                alert('An unexpected error occurred while cloning the path.');
+            }
+        }
+
+        function displayPathOnMap(waypoints) {
+            // 지도 초기화
+            if (!map) {
+                alert('Map is not initialized!');
+                return;
+            }
+
+            // 기존 Path 레이어 제거
+            if (waypointLayer) {
+                waypointLayer.clearLayers();
+            }
+
+            // Waypoints를 지도에 표시
+            const latlngs = waypoints.map(wp => [wp.latitude, wp.longitude]);
+            L.polyline(latlngs, { color: 'blue', weight: 5 }).addTo(waypointLayer); // 경로 표시
+            waypoints.forEach(wp => {
+                L.marker([wp.latitude, wp.longitude])
+                    .bindPopup(`<strong>${wp.name}</strong><br>Type: ${wp.type}`)
+                    .addTo(waypointLayer); // 웨이포인트 마커 추가
+            });
+
+            // 지도를 Waypoints 범위에 맞게 줌
+            const bounds = L.latLngBounds(latlngs);
+            map.fitBounds(bounds);
+        }
+
+        function previewPath(pathId) {
+            supabase
+                .from('Waypoint')
+                .select('*')
+                .eq('pathId', pathId)
+                .then(({ data: waypoints, error }) => {
+                    if (error) {
+                        console.error('Error fetching waypoints:', error);
+                        alert('Failed to load waypoints for preview.');
+                        return;
+                    }
+
+                    if (waypoints.length === 0) {
+                        alert('No waypoints available for this path.');
+                        return;
+                    }
+
+                    displayPathOnMap(waypoints); // 지도에 Path 표시
+                });
+        }
+
+
 
         // Waypoint 데이터를 불러와 지도에 표시하는 함수
         async function loadWaypointsFromDatabase(pathId) {
