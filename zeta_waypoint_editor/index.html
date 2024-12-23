@@ -734,7 +734,7 @@
         <button id="startNavigationBtn" onclick="sendAllWaypoints(selectedPathId)">Start Navigation</button>
         <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,0,true)">Reverse Waypoint</button>
         <button id="cancelBtn" onclick="sendAllWaypoints(selectedPathId,-1,false)"style="background-color: #dc3545; color: white;">Navigation Cancel</button>
-        <button id="clonePathButton" onclick="openRobotSelectionPopup()">Clone Path</button>
+        <button id="clonePathButton" onclick="openRobotSelectionPopup()">Clone Robot Path</button>
     </div>
 
     <!-- Path 목록을 표시하는 팝업 -->
@@ -2007,8 +2007,8 @@
                         position: fixed;
                         top: 50%;
                         left: 50%;
-                        width: 90%;
                         transform: translate(-50%, -50%);
+                        width: 90%;
                         background: white;
                         border: 1px solid black;
                         padding: 20px;
@@ -2016,33 +2016,61 @@
                         z-index: 1000;
                         max-width: 400px;
                         max-height: 400px;
-                        overflow-y: auto;
+                        display: flex;
+                        flex-direction: column;
                     `;
 
                     popup.innerHTML = `
-                        <h3>Select a Path to Clone</h3>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            ${paths
-                                .map(
-                                    path => `
-                                    <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">
-                                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <strong>${path.name}</strong><br>
-                                                <small>${path.description}</small>
+                        <!-- 상단 영역 -->
+                        <div style="position: relative; flex-shrink: 0;">
+                            <!-- 제목 -->
+                            <h3 style="margin: 0; text-align: center;">Select a Path to Clone</h3>
+                            <!-- 닫기 버튼 -->
+                            <button onclick="closePopup('pathSelectionPopup')" 
+                                style="
+                                    position: absolute; 
+                                    top: 10px; 
+                                    right: 10px; 
+                                    background: none; 
+                                    border: none; 
+                                    font-size: 20px; 
+                                    font-weight: bold; 
+                                    cursor: pointer;">
+                                &times;
+                            </button>
+                        </div>
+
+                        <!-- 스크롤 가능한 Path 리스트 -->
+                        <div style="flex: 1; overflow-y: auto; margin-top: 15px; padding-right: 5px;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${paths
+                                    .map(
+                                        path => `
+                                        <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div>
+                                                    <strong>${path.name}</strong><br>
+                                                    <small>${path.description}</small>
+                                                </div>
+                                                <div>
+                                                    <button onclick="previewPath('${path.id}')" 
+                                                        style="margin-right: 10px; padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Preview</button>
+                                                    <button onclick="clonePath('${path.id}', '${path.name}', '${path.description}', '${robotName}')" 
+                                                        style="padding: 5px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Clone</button>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <button onclick="previewPath('${path.id}')" style="margin-right: 10px;">Preview</button>
-                                                <button onclick="clonePath('${path.id}', '${path.name}', '${path.description}', '${robotName}')">Clone</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                `
-                                )
-                                .join('')}
-                        </ul>
-                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer;" 
-                            onclick="closePopup('pathSelectionPopup')">Cancel</button>
+                                        </li>
+                                    `
+                                    )
+                                    .join('')}
+                            </ul>
+                        </div>
+
+                        <!-- 하단 Cancel 버튼 -->
+                        <button onclick="closePopup('pathSelectionPopup')" 
+                            style="margin-top: 15px; padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px; flex-shrink: 0;">
+                            Cancel
+                        </button>
                     `;
 
                     document.body.appendChild(popup);
