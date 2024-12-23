@@ -2207,10 +2207,16 @@
         }
 
         function previewPath(pathId) {
-            // 팝업 숨기기
+             // 팝업 숨기기
             const popup = document.getElementById('pathSelectionPopup');
             if (popup) {
                 popup.style.display = 'none'; // 팝업 숨기기
+            }
+
+            // 이미 존재하는 복원 버튼 제거
+            const existingRestoreButton = document.getElementById('restoreButton');
+            if (existingRestoreButton) {
+                document.body.removeChild(existingRestoreButton);
             }
 
             // Waypoints 데이터 가져오기
@@ -2235,23 +2241,30 @@
                     // 지도에 Path 표시
                     displayPathOnMap(waypoints);
 
-                    // 미리보기 후 팝업을 다시 표시
+                    // 복원 버튼 생성
                     const restoreButton = document.createElement('button');
+                    restoreButton.id = 'restoreButton'; // 복원 버튼에 ID 설정
                     restoreButton.textContent = 'Back to Path List';
                     restoreButton.style = `
                         position: fixed;
                         top: 10px;
                         left: 10px;
                         padding: 10px;
-                        background: white;
-                        border: 1px solid black;
+                        background: #007bff;
+                        color: white;
+                        border: 2px solid #0056b3;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        font-weight: bold;
                         cursor: pointer;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transition: background 0.3s ease, transform 0.2s ease;
                         z-index: 1001;
                     `;
                     restoreButton.onclick = () => {
                         popup.style.display = 'block'; // 팝업 다시 표시
                         document.body.removeChild(restoreButton); // 복원 버튼 제거
-                        waypointLayer.clearLayers();
+                        waypointLayer.clearLayers(); // 지도에서 Waypoints 제거
                     };
 
                     document.body.appendChild(restoreButton);
