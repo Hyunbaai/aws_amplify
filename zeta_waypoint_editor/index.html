@@ -1932,7 +1932,26 @@
                     `;
 
                     popup.innerHTML = `
-                        <h3>Select a Robot</h3>
+                        <div style="position: relative;">
+                            <!-- 닫기 버튼 -->
+                            <button onclick="closePopup('robotSelectionPopup')" 
+                                style="
+                                    position: absolute; 
+                                    top: 10px; 
+                                    right: 10px; 
+                                    background: none; 
+                                    border: none; 
+                                    font-size: 20px; 
+                                    font-weight: bold; 
+                                    cursor: pointer;">
+                                &times;
+                            </button>
+
+                            <!-- 제목 -->
+                            <h3 style="margin: 0 0 20px 0;">Select a Robot</h3>
+                        </div>
+
+                        <!-- 로봇 리스트 -->
                         <ul style="list-style: none; padding: 0; margin: 0;">
                             ${robots
                                 .map(
@@ -1945,7 +1964,9 @@
                                 )
                                 .join('')}
                         </ul>
-                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer;" 
+
+                        <!-- 하단 취소 버튼 -->
+                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%;" 
                             onclick="closePopup('robotSelectionPopup')">Cancel</button>
                     `;
 
