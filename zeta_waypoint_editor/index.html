@@ -2131,6 +2131,13 @@
         }
 
         function previewPath(pathId) {
+            // 팝업 숨기기
+            const popup = document.getElementById('pathSelectionPopup');
+            if (popup) {
+                popup.style.display = 'none'; // 팝업 숨기기
+            }
+
+            // Waypoints 데이터 가져오기
             supabase
                 .from('Waypoint')
                 .select('*')
@@ -2139,15 +2146,38 @@
                     if (error) {
                         console.error('Error fetching waypoints:', error);
                         alert('Failed to load waypoints for preview.');
+                        popup.style.display = 'block'; // 에러 발생 시 팝업 다시 표시
                         return;
                     }
 
                     if (waypoints.length === 0) {
                         alert('No waypoints available for this path.');
+                        popup.style.display = 'block'; // 데이터가 없을 때 팝업 다시 표시
                         return;
                     }
 
-                    displayPathOnMap(waypoints); // 지도에 Path 표시
+                    // 지도에 Path 표시
+                    displayPathOnMap(waypoints);
+
+                    // 미리보기 후 팝업을 다시 표시
+                    const restoreButton = document.createElement('button');
+                    restoreButton.textContent = 'Back to Path List';
+                    restoreButton.style = `
+                        position: fixed;
+                        top: 10px;
+                        left: 10px;
+                        padding: 10px;
+                        background: white;
+                        border: 1px solid black;
+                        cursor: pointer;
+                        z-index: 1001;
+                    `;
+                    restoreButton.onclick = () => {
+                        popup.style.display = 'block'; // 팝업 다시 표시
+                        document.body.removeChild(restoreButton); // 복원 버튼 제거
+                    };
+
+                    document.body.appendChild(restoreButton);
                 });
         }
 
