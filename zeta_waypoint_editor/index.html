@@ -1932,8 +1932,8 @@
                     `;
 
                     popup.innerHTML = `
+                        <!-- 상단 닫기 버튼 -->
                         <div style="position: relative;">
-                            <!-- 닫기 버튼 -->
                             <button onclick="closePopup('robotSelectionPopup')" 
                                 style="
                                     position: absolute; 
@@ -1948,25 +1948,27 @@
                             </button>
 
                             <!-- 제목 -->
-                            <h3 style="margin: 0 0 20px 0;">Select a Robot</h3>
+                            <h3 style="margin: 0 0 15px 0; text-align: center;">Select a Robot</h3>
                         </div>
 
-                        <!-- 로봇 리스트 -->
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            ${robots
-                                .map(
-                                    robot => `
-                                    <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;" 
-                                        onclick="fetchPathList(${robot.id}, '${robot.name}')">
-                                        <strong>${robot.name}</strong> (${robot.robotId})
-                                    </li>
-                                `
-                                )
-                                .join('')}
-                        </ul>
+                        <!-- 스크롤 가능한 로봇 리스트 -->
+                        <div style="flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${robots
+                                    .map(
+                                        robot => `
+                                        <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;" 
+                                            onclick="fetchPathList(${robot.id}, '${robot.name}')">
+                                            <strong>${robot.name}</strong> (${robot.robotId})
+                                        </li>
+                                    `
+                                    )
+                                    .join('')}
+                            </ul>
+                        </div>
 
                         <!-- 하단 취소 버튼 -->
-                        <button style="margin-top: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%;" 
+                        <button style="padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px;" 
                             onclick="closePopup('robotSelectionPopup')">Cancel</button>
                     `;
 
