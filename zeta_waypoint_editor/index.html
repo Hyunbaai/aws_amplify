@@ -1913,7 +1913,6 @@
                         return;
                     }
 
-                    // 팝업 UI 생성
                     const popup = document.createElement('div');
                     popup.id = 'robotSelectionPopup';
                     popup.style = `
@@ -1938,7 +1937,7 @@
                                 .map(
                                     robot => `
                                     <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;" 
-                                        onclick="fetchPathList('${robot.robotId}')">
+                                        onclick="fetchPathList(${robot.id})">
                                         <strong>${robot.name}</strong> (${robot.robotId})
                                     </li>
                                 `
