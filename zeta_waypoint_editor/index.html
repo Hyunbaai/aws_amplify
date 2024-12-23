@@ -1937,7 +1937,7 @@
                                 .map(
                                     robot => `
                                     <li style="margin: 10px 0; cursor: pointer; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;" 
-                                        onclick="fetchPathList(${robot.id})">
+                                        onclick="fetchPathList(${robot.id}, '${robot.name}')">
                                         <strong>${robot.name}</strong> (${robot.robotId})
                                     </li>
                                 `
@@ -1959,7 +1959,7 @@
             }
         }
 
-        function fetchPathList(robotId) {
+        function fetchPathList(robotId, robotName) {
             closePopup('robotSelectionPopup'); // 이전 팝업 닫기
 
             supabase
@@ -2006,7 +2006,7 @@
                                             </div>
                                             <div>
                                                 <button onclick="previewPath('${path.id}')" style="margin-right: 10px;">Preview</button>
-                                                <button onclick="clonePath('${path.id}', '${path.name}', '${path.description}')">Clone</button>
+                                                <button onclick="clonePath('${path.id}', '${path.name}', '${path.description}', '${robotName}')">Clone</button>
                                             </div>
                                         </div>
                                     </li>
@@ -2022,7 +2022,7 @@
                 });
         }
 
-        async function clonePath(pathId, pathName, pathDescription) {
+        async function clonePath(pathId, pathName, pathDescription, sourceRobotName) {
             closePopup('pathSelectionPopup'); // 이전 팝업 닫기
 
             if (!selectedRobotId) {
@@ -2062,7 +2062,7 @@
                     .from('Path')
                     .insert({
                         robotId: currentRobotId,
-                        name: `${pathName}_clone`,
+                        name: `${sourceRobotName}_${pathName}_clone`,
                         description: pathDescription,
                         color: 'gray', // 기본 색상
                         type: 0, // 기본 타입
