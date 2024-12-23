@@ -1958,7 +1958,6 @@
             if (popup) {
                 document.body.removeChild(popup);
             }
-            waypointLayer.clearLayers();
         }
 
         function fetchPathList(robotId, robotName) {
@@ -2121,11 +2120,20 @@
                 waypointLayer.clearLayers();
             }
 
-            // Waypoints를 지도에 표시
+             // Waypoints를 지도에 표시
             const latlngs = waypoints.map(wp => [wp.latitude, wp.longitude]);
             L.polyline(latlngs, { color: 'blue', weight: 5 }).addTo(waypointLayer); // 경로 표시
+
             waypoints.forEach(wp => {
-                L.marker([wp.latitude, wp.longitude])
+                // Custom 마커 생성
+                const customIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<img src="arrow.png" alt="Waypoint Icon" style="transform: rotate(${2 * Math.PI - wp.yaw}rad);"/>`,
+                    iconSize: [10, 10], // 아이콘 크기 조정
+                });
+
+                // Custom 마커 추가
+                L.marker([wp.latitude, wp.longitude], { icon: customIcon })
                     .bindPopup(`<strong>${wp.name}</strong><br>Type: ${wp.type}`)
                     .addTo(waypointLayer); // 웨이포인트 마커 추가
             });
