@@ -2180,6 +2180,7 @@
                     restoreButton.onclick = () => {
                         popup.style.display = 'block'; // 팝업 다시 표시
                         document.body.removeChild(restoreButton); // 복원 버튼 제거
+                        waypointLayer.clearLayers();
                     };
 
                     document.body.appendChild(restoreButton);
