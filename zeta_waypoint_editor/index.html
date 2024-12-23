@@ -2098,6 +2098,8 @@
                 }
 
                 alert('Path successfully cloned!');
+                waypointLayer.clearLayers();
+
             } catch (error) {
                 console.error('Unexpected error cloning path:', error);
                 alert('An unexpected error occurred while cloning the path.');
