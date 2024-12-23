@@ -1927,13 +1927,15 @@
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                         z-index: 1000;
                         max-width: 400px;
-                        max-height: 300px;
-                        overflow-y: auto;
+                        max-height: 400px;
+                        display: flex;
+                        flex-direction: column;
                     `;
 
                     popup.innerHTML = `
-                        <!-- 상단 닫기 버튼 -->
-                        <div style="position: relative;">
+                        <!-- 상단 영역 -->
+                        <div style="position: relative; flex-shrink: 0;">
+                            <!-- 닫기 버튼 -->
                             <button onclick="closePopup('robotSelectionPopup')" 
                                 style="
                                     position: absolute; 
@@ -1948,11 +1950,11 @@
                             </button>
 
                             <!-- 제목 -->
-                            <h3 style="margin: 0 0 15px 0; text-align: center;">Select a Robot</h3>
+                            <h3 style="margin: 0; text-align: center;">Select a Robot</h3>
                         </div>
 
                         <!-- 스크롤 가능한 로봇 리스트 -->
-                        <div style="flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                        <div style="flex: 1; overflow-y: auto; margin-top: 15px; padding-right: 5px;">
                             <ul style="list-style: none; padding: 0; margin: 0;">
                                 ${robots
                                     .map(
@@ -1968,7 +1970,7 @@
                         </div>
 
                         <!-- 하단 취소 버튼 -->
-                        <button style="padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px;" 
+                        <button style="margin-top: 15px; padding: 10px; background: red; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px; flex-shrink: 0;" 
                             onclick="closePopup('robotSelectionPopup')">Cancel</button>
                     `;
 
