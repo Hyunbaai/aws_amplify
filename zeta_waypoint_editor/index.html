@@ -2113,6 +2113,8 @@
                     .eq('pathId', pathId)
                     .order('id', { ascending: true }); // 오름차순 정렬
 
+                console.log('Inserted waypoints:', waypoints);
+
                 if (waypointError) {
                     console.error('Error fetching waypoints:', waypointError);
                     return;
