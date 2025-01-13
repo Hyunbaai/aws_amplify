@@ -1137,61 +1137,6 @@
         }
 
 
-        // 팝업창에 드래그 기능을 추가하는 함수
-        // function makeElementDraggable(popupId, headerClass) {
-        //     const popup = document.getElementById(popupId);
-        //     const header = popup.querySelector(headerClass);
-        
-        //     let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-        
-        //     header.onmousedown = dragMouseDown;
-        
-        //     function dragMouseDown(e) {
-        //         e = e || window.event;
-        //         e.preventDefault();
-        
-        //         mouseX = e.clientX;
-        //         mouseY = e.clientY;
-        
-        //         document.onmouseup = closeDragElement;
-        //         document.onmousemove = elementDrag;
-        //     }
-        
-        //     function elementDrag(e) {
-        //         e = e || window.event;
-        //         e.preventDefault();
-        
-        //         posX = mouseX - e.clientX;
-        //         posY = mouseY - e.clientY;
-        //         mouseX = e.clientX;
-        //         mouseY = e.clientY;
-        
-        //         popup.style.top = (popup.offsetTop - posY) + "px";
-        //         popup.style.left = (popup.offsetLeft - posX) + "px";
-        //     }
-        
-        //     function closeDragElement() {
-        //         document.onmouseup = null;
-        //         document.onmousemove = null;
-        //     }
-        // }
-        
-        // // 팝업 열기 함수
-        // function openPopup(popupId) {
-        //     document.getElementById('overlay').style.display = 'block'; // 배경 어둡게 처리
-        //     const popup = document.getElementById(popupId);
-        //     popup.style.display = 'block'; // 팝업 창 열기
-        
-        //     // 팝업을 드래그 가능하게 설정
-        //     makeElementDraggable(popupId, '.popup-header');
-        // }
-        
-        // // 팝업 닫기 함수
-        // function closePopup(popupId) {
-        //     document.getElementById('overlay').style.display = 'none'; // 배경 숨기기
-        //     document.getElementById(popupId).style.display = 'none'; // 팝업 창 숨기기
-        // }
-
         // ==================================================================
         //
         //                    로봇 세팅 및 상태 시각화 함수
@@ -1870,7 +1815,7 @@
                             waypoint_id: -1,
                             type: commandType,
                             request_id: requestId, // request_id 추가
-                        },
+                        },yy
                     };
 
                     console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
@@ -2165,7 +2110,8 @@
                 const { data: waypoints, error: waypointError } = await supabase
                     .from('Waypoint')
                     .select('*')
-                    .eq('pathId', pathId);
+                    .eq('pathId', pathId)
+                    .order('id', { ascending: true }); // 오름차순 정렬
 
                 if (waypointError) {
                     console.error('Error fetching waypoints:', waypointError);
