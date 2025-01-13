@@ -775,7 +775,7 @@
         <label>[DB Data]</label>
         <button onclick="openDBRobotPopup()"> DB Waypoint List </button>
         <button id="startNavigationBtn" onclick="sendAllWaypoints(selectedPathId)">Start Navigation</button>
-        <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,0,true)">Reverse Waypoint</button>
+        <button id="reverseNavigationBtn" onclick="sendAllWaypoints(selectedPathId,0,true)">Create Reverse Path</button>
         <button id="cancelBtn" onclick="sendAllWaypoints(selectedPathId,-1,false)"style="background-color: #dc3545; color: white;">Navigation Cancel</button>
         <button id="clonePathButton" onclick="openRobotSelectionPopup()">Clone Robot Path</button>
     </div>
@@ -1786,42 +1786,7 @@
 
                 const robotDbId = robotData.id; // Robot 테이블의 id 값
 
-                // Reverse Path가 이미 존재하는지 확인
-                const { data: existingPath, error: existingPathError } = await supabase
-                    .from('Path')
-                    .select('id')
-                    .eq('name', reversePathName)
-                    .maybeSingle();
-
-                if (existingPathError) {
-                    console.error("Reverse Path 확인 중 오류 발생:", existingPathError);
-                    return;
-                }
-
                 let newPathId = null;
-
-                if (existingPath) {
-                    console.log("Reverse Path가 이미 존재합니다. 기존 Path를 전송합니다.");
-                    newPathId  = existingPath.id;
-                    selectedPathId=newPathId;
-                    
-                    const pathData = {
-                        type: "system",
-                        args: {
-                            command: "path",
-                            connection_id: connectionId,
-                            robot_id: selectedRobotId,
-                            path_id: newPathId,
-                            waypoint_id: -1,
-                            type: commandType,
-                            request_id: requestId, // request_id 추가
-                        },yy
-                    };
-
-                    console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
-                    socket.send(JSON.stringify(pathData));
-                    return;
-                }
 
                 // Reverse Waypoints 처리
                 const reversedWaypoints = [...waypoints] // 원본 배열을 복사
@@ -1870,22 +1835,6 @@
                 }                
 
                 console.log("Reverse Path와 Waypoints가 성공적으로 생성되었습니다.");
-
-                const pathData = {
-                        type: "system",
-                        args: {
-                            command: "path",
-                            connection_id: connectionId,
-                            robot_id: selectedRobotId,
-                            path_id: newPathId,
-                            waypoint_id: -1,
-                            type: commandType,
-                            request_id: requestId, // request_id 추가
-                        },
-                    };
-
-                console.log("전송할 Reverse Path WebSocket 데이터:", JSON.stringify(pathData, null, 2));
-                socket.send(JSON.stringify(pathData));
                 return;
 
 
