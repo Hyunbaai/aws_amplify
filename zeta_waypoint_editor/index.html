@@ -1772,23 +1772,6 @@
                 // Reverse Path 이름 생성
                 const reversePathName = `${originalPathName}_reverse`;
 
-                // 동일한 이름의 Reverse Path가 이미 존재하는지 확인
-                const { data: existingReversePath, error: existingReversePathError } = await supabase
-                    .from('Path')
-                    .select('id')
-                    .eq('name', reversePathName)
-                    .maybeSingle();
-
-                if (existingReversePathError) {
-                    console.error('Reverse Path 중복 확인 중 오류 발생:', existingReversePathError);
-                    return;
-                }
-
-                if (existingReversePath) {
-                    alert(`Reverse Path "${reversePathName}"가 이미 존재합니다. 새로 생성하지 않습니다.`);
-                    return;
-                }
-
                 const { data: robotData, error: robotError } = await supabase
                     .from('Robot') // Robot 테이블에서
                     .select('id')  // id만 선택
@@ -1801,6 +1784,24 @@
                 }
 
                 const robotDbId = robotData.id; // Robot 테이블의 id 값
+
+                // Reverse Path 중복 확인
+                const { data: existingReversePath, error: existingReversePathError } = await supabase
+                    .from('Path')
+                    .select('id')
+                    .eq('name', reversePathName)
+                    .eq('robotId', robotDbId) // 선택된 로봇에 해당하는 Path만 확인
+                    .maybeSingle();
+
+                if (existingReversePathError) {
+                    console.error('Reverse Path 중복 확인 중 오류 발생:', existingReversePathError);
+                    return;
+                }
+
+                if (existingReversePath) {
+                    alert(`Reverse Path "${reversePathName}"가 이미 선택된 로봇에 존재합니다. 새로 생성하지 않습니다.`);
+                    return;
+                }
 
                 let newPathId = null;
 
