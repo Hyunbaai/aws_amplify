@@ -2171,7 +2171,7 @@
         }
 
         function previewPath(pathId) {
-             // 팝업 숨기기
+            // 팝업 숨기기
             const popup = document.getElementById('pathSelectionPopup');
             if (popup) {
                 popup.style.visibility = 'hidden'; // 팝업 숨기기
@@ -2192,13 +2192,13 @@
                     if (error) {
                         console.error('Error fetching waypoints:', error);
                         alert('Failed to load waypoints for preview.');
-                        popup.style.visibility = 'hidden'; // 에러 발생 시 팝업 다시 표시
+                        if (popup) popup.style.visibility = 'visible'; // 에러 발생 시 팝업 다시 표시
                         return;
                     }
 
-                    if (waypoints.length === 0) {
+                    if (!waypoints || waypoints.length === 0) {
                         alert('No waypoints available for this path.');
-                        popup.style.visibility = 'hidden'; // 데이터가 없을 때 팝업 다시 표시
+                        if (popup) popup.style.visibility = 'visible'; // 데이터가 없을 때 팝업 다시 표시
                         return;
                     }
 
@@ -2226,7 +2226,7 @@
                         z-index: 1001;
                     `;
                     restoreButton.onclick = () => {
-                        popup.style.visibility = 'hidden' // 팝업 다시 표시
+                        if (popup) popup.style.visibility = 'visible'; // 팝업 다시 표시
                         document.body.removeChild(restoreButton); // 복원 버튼 제거
                         waypointLayer.clearLayers(); // 지도에서 Waypoints 제거
                     };
