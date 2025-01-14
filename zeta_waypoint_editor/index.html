@@ -1852,12 +1852,24 @@
                 
                 alert(`"${reversePathName}"가 생성되었습니다.`);
                 console.log("Reverse Path와 Waypoints가 성공적으로 생성되었습니다.");
+                selectedPathId = null;          
+
+                // waypointLayer와 pathLayer에 각각의 레이어가 존재하는지 확인
+                if (waypointLayer) {
+                    waypointLayer.clearLayers(); // 지도에서 모든 Waypoint 제거
+                }
                 return;
 
 
                 
             } catch (error) {
                 console.error("Reverse Path 처리 중 예기치 않은 오류 발생:", error);
+                selectedPathId = null;          
+
+                // waypointLayer와 pathLayer에 각각의 레이어가 존재하는지 확인
+                if (waypointLayer) {
+                    waypointLayer.clearLayers(); // 지도에서 모든 Waypoint 제거
+                }
             }
         }
 
