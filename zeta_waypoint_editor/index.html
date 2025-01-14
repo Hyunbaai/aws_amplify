@@ -2050,6 +2050,7 @@
 
         async function clonePath(pathId, pathName, pathDescription, sourceRobotName) {
             closePopup('pathSelectionPopup'); // 이전 팝업 닫기
+            selectedPathId = null;
 
             if (!selectedRobotId) {
                 alert('Please select a robot to clone the path to.');
