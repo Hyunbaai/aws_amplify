@@ -1510,9 +1510,26 @@
                     deletePath(path.id, pathItem); // Path 삭제 함수 호출
                 };
 
+                // 이름 편집 버튼
+                const editButton = document.createElement("button");
+                editButton.innerText = "Edit";
+                editButton.style = `
+                    background: none; 
+                    border: none; 
+                    font-size: 14px; 
+                    color: #ff9800; 
+                    cursor: pointer; 
+                    margin-right: 10px;
+                `;
+                editButton.onclick = (e) => {
+                    e.stopPropagation(); // Path 클릭 이벤트 중지
+                    editPathName(path.id, path.name); // Path 이름 편집 함수 호출
+                };
+
                 // Path 항목에 요소 추가
                 pathItem.appendChild(pathName);
                 pathItem.appendChild(addWaypointButton);
+                pathItem.appendChild(editButton);
                 pathItem.appendChild(deleteButton);
 
                 pathListDisplay.appendChild(pathItem);
@@ -1520,9 +1537,38 @@
 
             document.getElementById("pathListPopup").style.display = "block"; // 팝업 열기
 
-        } catch (error) {
-            console.error("Path 목록 불러오기 오류:", error);
+            } catch (error) {
+                console.error("Path 목록 불러오기 오류:", error);
+            }
         }
+
+        function editPathName(pathId, currentName) {
+            const newName = prompt('Enter a new name for the path:', currentName);
+            if (!newName || newName.trim() === '') {
+                alert('Path name cannot be empty.');
+                return;
+            }
+
+            supabase
+                .from('Path')
+                .update({ name: newName })
+                .eq('id', pathId)
+                .then(({ error }) => {
+                    if (error) {
+                        console.error('Error updating path name:', error);
+                        alert('Failed to update path name.');
+                        return;
+                    }
+
+                    // 업데이트된 이름을 UI에 반영
+                    document.querySelectorAll("#pathListDisplay div").forEach(item => {
+                        if (item.textContent.includes(currentName)) {
+                            item.querySelector("strong").innerText = `Path Name: ${newName}`;
+                        }
+                    });
+
+                    alert('Path name updated successfully.');
+                });
         }
 
         async function deletePath(pathId, pathElement) {
