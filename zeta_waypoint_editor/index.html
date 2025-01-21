@@ -1542,33 +1542,29 @@
             }
         }
 
-        function editPathName(pathId, currentName) {
+        async function editPathName(pathId, currentName) {
             const newName = prompt('Enter a new name for the path:', currentName);
             if (!newName || newName.trim() === '') {
                 alert('Path name cannot be empty.');
                 return;
             }
 
-            supabase
+            const { error } = await supabase
                 .from('Path')
                 .update({ name: newName })
-                .eq('id', pathId)
-                .then(({ error }) => {
-                    if (error) {
-                        console.error('Error updating path name:', error);
-                        alert('Failed to update path name.');
-                        return;
-                    }
+                .eq('id', pathId);
 
-                    // 업데이트된 이름을 UI에 반영
-                    document.querySelectorAll("#pathListDisplay div").forEach(item => {
-                        if (item.textContent.includes(currentName)) {
-                            item.querySelector("strong").innerText = `Path Name: ${newName}`;
-                        }
-                    });
+            if (error) {
+                console.error('Error updating path name:', error);
+                alert('Failed to update path name.');
+                return;
+            }
 
-                    alert('Path name updated successfully.');
-                });
+            alert('Path name updated successfully.');
+            closePathListPopup();
+
+            // Path 목록을 새로고침하여 업데이트된 이름 표시
+            await openPathListPopup(selected_RobotId);
         }
 
         async function deletePath(pathId, pathElement) {
